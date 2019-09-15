@@ -1,29 +1,36 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-    <TyrMap></TyrMap>
+    <Menu></Menu>
+    <div class="container-fluid">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
+  import "./router/Router";
   import HelloWorld from "./components/HelloWorld.vue"
   import Vue from 'vue';
-  import BootstrapVue from "bootstrap-vue";
   import Component from "vue-class-component";
   import TyrMap from "./components/map/TyrMap.vue";
+  import Menu from "./components/common/Menu.vue";
+  import TopBar from "./components/common/TopBar.vue"
+  import BootstrapVue from "bootstrap-vue";
 
   @Component({
     name: 'App',
     components: {
+      Menu,
+      TopBar,
       HelloWorld,
       TyrMap
-    },
-    created: () => {
-      Vue.use(BootstrapVue);
     }
   })
   export default class App extends Vue {
+    created() {
+      Vue.use(BootstrapVue);
+    }
+
     errorCaptured(error: Error) {
       this.$bvToast.toast(error.message, {variant: 'danger'});
     }
@@ -33,12 +40,4 @@
 <style>
   @import "../node_modules/normalize.css/normalize.css";
   @import "style.scss";
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
-  }
 </style>

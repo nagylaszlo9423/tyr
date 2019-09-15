@@ -9,6 +9,11 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.22",
+    "@fortawesome/free-brands-svg-icons": "^5.10.2",
+    "@fortawesome/free-regular-svg-icons": "^5.10.2",
+    "@fortawesome/free-solid-svg-icons": "^5.10.2",
+    "@fortawesome/vue-fontawesome": "^0.1.7",
     "axios": "^0.19.0",
     "bootstrap": "^4.3.1",
     "bootstrap-vue": "^2.0.0",
@@ -62,7 +67,11 @@
       "no-extra-semi": "error",
       "semi": "error",
       "semi-spacing": "error",
-      "semi-style": "error"
+      "semi-style": "error",
+      "quotes": [
+        "error",
+        "single"
+      ]
     },
     "parserOptions": {
       "parser": "babel-eslint"

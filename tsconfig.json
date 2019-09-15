@@ -10,6 +10,7 @@
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "strictPropertyInitialization": false,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "baseUrl": "./src",
@@ -24,6 +25,7 @@
     ]
   },
   "files": ["src/App.vue"],
+  "include": ["./src/vue.shims.d.ts"],
   "exclude": [
     "node_modules",
     "dist"

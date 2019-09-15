@@ -4,7 +4,7 @@ import {Coordinate} from "ol/coordinate";
 import {MultiLineString} from "ol/geom";
 
 
-export class PathRecorderService {
+export class PathRecorder {
     private route: Feature;
     private path: Coordinate[][];
     private watchId: number = -1;

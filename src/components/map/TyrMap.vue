@@ -1,7 +1,7 @@
 <template>
     <div id="tyr-map">
-        <button v-if="!isRecording" v-on:click="">Record</button>
-        <button v-if="isRecording">Stop recording</button>
+        <button v-if="!isRecording" v-on:click="recordPath">Record</button>
+        <button v-if="isRecording" v-on:click="stopRecording">Stop recording</button>
         <select v-model="country">
             <option v-for="country in countries.features" v-bind:value="country['id']">{{country.properties.name}}
             </option>
@@ -24,7 +24,7 @@
     import SimpleGeometry from "ol/geom/SimpleGeometry";
     import {GeoJSON} from "ol/format";
     import {fromLonLat} from "ol/proj";
-    import {PathRecorderService} from "../../services/PathRecorderService";
+    import {PathRecorder} from "./PathRecorder";
 
     @Component
     export default class TyrMap extends Vue {
@@ -39,7 +39,7 @@
         });
         countries: FeatureCollection = Countries as FeatureCollection;
         _country: string;
-        pathRecorder: PathRecorderService;
+        pathRecorder: PathRecorder;
         isRecording = false;
 
         set country(countryId: string) {
@@ -81,7 +81,7 @@
 
         recordPath() {
             navigator.geolocation.getCurrentPosition(position => {
-                this.pathRecorder = new PathRecorderService(position);
+                this.pathRecorder = new PathRecorder(position);
                 this.pathRecorder.record();
                 this.isRecording = true;
             }, this.onPositionError, this.positionOptions);
