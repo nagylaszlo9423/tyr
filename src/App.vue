@@ -7,11 +7,11 @@
 </template>
 
 <script lang="ts">
-  import HelloWorld from './components/HelloWorld.vue'
+  import HelloWorld from "./components/HelloWorld.vue"
   import Vue from 'vue';
   import BootstrapVue from "bootstrap-vue";
-  import TyrMap from "./components/TyrMap.vue";
   import Component from "vue-class-component";
+  import TyrMap from "./components/map/TyrMap.vue";
 
   @Component({
     name: 'App',
@@ -24,10 +24,14 @@
     }
   })
   export default class App extends Vue {
+    errorCaptured(error: Error) {
+      this.$bvToast.toast(error.message, {variant: 'danger'});
+    }
   }
 </script>
 
 <style>
+  @import "../node_modules/normalize.css/normalize.css";
   @import "style.scss";
   #app {
     font-family: 'Avenir', Helvetica, Arial, sans-serif;

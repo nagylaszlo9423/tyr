@@ -1,0 +1,129 @@
+<template>
+    <div id="tyr-map">
+        <button v-if="!isRecording" v-on:click="">Record</button>
+        <button v-if="isRecording">Stop recording</button>
+        <select v-model="country">
+            <option v-for="country in countries.features" v-bind:value="country['id']">{{country.properties.name}}
+            </option>
+        </select>
+        <div id="open-layers-map">
+
+        </div>
+    </div>
+</template>
+
+<script lang="ts">
+    import 'ol/ol.css';
+    import {Map, View} from "ol";
+    import TileLayer from "ol/layer/Tile";
+    import {OSM} from "ol/source";
+    import {Component, Vue} from "vue-property-decorator";
+    import Countries from "../../assets/geojson/countries.json";
+    import VectorSource from "ol/source/Vector";
+    import {FeatureCollection} from "geojson";
+    import SimpleGeometry from "ol/geom/SimpleGeometry";
+    import {GeoJSON} from "ol/format";
+    import {fromLonLat} from "ol/proj";
+    import {PathRecorderService} from "../../services/PathRecorderService";
+
+    @Component
+    export default class TyrMap extends Vue {
+        view: View = new View({});
+        map: Map = new Map({});
+        positionOptions: PositionOptions = {
+            timeout: 10000,
+            maximumAge: 60000
+        };
+        source: VectorSource = new VectorSource({
+            features: (new GeoJSON()).readFeatures(Countries)
+        });
+        countries: FeatureCollection = Countries as FeatureCollection;
+        _country: string;
+        pathRecorder: PathRecorderService;
+        isRecording = false;
+
+        set country(countryId: string) {
+            const feature = this.source.getFeatureById(countryId);
+            const polygon: SimpleGeometry = (feature.getGeometry()) as SimpleGeometry;
+            this.view.fit(polygon, {padding: [170, 50, 30, 150], nearest: true});
+        }
+
+        get country(): string {
+            return this._country;
+        }
+
+        mounted() {
+            this.view = new View({
+                center: [0, 0],
+                zoom: 1
+            });
+            this.map = new Map({
+                target: 'open-layers-map',
+                layers: [
+                    new TileLayer({
+                        source: new OSM()
+                    })
+                ],
+                view: this.view
+            });
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(this.goToPosition, this.onPositionError, this.positionOptions);
+            }
+        }
+
+        goToPosition(position: Position) {
+            console.log(position.coords);
+            this.view.animate({
+                center: fromLonLat([position.coords.longitude, position.coords.latitude]),
+                zoom: 15
+            });
+        }
+
+        recordPath() {
+            navigator.geolocation.getCurrentPosition(position => {
+                this.pathRecorder = new PathRecorderService(position);
+                this.pathRecorder.record();
+                this.isRecording = true;
+            }, this.onPositionError, this.positionOptions);
+        }
+
+        stopRecording() {
+            this.pathRecorder.stop();
+            this.isRecording = false;
+        }
+
+        onPositionError(positionError: PositionError) {
+            let message = '';
+            let variant = 'danger';
+            switch (positionError.code) {
+                default:
+                case 0:
+                    message = 'Unknown error';
+                    break;
+                case 1:
+                    message = 'Permission denied';
+                    break;
+                case 2:
+                    message = 'Position unavailable';
+                    variant = 'warning';
+                    break;
+                case 3:
+                    message = 'Timed out';
+                    variant = 'warning';
+                    break;
+            }
+            this.$bvToast.toast(message, {
+                autoHideDelay: 5000,
+                appendToast: true,
+                variant: variant
+            });
+        }
+    }
+</script>
+
+<style scoped>
+    #tyr-map {
+        width: 100%;
+        height: 100%;
+    }
+</style>
