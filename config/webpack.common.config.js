@@ -1,6 +1,7 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const relativePath = require('./relative-path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -76,6 +77,7 @@ module.exports = {
   },
   devtool: '#eval-source-map',
   plugins: [
+    new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
       template: './src/index.html',

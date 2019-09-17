@@ -1,5 +1,5 @@
 {
-  "name": "tyr",
+  "name": "tyr-frontend",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -36,6 +36,7 @@
     "@vue/cli-plugin-eslint": "^3.11.0",
     "@vue/cli-service": "^3.11.0",
     "babel-eslint": "^10.0.1",
+    "clean-webpack-plugin": "^3.0.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "file-loader": "^4.2.0",
