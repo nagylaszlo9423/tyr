@@ -1,5 +1,7 @@
 <template>
+  <div class="top-bar">
 
+  </div>
 </template>
 
 <script lang="ts">
