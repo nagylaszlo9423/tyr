@@ -1,7 +1,8 @@
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const relativePath = require('./relative-path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -9,7 +10,6 @@ module.exports = {
   },
   output: {
     path: relativePath('dist'),
-    publicPath: '/public/',
     filename: 'main.js'
   },
   module: {
@@ -80,8 +80,13 @@ module.exports = {
     new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      template: './src/index.html',
-      chunksSortMode: 'dependency'
+      template: relativePath('public/index.html'),
+      inject: true
     }),
+    new CopyWebpackPlugin([{
+      from: relativePath('public'),
+      to: relativePath('dist'),
+      toType: 'dir'
+    }])
   ]
 };
