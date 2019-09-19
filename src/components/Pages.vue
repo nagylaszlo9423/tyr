@@ -1,22 +1,21 @@
 <template>
-  <top-bar></top-bar>
-  <div class="pages-content">
-    <Menu></Menu>
-    <router-view></router-view>
+  <div class="pages">
+    <div class="pages-content d-flex flex-row">
+      <NavigationBar></NavigationBar>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
   import {Vue, Component} from "vue-property-decorator";
-  import Menu from "./common/Menu.vue";
-  import TopBar from "./common/TopBar.vue";
   import TyrMap from "./map/TyrMap.vue";
   import HelloWorld from "./HelloWorld.vue";
+  import NavigationBar from "./common/NavigationBar.vue";
 
   @Component({
     components: {
-      Menu,
-      TopBar,
+      NavigationBar,
       TyrMap,
       HelloWorld
     }

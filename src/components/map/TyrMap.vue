@@ -1,13 +1,13 @@
 <template>
     <div id="tyr-map">
-        <button v-if="!isRecording" v-on:click="recordPath">Record</button>
-        <button v-if="isRecording" v-on:click="stopRecording">Stop recording</button>
-        <select v-model="country">
-            <option v-for="country in countries.features" v-bind:value="country['id']">{{country.properties.name}}
-            </option>
-        </select>
-        <div id="open-layers-map">
-
+        <div id="open-layers-map"></div>
+        <div id="tyr-map-overlay">
+            <button class="overlay-item" v-if="!isRecording" v-on:click="recordPath">Record</button>
+            <button class="overlay-item" v-if="isRecording" v-on:click="stopRecording">Stop recording</button>
+            <select class="overlay-item" v-model="country">
+                <option v-for="country in countries.features" v-bind:value="country['id']">{{country.properties.name}}
+                </option>
+            </select>
         </div>
     </div>
 </template>
@@ -25,6 +25,7 @@
     import {GeoJSON} from "ol/format";
     import {fromLonLat} from "ol/proj";
     import {PathRecorder} from "./PathRecorder";
+    import {Control} from 'ol/control';
 
     @Component
     export default class TyrMap extends Vue {
@@ -53,6 +54,9 @@
         }
 
         mounted() {
+            const c = new Control({
+
+            });
             this.view = new View({
                 center: [0, 0],
                 zoom: 1
@@ -64,7 +68,8 @@
                         source: new OSM()
                     })
                 ],
-                view: this.view
+                view: this.view,
+                controls: []
             });
             if (navigator.geolocation) {
                 navigator.geolocation.getCurrentPosition(this.goToPosition, this.onPositionError, this.positionOptions);
@@ -123,7 +128,34 @@
 
 <style lang="scss" scoped>
     #tyr-map {
-        width: 100%;
+        position: fixed;
+        left: 0;
+        top: 0;
         height: 100%;
+        width: 100%;
+
+        #open-layers-map {
+            position: absolute;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        #tyr-map-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: flex-end;
+
+            .overlay-item {
+                position: relative;
+                z-index: 10;
+            }
+        }
     }
 </style>
