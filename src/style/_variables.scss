@@ -1,0 +1,27 @@
+$success: green;
+$error: red;
+$info: blue;
+
+$themeNames: (default, dracula);
+$themes: (
+  default: (
+    background: grey,
+    primary: black,
+    secondary: green,
+    text: black,
+    text-light: white
+  ),
+  dracula: (
+    background: grey,
+    primary: black,
+    secondary: green,
+    text: black,
+    text-light: white
+  )
+);
+
+$background: map-get(map-get($themes, default), background);
+$primary: map-get(map-get($themes, default), primary);
+$secondary: map-get(map-get($themes, default), secondary);
+$text: map-get(map-get($themes, default), text);
+$text-light: map-get(map-get($themes, default), text-light);

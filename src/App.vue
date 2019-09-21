@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="container-fluid">
+    <div class="container-fluid" :class="'theme-'+theme">
       <router-view></router-view>
     </div>
   </div>
@@ -16,6 +16,8 @@
     name: 'App',
   })
   export default class App extends Vue {
+    private theme = 'default';
+
     created() {
       Vue.use(BootstrapVue);
     }

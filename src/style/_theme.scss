@@ -1,7 +1,38 @@
+@import "variables";
 
+@mixin setTheme($name) {
+  $theme: map_get($themes, $name);
+  $background: map-get($theme, background);
+  $primary: map-get($theme, primary);
+  $secondary: map-get($theme, secondary);
+  $text: map-get($theme, text);
+  $text-light: map-get($theme, text-light);
 
-$background: #F7F9FB;
-
-html, body {
   background-color: $background;
+
+  a.nav-link {
+    color: $secondary;
+
+    &:hover {
+      color: lighten($secondary, 10%);
+    }
+
+    &.active, &:active {
+      color: darken($secondary, 10%);
+    }
+  }
+
+  input {
+    border: $primary 1px solid;
+
+    &.active, &:active {
+      box-shadow: darken($primary, 20%);
+    }
+  }
+}
+
+@each $theme in $themeNames {
+  .theme-#{$theme} {
+    @include setTheme($theme);
+  }
 }

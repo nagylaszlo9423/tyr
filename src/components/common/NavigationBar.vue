@@ -1,20 +1,40 @@
 <template>
   <div id="navigation-bar">
     <div id="navigation-bar-title">
-      <h1>Tyr</h1>
+      <h3>Tyr</h3>
     </div>
     <div id="navigation-bar-list">
+      <div class="search-field"
+           :class="{'search-field-open': searchFieldToggleState === ToggleState.OPEN, 'search-field-close': searchFieldToggleState === ToggleState.CLOSE}">
+        <div class="search-field-content">
+          <div class="input-group">
+            <input id="search-field" name="search-field" placeholder="Search for locations" class="form-control" type="text"/>
+          </div>
+          <font-awesome-icon class="fa-1x" icon="play"></font-awesome-icon>
+        </div>
+      </div>
+      <div class="search-field-underlay" v-if="searchFieldToggleState === ToggleState.OPEN"
+           @click="toggleSearchField">
+      </div>
       <nav class="navbar navbar-brand">
         <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a @click="toggleSearchField" class="nav-link">
+              <font-awesome-icon class="fa-1x" icon="search-location"/>
+            </a>
+          </li>
+        </ul>
+        <ul class="navbar-nav mr-auto">
           <li v-for="item in items" class="nav-item">
-            <router-link v-on:click.native="setActive(item.name)" :to="item.to" :class="{'nav-link': true, active: isActive(item.name)}">
+            <router-link v-on:click.native="setActive(item.name)" :to="item.to"
+                         :class="{'nav-link': true, active: isActive(item.name)}">
               <font-awesome-icon class="fa-1x" :icon="item.icon"/>
             </router-link>
           </li>
         </ul>
       </nav>
     </div>
-    <div class="navbar-fill" :class="{'navbar-open': !isActive('map')}">
+    <div class="navbar-fill" :class="{'navbar-open': isActive('profile'), 'navbar-close': !isActive('profile')}">
     </div>
     <div id="navigation-bar-tail">
     </div>
@@ -24,7 +44,6 @@
 <script lang="ts">
 
   import {Component, Vue} from "vue-property-decorator";
-  import * as $ from "jquery";
 
   interface NavBarItem {
     name: string;
@@ -32,19 +51,25 @@
     to: string;
   }
 
+  enum ToggleState {
+    INIT, OPEN, CLOSE
+  }
+
   @Component
   export default class NavigationBar extends Vue {
+    ToggleState = ToggleState;
+    searchFieldToggleState: ToggleState = ToggleState.INIT;
 
     items: NavBarItem[] = [
-      {
-        name: 'search',
-        icon: 'search-location',
-        to: 'search'
-      },
       {
         name: 'map',
         icon: 'map-marked',
         to: 'map'
+      },
+      {
+        name: 'profile',
+        icon: 'user-alt',
+        to: 'search'
       }
     ];
     activeItem = 'map';
@@ -55,6 +80,17 @@
 
     setActive(item: string) {
       this.activeItem = item;
+    }
+
+    toggleSearchField() {
+      switch (this.searchFieldToggleState) {
+        case ToggleState.INIT:
+        case ToggleState.CLOSE:
+          this.searchFieldToggleState = ToggleState.OPEN;
+          break;
+        case ToggleState.OPEN:
+          this.searchFieldToggleState = ToggleState.CLOSE;
+      }
     }
   }
 
@@ -69,13 +105,11 @@
 
     #navigation-bar-title {
       background: #FFFFFFCC;
-
-      > h1 {
-        color: transparent;
-      }
+      text-align: center;
     }
 
     #navigation-bar-list {
+      position: relative;
       display: flex;
       flex-direction: column;
       justify-content: flex-start;
@@ -99,22 +133,92 @@
     }
   }
 
-  .navbar-fill {
-    max-height: 0;
+  .search-field {
+    background: #FFFFFFCC;
+    position: absolute;
+    z-index: 1000000;
+    overflow-x: hidden;
+    top: 0;
+    left: 3rem;
+    width: 0;
+    white-space: nowrap;
+    border-radius: 0 15px 15px 0;
+
+    .search-field-content {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin: .4rem;
+      text-align: left;
+
+      svg {
+        margin: .3rem;
+      }
+    }
   }
 
-  .navbar-open {
-    max-height: 4000px;
-    transition: max-height 3s ease-in;
+  .search-field-underlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 100000;
+  }
+
+  .search-field-open {
+    animation: openSearchField 1s ease-in-out forwards;
+  }
+
+  .search-field-close {
+    animation: closeSearchField 1s ease-in-out forwards;
+  }
+
+  @keyframes openSearchField {
+    from {
+      width: 0;
+    }
+    to {
+      width: 300px;
+    }
+  }
+
+  @keyframes closeSearchField {
+    from {
+      width: 300px;
+    }
+    to {
+      width: 0;
+    }
+  }
+
+  .navbar-fill {
     background: #FFFFFFCC;
   }
 
-  @keyframes stretchNavBar {
-    0% {
+  .navbar-open {
+    animation: openNavBar 1500ms ease-in forwards;
+  }
+
+  .navbar-close {
+    animation: closeNavBar 1500ms ease-out forwards;
+  }
+
+  @keyframes openNavBar {
+    from {
       height: 0;
     }
-    100%  {
-      height: 100%;
+    to {
+      height: 85%;
+    }
+  }
+
+  @keyframes closeNavBar {
+    from {
+      height: 85%;
+    }
+    to {
+      height: 0;
     }
   }
 </style>
