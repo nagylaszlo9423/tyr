@@ -1,9 +1,16 @@
+@import "variables";
 
+* {
+  font-family: Verdana, SansSerif, serif;
+}
 
 h1, h2, h3, h4, h5, h6, p, span, label, strong, small {
-  margin: 0;
 }
 
 label {
   font-size: .8rem;
+}
+
+input.form-control {
+  font-size: .9rem;
 }

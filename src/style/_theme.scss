@@ -5,10 +5,64 @@
   $background: map-get($theme, background);
   $primary: map-get($theme, primary);
   $secondary: map-get($theme, secondary);
+  $accent: map_get($theme, accent);
   $text: map-get($theme, text);
   $text-light: map-get($theme, text-light);
 
   background-color: $background;
+
+  .btn.btn-primary {
+    background: $primary;
+    border: 1px solid $primary;
+
+    &.active, &:active {
+      border: 1px solid lighten($primary, 10%);
+      background: lighten($primary, 10%);
+    }
+
+    &.focus, &:focus {
+      box-shadow: 0 0 0 0.1rem lighten($primary, 10%);
+    }
+
+    &.hover, &:hover {
+      background: darken($primary, 10%);
+    }
+  }
+
+  .btn.btn-outline-primary {
+
+  }
+
+  .btn.btn-secondary {
+
+  }
+
+  .btn.btn-outline-secondary {
+    border: 1px solid $secondary;
+
+    &.active, &:active {
+      background: lighten($secondary, 10%);
+    }
+
+    &.focus, &:focus {
+      box-shadow: 0 0 0 0.1rem lighten($secondary, 10%);
+    }
+
+    &.hover, &:hover {
+      background: $secondary;
+    }
+  }
+
+  input, textarea, select {
+    border: 1px solid $primary;
+    color: $text;
+
+    &.focus, &:focus {
+      border-color: lighten($primary, 10%);
+      box-shadow: 0 0 0 0.1rem lighten($primary, 10%);
+      outline: none;
+    }
+  }
 
   a.nav-link {
     color: $secondary;

@@ -1,8 +1,6 @@
 <template>
-  <div id="app">
-    <div class="container-fluid" :class="'theme-'+theme">
-      <router-view></router-view>
-    </div>
+  <div id="app" class="container-fluid p-0" :class="'theme-'+theme">
+    <router-view></router-view>
   </div>
 </template>
 
@@ -13,7 +11,7 @@
   import BootstrapVue from "bootstrap-vue";
 
   @Component({
-    name: 'App',
+    name: 'App'
   })
   export default class App extends Vue {
     private theme = 'default';
@@ -30,4 +28,8 @@
 
 <style>
   @import "../node_modules/normalize.css/normalize.css";
+
+  #app {
+    height: 100vh;
+  }
 </style>

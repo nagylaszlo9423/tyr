@@ -5,16 +5,24 @@ $info: blue;
 $themeNames: (default, dracula);
 $themes: (
   default: (
-    background: grey,
-    primary: black,
-    secondary: green,
-    text: black,
-    text-light: white
+    //background: #09868b,
+    //primary: #d8ab4e,
+    //secondary: #b48c36,
+    //accent: #faed26,
+    //text: black,
+    //text-light: white
+    background: #FFFFFF,
+    primary: #31708e,
+    secondary: #5085a5,
+    accent: #faed26,
+    text: #687864,
+    text-light: #f7f9fb
   ),
   dracula: (
     background: grey,
     primary: black,
     secondary: green,
+    accent: #faed26,
     text: black,
     text-light: white
   )
@@ -23,5 +31,6 @@ $themes: (
 $background: map-get(map-get($themes, default), background);
 $primary: map-get(map-get($themes, default), primary);
 $secondary: map-get(map-get($themes, default), secondary);
+$accent: map_get(map_get($themes, default), accent);
 $text: map-get(map-get($themes, default), text);
 $text-light: map-get(map-get($themes, default), text-light);

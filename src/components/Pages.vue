@@ -1,7 +1,8 @@
 <template>
-  <div class="pages">
-    <div class="pages-content d-flex flex-row">
-      <NavigationBar></NavigationBar>
+  <div class="pages d-flex flex-column align-items-stretch">
+    <title-bar></title-bar>
+    <div class="pages-content">
+      <navigation-drawer></navigation-drawer>
       <router-view></router-view>
     </div>
   </div>
@@ -9,22 +10,30 @@
 
 <script lang="ts">
   import {Vue, Component} from "vue-property-decorator";
-  import TyrMap from "./map/TyrMap.vue";
-  import HelloWorld from "./HelloWorld.vue";
-  import NavigationBar from "./common/NavigationBar.vue";
+  import NavigationDrawer from "./common/NavigationDrawer.vue";
+  import TitleBar from "./common/TitleBar.vue";
 
   @Component({
     components: {
-      NavigationBar,
-      TyrMap,
-      HelloWorld
+      TitleBar,
+      NavigationDrawer
     }
   })
   export default class Pages extends Vue {
+    created() {
+      this.$router.beforeEach((to, from, next) => {
+        console.log('guard');
+        next(false);
+      });
+    }
   }
 </script>
 
 <style lang="scss" scoped>
+  .pages, .pages-content {
+    height: 100%;
+  }
+
   .pages-content {
     position: relative;
   }
