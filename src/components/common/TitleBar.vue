@@ -1,25 +1,27 @@
 <template>
-  <div id="title-bar" class="d-flex justify-content-between p-1">
-    <div class="d-flex flex-row">
-      <button @click="toggleNavDrawer()" type="button" class="btn btn-toolbar"><font-awesome-icon class="fa-1x" icon="bars"></font-awesome-icon></button>
+  <div id="title-bar" class="d-flex p-1">
+    <div id="title-bar-left-controls" class="d-flex flex-row mr-auto">
+      <b-button variant="link" @click="toggleNavDrawer"><font-awesome-icon class="fa-1x" icon="bars"></font-awesome-icon></b-button>
       <h3>Logo</h3>
     </div>
-    <div class="d-flex flex-row">
-      <input  />
-      <button type="button" class="btn btn-toolbar"><font-awesome-icon class="fa-1x" icon="search-location"></font-awesome-icon></button>
+    <div id="title-bar-right-controls" class="d-flex flex-row justify-content-end pl-2">
+      <b-input id="search-field" name="search-field" :class="{'open': isSearchFieldOpen}" />
+      <b-button variant="link" type="button" class="btn btn-toolbar" @click="isSearchFieldOpen = !isSearchFieldOpen"><font-awesome-icon class="fa-1x" icon="search-location"></font-awesome-icon></b-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
-  import {EventBus} from '../../services/EventBus';
+  import {Component} from 'vue-property-decorator';
+  import {EventBus, EventVue} from '../../services/EventBus';
 
   @Component
-  export default class TitleBar extends Vue {
+  export default class TitleBar extends EventVue {
+    public static readonly events = {toggle: 'navigation-drawer:toggle'};
+    isSearchFieldOpen = false;
+
     toggleNavDrawer() {
-      console.log('toggleNavDrawer');
-      EventBus.$emit('navigation-drawer:toggle');
+      EventBus.$emit(TitleBar.events.toggle);
     }
   }
 </script>
@@ -37,6 +39,22 @@
     color: $text-light;
     svg {
       color: $accent;
+    }
+
+    #title-bar-right-controls {
+      position: relative;
+      right: 0;
+
+      #search-field {
+        width: 0;
+        opacity: 0;
+        transition: width .5s ease-in-out, opacity .5s;
+
+        &.open {
+          width: 80%;
+          opacity: 1;
+        }
+      }
     }
   }
 </style>

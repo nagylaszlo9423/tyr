@@ -43,14 +43,16 @@
               </b-col>
             </b-row>
             <b-row class="my-2">
-              <b-col>
-                <b-button variant="link">
-                  <img class="icon" src="../../assets/facebook-48.png" />
+              <b-col class="d-flex justify-content-center">
+                <b-button class="icon-link" variant="link">
+                  <img class="icon" src="../../assets/facebook-48.png" alt="Facebook" />
+                  <span>Facebook</span>
                 </b-button>
               </b-col>
-              <b-col>
-                <b-button variant="link">
-                  <img class="icon" src="../../assets/google-48.png" />
+              <b-col class="d-flex justify-content-center">
+                <b-button class="icon-link" variant="link">
+                  <img class="icon" src="../../assets/google-48.png" alt="Google" />
+                  <span>Google</span>
                 </b-button>
               </b-col>
             </b-row>

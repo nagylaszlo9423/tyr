@@ -1,12 +1,12 @@
 <template>
-  <h1>ProfilePage</h1>
+  <h1>SearchPage</h1>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
 
   @Component
-  export default class ProfilePage extends Vue {
+  export default class SearchPage extends Vue {
   }
 </script>
 

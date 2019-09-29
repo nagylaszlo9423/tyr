@@ -4,7 +4,8 @@ import TyrMap from "../components/map/TyrMap.vue";
 import LoginPage from "../components/auth/LoginPage.vue";
 import RegistrationPage from "../components/auth/RegistrationPage.vue";
 import NotFoundPage from "../components/common/NotFoundPage.vue";
-import ProfilePage from "../components/profile/ProfilePage.vue"
+import ProfilePage from "../components/profile/ProfilePage.vue";
+import SearchPage from "../components/search/SearchPage.vue"
 
 const routes: RouteConfig[] = [
   {
@@ -20,6 +21,11 @@ const routes: RouteConfig[] = [
     component: Pages,
     redirect: '/map',
     children: [
+      {
+        path: '/search',
+        name: 'search',
+        component: SearchPage
+      },
       {
         path: '/map',
         name: 'map',

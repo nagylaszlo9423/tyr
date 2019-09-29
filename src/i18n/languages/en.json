@@ -4,5 +4,6 @@
   "MAP": "Map",
   "PROFILE": "Profile",
   "REGISTRATION": "Registration",
-  "LOGIN": "Login"
+  "LOGIN": "Login",
+  "ADVANCED_SEARCH": "Advanced search"
 }
