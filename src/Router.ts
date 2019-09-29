@@ -1,11 +1,11 @@
 import VueRouter, {RouteConfig} from "vue-router";
-import Pages from "../components/Pages.vue";
-import TyrMap from "../components/map/TyrMap.vue";
-import LoginPage from "../components/auth/LoginPage.vue";
-import RegistrationPage from "../components/auth/RegistrationPage.vue";
-import NotFoundPage from "../components/common/NotFoundPage.vue";
-import ProfilePage from "../components/profile/ProfilePage.vue";
-import SearchPage from "../components/search/SearchPage.vue"
+import Pages from "./components/Pages.vue";
+import TyrMap from "./components/map/TyrMap.vue";
+import LoginPage from "./components/auth/LoginPage.vue";
+import RegistrationPage from "./components/auth/RegistrationPage.vue";
+import NotFoundPage from "./components/common/NotFoundPage.vue";
+import ProfilePage from "./components/profile/ProfilePage.vue";
+import SearchPage from "./components/search/SearchPage.vue"
 
 const routes: RouteConfig[] = [
   {

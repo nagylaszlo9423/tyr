@@ -4,7 +4,7 @@
       <b-button variant="link" @click="toggleNavDrawer"><font-awesome-icon class="fa-1x" icon="bars"></font-awesome-icon></b-button>
       <h3>Logo</h3>
     </div>
-    <div id="title-bar-right-controls" class="d-flex flex-row justify-content-end pl-2">
+    <div id="title-bar-right-controls" class="d-flex flex-row justify-content-end align-items-center pl-2">
       <b-input id="search-field" name="search-field" :class="{'open': isSearchFieldOpen}" />
       <b-button variant="link" type="button" class="btn btn-toolbar" @click="isSearchFieldOpen = !isSearchFieldOpen"><font-awesome-icon class="fa-1x" icon="search-location"></font-awesome-icon></b-button>
     </div>

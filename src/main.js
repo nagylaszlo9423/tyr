@@ -3,7 +3,7 @@ import App from './App.vue'
 import i18n from './i18n'
 import VueAxios from "vue-axios";
 import Axios from "axios";
-import router from './router/Router';
+import router from './Router';
 
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';

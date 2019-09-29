@@ -1,6 +1,6 @@
 <template>
   <div id="navigation-drawer" class="d-flex" :class="{'navigation-drawer-open': isOpen}">
-    <v-touch class="swipe-zone-close" @swipeleft="isOpen = false" :class="{'navigation-drawer-open': isOpen}">
+    <v-touch class="swipe-zone-close" @swiperight="isOpen = true" @swipeleft="isOpen = false" :class="{'navigation-drawer-open': isOpen}">
       <nav class="navbar navbar-brand">
         <ul class="navbar-nav mr-auto">
           <li v-for="item in items" class="nav-item">
@@ -16,7 +16,7 @@
         </ul>
       </nav>
     </v-touch>
-    <v-touch class="swipe-zone-open" @swiperight="isOpen = true">
+    <v-touch :class="{'swipe-zone-open': !isOpen}" @swiperight="isOpen = true">
     </v-touch>
   </div>
 </template>
@@ -119,6 +119,18 @@
     &.navigation-drawer-open, .swipe-zone-close.navigation-drawer-open {
       width: 13em;
     }
+  }
+
+  @media only screen and (max-width: 600px) {
+    #navigation-drawer, .swipe-zone-close {
+      width: 0;
+    }
+
+    .swipe-zone-close {
+      nav {
+        overflow-x: hidden;
+      }
+    }
 
     .swipe-zone-open {
       position: absolute;
@@ -127,16 +139,6 @@
       z-index: 10000;
       height: 100%;
       width: 3rem;
-    }
-  }
-
-  @media only screen and (max-width: 600px) {
-    #navigation-drawer, .swipe-zone-close {
-      width: 0;
-
-      nav {
-        overflow-x: hidden;
-      }
     }
   }
 </style>

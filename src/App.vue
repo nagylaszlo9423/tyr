@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-  import "./router/Router";
+  import "./Router";
   import Vue from 'vue';
   import Component from "vue-class-component";
   import BootstrapVue from "bootstrap-vue";
