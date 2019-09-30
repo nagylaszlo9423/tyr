@@ -133,7 +133,7 @@
       top: 0;
       left: 0;
       width: 100vw;
-      height: 100vh;
+      height: 100%;
       z-index: -1000;
       background-color: #00000022;
       visibility: hidden;
