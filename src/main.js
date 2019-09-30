@@ -14,9 +14,12 @@ import VueRouter from 'vue-router';
 import {fab} from '@fortawesome/free-brands-svg-icons';
 import './style.scss';
 import VueTouch from 'vue-touch';
+import registerServiceWorker from './register-service-worker';
 
 library.add(fas);
 library.add(fab);
+
+registerServiceWorker();
 
 Vue.config.productionTip = false;
 

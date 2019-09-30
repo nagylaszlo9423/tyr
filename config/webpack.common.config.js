@@ -1,3 +1,4 @@
+const WorkboxPlugin = require('workbox-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const relativePath = require('./relative-path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
@@ -81,13 +82,15 @@ module.exports = {
     new CleanWebpackPlugin(),
     new VueLoaderPlugin(),
     new HtmlWebpackPlugin({
-      template: relativePath('public/index.html'),
+      template: relativePath('static/index.html'),
       inject: true
     }),
     new CopyWebpackPlugin([{
-      from: relativePath('public'),
+      from: relativePath('static'),
       to: relativePath('dist'),
       toType: 'dir'
-    }])
+    }]),
+    new WorkboxPlugin.GenerateSW({
+    })
   ]
 };

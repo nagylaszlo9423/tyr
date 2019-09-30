@@ -1,9 +1,11 @@
 <template>
   <div class="pages d-flex flex-column align-items-stretch">
     <title-bar></title-bar>
-    <div class="pages-content">
+    <div class="pages-container d-flex flex-row">
       <navigation-drawer></navigation-drawer>
-      <router-view></router-view>
+      <div class="pages-content container-fluid p-2 overflow-hidden">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -23,18 +25,31 @@
     created() {
       this.$router.beforeEach((to, from, next) => {
         console.log('guard');
-        next(false);
+        next();
       });
     }
   }
 </script>
 
 <style lang="scss" scoped>
-  .pages, .pages-content {
+  @import "../style/media";
+
+  .pages, .pages-container  {
     height: 100%;
   }
 
-  .pages-content {
+  .pages-container  {
     position: relative;
   }
+
+  .pages-content {
+    margin-left: 3rem;
+  }
+
+  @include media-sm {
+    .pages-content  {
+      margin-left: 0;
+    }
+  }
+
 </style>

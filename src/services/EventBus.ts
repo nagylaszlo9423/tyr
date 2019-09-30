@@ -8,8 +8,4 @@ export interface IEventBus {
   $emit(event: string, ...args: any[]): this;
 }
 
-export abstract class EventVue extends Vue {
-  public static readonly events: {[key: string]: string};
-}
-
 export const EventBus: IEventBus = new Vue();

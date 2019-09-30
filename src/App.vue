@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="container-fluid p-0" :class="'theme-'+theme">
+  <div id="app" :class="`theme-${theme}`">
     <router-view></router-view>
   </div>
 </template>

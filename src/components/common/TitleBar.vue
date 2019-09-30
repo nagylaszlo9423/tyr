@@ -12,11 +12,11 @@
 </template>
 
 <script lang="ts">
-  import {Component} from 'vue-property-decorator';
-  import {EventBus, EventVue} from '../../services/EventBus';
+  import {Vue, Component} from 'vue-property-decorator';
+  import {EventBus} from '../../services/EventBus';
 
   @Component
-  export default class TitleBar extends EventVue {
+  export default class TitleBar extends Vue {
     public static readonly events = {toggle: 'navigation-drawer:toggle'};
     isSearchFieldOpen = false;
 

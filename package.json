@@ -58,7 +58,8 @@
     "webpack": "^4.40.1",
     "webpack-cli": "^3.3.8",
     "webpack-md5-hash": "0.0.6",
-    "webpack-merge": "^4.2.2"
+    "webpack-merge": "^4.2.2",
+    "workbox-webpack-plugin": "^4.3.1"
   },
   "eslintConfig": {
     "root": true,

@@ -9,39 +9,48 @@ import SearchPage from "./components/search/SearchPage.vue"
 
 const routes: RouteConfig[] = [
   {
+    path: '/',
+    redirect: '/pages'
+  },
+  {
     path: '/login',
+    name: 'login',
     component: LoginPage
   },
   {
     path: '/register',
+    name: 'register',
     component: RegistrationPage
   },
   {
-    path: '/',
+    path: '/pages',
     component: Pages,
-    redirect: '/map',
     children: [
       {
-        path: '/search',
+        path: '',
+        redirect: '/pages/map'
+      },
+      {
+        path: 'search',
         name: 'search',
         component: SearchPage
       },
       {
-        path: '/map',
+        path: 'map',
         name: 'map',
         component: TyrMap
       },
       {
-        path: '/profile',
+        path: 'profile',
         name: 'profile',
         component: ProfilePage
       }
     ]
   },
   {
-    path: '*',
+    path: '**',
     component: NotFoundPage
   }
 ];
 
-export default new VueRouter({mode: 'history', routes})
+export default new VueRouter({routes})

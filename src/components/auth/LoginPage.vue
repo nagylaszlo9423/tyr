@@ -3,12 +3,15 @@
     <div class="login-page-overlay d-flex justify-content-center align-items-center">
       <div class="login-page-content">
         <b-form>
-          <b-container fluid class="p-4">
+          <b-container fluid class="p-3">
+            <b-row>
+              <b-col class="d-flex justify-content-center my-3">
+                <h1>LOGO</h1>
+              </b-col>
+            </b-row>
             <b-row class="mt-2">
               <b-col>
-                <b-form-group
-                  :label="$t('EMAIL')"
-                  label-for="email">
+                <b-form-group>
                   <b-form-input
                     id="email"
                     name="email"
@@ -20,9 +23,7 @@
             </b-row>
             <b-row class="mb-2">
               <b-col>
-                <b-form-group
-                  :label="$t('PASSWORD')"
-                  label-for="password">
+                <b-form-group>
                   <b-form-input
                     id="password"
                     name="password"
@@ -88,9 +89,9 @@
       background-color: #FFFFFF77;
 
       .login-page-content {
-        max-width: 800px;
+        max-width: 400px;
         min-width: 250px;
-        width: 40%;
+        width: 90%;
         background-color: white;
         border-radius: 15px;
 
