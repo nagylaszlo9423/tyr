@@ -14,6 +14,7 @@
   import {Vue, Component} from "vue-property-decorator";
   import NavigationDrawer from "./common/NavigationDrawer.vue";
   import TitleBar from "./common/TitleBar.vue";
+  import {authService} from '../services/AuthService';
 
   @Component({
     components: {
@@ -23,9 +24,11 @@
   })
   export default class Pages extends Vue {
     created() {
-      this.$router.beforeEach((to, from, next) => {
-        console.log('guard');
-        next();
+      this.$router.beforeEach(async (to, from, next) => {
+        if (await authService.isLoggedIn()) {
+          return next();
+        }
+        return next(false);
       });
     }
   }

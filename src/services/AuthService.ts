@@ -5,8 +5,13 @@ import {LoginResponse} from "./dtos/auth/LoginResponse";
 import environment from "../environment/environment";
 import {RegistrationResponse} from "./dtos/auth/RegistrationResponse";
 import {RegistrationRequest} from "./dtos/auth/RegistrationRequest";
+import {store} from "../store/Store";
+import {router} from "../Router";
 
-export default {
+let isRefreshing = false;
+
+export const authService =  {
+  refreshPromise: Promise.resolve<TokenResponse>(new TokenResponse()),
   login(email: string, password: string): Promise<void> {
     return post<LoginResponse>('/oauth/login', new LoginRequest({
       email: email,
@@ -29,10 +34,36 @@ export default {
       'client_id': clientId
     })
   },
-  refreshTokens(tokens: TokenResponse): Promise<TokenResponse> {
-    return post<TokenResponse>('/oauth/token', undefined, {
-      'grant_type': 'refresh_token',
-      'refresh_token': tokens.refreshToken
-    });
+  refreshTokens(token: string): Promise<TokenResponse> {
+    if (!isRefreshing) {
+      isRefreshing = true;
+      return post<TokenResponse>('/oauth/token', undefined, {
+        'grant_type': 'refresh_token',
+        'refresh_token': token
+      }).finally(() => isRefreshing = false);
+    } else {
+      return this.refreshPromise;
+    }
   },
-}
+  logout() {
+    store.commit('auth/clear');
+    router.push('/login');
+  },
+  isLoggedIn(): boolean {
+    const now = new Date();
+    if (!navigator.onLine && store.state.tokens.accessToken && store.state.tokens.refreshToken) {
+      return true;
+    }
+    if (store.state.tokens.accessTokenExpiration && store.state.tokens.accessTokenExpiration < now) {
+      if (store.state.tokens.refreshTokenExpiration && store.state.tokens.refreshTokenExpiration < now) {
+        this.logout();
+        return false;
+      }
+
+      store.commit('auth/refresh');
+      return true;
+    }
+
+    return false;
+  }
+};

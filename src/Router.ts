@@ -53,4 +53,4 @@ const routes: RouteConfig[] = [
   }
 ];
 
-export default new VueRouter({routes})
+export const router =  new VueRouter({routes})

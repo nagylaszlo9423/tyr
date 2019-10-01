@@ -66,9 +66,15 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
+  import {authService} from '../../services/AuthService'
 
   @Component
   export default class LoginPage extends Vue {
+    login() {
+      authService.login('', '').then(() => {
+        this.$router.push('/');
+      })
+    }
   }
 </script>
 
