@@ -49,21 +49,25 @@ export const authService =  {
     store.commit('auth/clear');
     router.push('/login');
   },
-  isLoggedIn(): boolean {
-    const now = new Date();
-    if (!navigator.onLine && store.state.tokens.accessToken && store.state.tokens.refreshToken) {
-      return true;
-    }
-    if (store.state.tokens.accessTokenExpiration && store.state.tokens.accessTokenExpiration < now) {
-      if (store.state.tokens.refreshTokenExpiration && store.state.tokens.refreshTokenExpiration < now) {
-        this.logout();
-        return false;
+  async isLoggedIn(): Promise<boolean> {
+    console.log('isLoggedIn');
+    try {
+      const now = new Date();
+      const tokens = store.getters['auth/tokens'] as TokenResponse;
+      if (!navigator.onLine && tokens.accessToken && tokens.accessToken !== '' && tokens.refreshToken && tokens.refreshToken !== '') {
+        return true;
       }
+      if (tokens.accessTokenExpiration && tokens.accessTokenExpiration < now) {
+        if (tokens.refreshTokenExpiration && tokens.refreshTokenExpiration < now) {
+          return false;
+        }
 
-      store.commit('auth/refresh');
-      return true;
+        await store.dispatch('auth/refreshToken');
+        return true;
+      }
+    } catch (e) {
+      console.error(e);
     }
-
     return false;
   }
 };

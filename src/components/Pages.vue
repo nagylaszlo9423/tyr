@@ -15,6 +15,8 @@
   import NavigationDrawer from "./common/NavigationDrawer.vue";
   import TitleBar from "./common/TitleBar.vue";
   import {authService} from '../services/AuthService';
+  import {Route} from 'vue-router';
+  import {ComponentOptions} from 'vue';
 
   @Component({
     components: {
@@ -23,14 +25,6 @@
     }
   })
   export default class Pages extends Vue {
-    created() {
-      this.$router.beforeEach(async (to, from, next) => {
-        if (await authService.isLoggedIn()) {
-          return next();
-        }
-        return next(false);
-      });
-    }
   }
 </script>
 

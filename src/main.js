@@ -9,7 +9,6 @@ import {library} from '@fortawesome/fontawesome-svg-core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import VueRouter from 'vue-router';
-import Vuex from 'vuex';
 import {fab} from '@fortawesome/free-brands-svg-icons';
 import './style.scss';
 import VueTouch from 'vue-touch';
@@ -26,7 +25,6 @@ Vue.config.productionTip = false;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(VueTouch);
 Vue.use(VueRouter);
-Vue.use(Vuex);
 
 new Vue({
   i18n,

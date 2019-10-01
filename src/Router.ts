@@ -6,6 +6,7 @@ import RegistrationPage from "./components/auth/RegistrationPage.vue";
 import NotFoundPage from "./components/common/NotFoundPage.vue";
 import ProfilePage from "./components/profile/ProfilePage.vue";
 import SearchPage from "./components/search/SearchPage.vue"
+import {authGuard} from "./guards/AuthGuard";
 
 const routes: RouteConfig[] = [
   {
@@ -19,12 +20,13 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/register',
-    name: 'register',
+    name: 'registration',
     component: RegistrationPage
   },
   {
     path: '/pages',
     component: Pages,
+    beforeEnter: authGuard,
     children: [
       {
         path: '',

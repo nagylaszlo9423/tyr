@@ -1,4 +1,4 @@
-import {Module} from 'vuex';
+import {ActionContext, Module, Store} from 'vuex';
 import {TokenResponse} from "../../services/dtos/auth/TokenResponse";
 import {authService} from "../../services/AuthService";
 
@@ -10,12 +10,22 @@ class State {
 export default {
   namespaced: true,
   state: new State(),
+  getters: {
+    tokens: (state: State) => state.tokens,
+    code: (state: State) => state.code
+  },
   mutations: {
-    async refresh(state: State) {
-      state.tokens = await authService.refreshTokens(state.tokens.refreshToken);
+    async setTokens(state: State, tokens: TokenResponse) {
+      state.tokens = tokens;
     },
     clear(state: State) {
       state = new State();
+    }
+  },
+  actions: {
+    async refreshToken(store: ActionContext<State, any>) {
+      console.log('refreshToken');
+      store.commit('auth/setTokens', await authService.refreshTokens(store.state.tokens.refreshToken));
     }
   }
 } as Module<State, any>;

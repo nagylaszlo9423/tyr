@@ -40,7 +40,7 @@
             </b-row>
             <b-row class="my-2">
               <b-col>
-                <b-button variant="outline-secondary" size="sm">{{$t('REGISTRATION')}}</b-button>
+                <b-button variant="outline-secondary" size="sm" @click="toRegistrationPage">{{$t('REGISTRATION')}}</b-button>
               </b-col>
             </b-row>
             <b-row class="my-2">
@@ -74,6 +74,10 @@
       authService.login('', '').then(() => {
         this.$router.push('/');
       })
+    }
+
+    toRegistrationPage() {
+      this.$router.push({name: 'registration'});
     }
   }
 </script>

@@ -1,5 +1,5 @@
 <template>
-
+  <h1>RegistrationPage</h1>
 </template>
 
 <script lang="ts">

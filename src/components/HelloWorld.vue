@@ -36,6 +36,7 @@
 
 <script lang="ts">
   import {Vue, Prop, Component} from 'vue-property-decorator';
+  import {ComponentOptions} from 'vue';
 
   @Component
   export default class HelloWorld extends Vue {
