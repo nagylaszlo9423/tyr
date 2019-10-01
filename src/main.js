@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
 import i18n from './i18n'
-import VueAxios from "vue-axios";
-import Axios from "axios";
 import router from './Router';
 
 import 'bootstrap';
@@ -11,10 +9,11 @@ import {library} from '@fortawesome/fontawesome-svg-core';
 import {fas} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import VueRouter from 'vue-router';
+import Vuex from 'vuex';
 import {fab} from '@fortawesome/free-brands-svg-icons';
 import './style.scss';
 import VueTouch from 'vue-touch';
-import registerServiceWorker from './register-service-worker';
+import registerServiceWorker from './RegisterServiceWorker';
 
 library.add(fas);
 library.add(fab);
@@ -24,9 +23,9 @@ registerServiceWorker();
 Vue.config.productionTip = false;
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
-Vue.use(VueAxios, Axios);
 Vue.use(VueTouch);
 Vue.use(VueRouter);
+Vue.use(Vuex);
 
 new Vue({
   i18n,
