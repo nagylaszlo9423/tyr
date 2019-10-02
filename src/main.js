@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import App from './App.vue'
-import i18n from './i18n'
+import Vue from 'vue';
+import App from './App.vue';
+import i18n from './i18n';
 import {router} from './Router';
 
 import 'bootstrap';
@@ -18,7 +18,9 @@ import {store} from './store/Store';
 library.add(fas);
 library.add(fab);
 
-registerServiceWorker();
+if (process.env.NODE_ENV === 'production' || process.env.PWA) {
+  registerServiceWorker();
+}
 
 Vue.config.productionTip = false;
 

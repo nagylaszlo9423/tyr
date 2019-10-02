@@ -1,5 +1,7 @@
 <template>
-  <h1>RegistrationPage</h1>
+  <div id="registration-page">
+
+  </div>
 </template>
 
 <script lang="ts">

@@ -9,6 +9,19 @@
                 <h1>LOGO</h1>
               </b-col>
             </b-row>
+            <b-row>
+              <b-col>
+                <div v-if="error" class="alert alert-danger" role="alert">
+                  <span>{{$t(`errors.${error}`)}}</span>
+                </div>
+                <div v-if="formErrors.length" class="alert alert-danger" role="alert">
+                  <b>{{$t('PLEASE_CORRECT_FOLLOWING_ERRORS')}}</b>
+                  <ul>
+                    <li :key="`error_${index}`" v-for="(error, index) in formErrors">{{ $t(`errors.${error}`) }}</li>
+                  </ul>
+                </div>
+              </b-col>
+            </b-row>
             <b-row class="mt-2">
               <b-col>
                 <b-form-group>
@@ -16,6 +29,7 @@
                     id="email"
                     name="email"
                     type="email"
+                    v-model="email"
                     :placeholder="$t('ENTER_EMAIL')"
                     required></b-form-input>
                 </b-form-group>
@@ -28,6 +42,7 @@
                     id="password"
                     name="password"
                     type="password"
+                    v-model="password"
                     :placeholder="$t('ENTER_PASSWORD')"
                     required></b-form-input>
                 </b-form-group>
@@ -35,24 +50,25 @@
             </b-row>
             <b-row class="my-2">
               <b-col>
-                <b-button variant="primary" size="sm">{{$t('LOGIN')}}</b-button>
+                <b-button variant="primary" size="sm" @click="login">{{$t('LOGIN')}}</b-button>
               </b-col>
             </b-row>
             <b-row class="my-2">
               <b-col>
-                <b-button variant="outline-secondary" size="sm" @click="toRegistrationPage">{{$t('REGISTRATION')}}</b-button>
+                <b-button variant="outline-secondary" size="sm" @click="toRegistrationPage">{{$t('REGISTRATION')}}
+                </b-button>
               </b-col>
             </b-row>
             <b-row class="my-2">
               <b-col class="d-flex justify-content-center">
                 <b-button class="icon-link" variant="link">
-                  <img class="icon" src="../../assets/facebook-48.png" alt="Facebook" />
+                  <img class="icon" src="../../assets/facebook-48.png" alt="Facebook"/>
                   <span>Facebook</span>
                 </b-button>
               </b-col>
               <b-col class="d-flex justify-content-center">
                 <b-button class="icon-link" variant="link">
-                  <img class="icon" src="../../assets/google-48.png" alt="Google" />
+                  <img class="icon" src="../../assets/google-48.png" alt="Google"/>
                   <span>Google</span>
                 </b-button>
               </b-col>
@@ -66,14 +82,37 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import {authService} from '../../services/AuthService'
+  import {authService} from '../../services/AuthService';
+  import environment from '../../environment/environment';
 
   @Component
   export default class LoginPage extends Vue {
+    email = '';
+    password = '';
+    error = '';
+    formErrors: string[] = [];
+
     login() {
-      authService.login('', '').then(() => {
-        this.$router.push('/');
-      })
+      if (this.isFormValid()) {
+        authService.login(this.email, this.password).then(() => {
+          this.$router.push('/');
+        }).catch((error: Error) => {
+          this.error = error.message;
+        });
+      }
+    }
+
+    isFormValid(): boolean {
+      this.formErrors = [];
+
+      if (!this.email) {
+        this.formErrors.push('INVALID_EMAIL_ADDRESS');
+      }
+      if (!this.password || !this.password.match(environment.passwordRegex)) {
+        this.formErrors.push('INVALID_PASSWORD');
+      }
+
+      return this.formErrors.length === 0;
     }
 
     toRegistrationPage() {

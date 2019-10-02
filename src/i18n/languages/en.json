@@ -5,5 +5,13 @@
   "PROFILE": "Profile",
   "REGISTRATION": "Registration",
   "LOGIN": "Login",
-  "ADVANCED_SEARCH": "Advanced search"
+  "ADVANCED_SEARCH": "Advanced search",
+  "ENTER_EMAIL": "Enter email",
+  "ENTER_PASSWORD": "Enter password",
+  "PLEASE_CORRECT_FOLLOWING_ERRORS": "Please correct the following errors",
+  "errors": {
+    "LOGIN_DENIED": "Login denied",
+    "INVALID_EMAIL_ADDRESS": "Invalid email address",
+    "INVALID_PASSWORD": "Invalid password"
+  }
 }

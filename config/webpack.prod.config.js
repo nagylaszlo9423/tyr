@@ -9,8 +9,8 @@ module.exports = merge(common, {
   output: {
     path: relativePath('dist'),
     filename: './[name].[chunkhash].bundle.js',
-    sourceMapFilename: "./[name].[chunkhash].map",
-    chunkFilename: "./[id].[chunkhash].chunk.js"
+    sourceMapFilename: './[name].[chunkhash].map',
+    chunkFilename: './[id].[chunkhash].chunk.js'
   },
   devtool: 'source-map',
   optimization: {
