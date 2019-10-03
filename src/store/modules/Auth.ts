@@ -1,4 +1,4 @@
-import {ActionContext, Module, Store} from 'vuex';
+import {ActionContext, Module} from 'vuex';
 import {TokenResponse} from "../../services/dtos/auth/TokenResponse";
 import {authService} from "../../services/AuthService";
 
@@ -24,7 +24,6 @@ export default {
   },
   actions: {
     async refreshToken(store: ActionContext<State, any>) {
-      console.log('refreshToken');
       store.commit('auth/setTokens', await authService.refreshTokens(store.state.tokens.refreshToken));
     }
   }

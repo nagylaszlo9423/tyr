@@ -1,15 +1,5 @@
 <template>
-    <div id="tyr-map">
-        <div id="open-layers-map"></div>
-        <div id="tyr-map-overlay">
-            <button class="overlay-item" v-if="!isRecording" v-on:click="recordPath">Record</button>
-            <button class="overlay-item" v-if="isRecording" v-on:click="stopRecording">Stop recording</button>
-            <select class="overlay-item" v-model="country">
-                <option v-for="country in countries.features" v-bind:value="country['id']">{{country.properties.name}}
-                </option>
-            </select>
-        </div>
-    </div>
+    <div id="tyr-map"></div>
 </template>
 
 <script lang="ts">
@@ -18,10 +8,10 @@
     import TileLayer from "ol/layer/Tile";
     import {OSM} from "ol/source";
     import {Component, Vue} from "vue-property-decorator";
-    import Countries from "../../assets/geojson/countries.json";
     import VectorSource from "ol/source/Vector";
     import {FeatureCollection} from "geojson";
     import SimpleGeometry from "ol/geom/SimpleGeometry";
+    import Countries from "../../assets/geojson/countries.json";
     import {GeoJSON} from "ol/format";
     import {fromLonLat} from "ol/proj";
     import {PathRecorder} from "./PathRecorder";
@@ -62,7 +52,7 @@
                 zoom: 1
             });
             this.map = new Map({
-                target: 'open-layers-map',
+                target: 'tyr-map',
                 layers: [
                     new TileLayer({
                         source: new OSM()
@@ -77,7 +67,6 @@
         }
 
         goToPosition(position: Position) {
-            console.log(position.coords);
             this.view.animate({
                 center: fromLonLat([position.coords.longitude, position.coords.latitude]),
                 zoom: 15
@@ -133,29 +122,6 @@
         top: 0;
         height: 100%;
         width: 100%;
-
-        #open-layers-map {
-            position: absolute;
-            z-index: 1;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-        }
-
-        #tyr-map-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: flex-end;
-
-            .overlay-item {
-                position: relative;
-                z-index: 10;
-            }
-        }
+        z-index: 1;
     }
 </style>

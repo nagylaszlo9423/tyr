@@ -50,7 +50,6 @@ export const authService =  {
     router.push('/login');
   },
   async isLoggedIn(): Promise<boolean> {
-    console.log('isLoggedIn');
     try {
       const now = new Date();
       const tokens = store.getters['auth/tokens'] as TokenResponse;

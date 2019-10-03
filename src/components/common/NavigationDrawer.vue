@@ -94,7 +94,7 @@
   #navigation-drawer {
     height: 100%;
     width: 3rem;
-    position: absolute;
+    position: relative;
     top: 0;
     left: 0;
     z-index: 100000;
@@ -141,6 +141,12 @@
 
     &.navigation-drawer-open, .swipe-zone.navigation-drawer-open {
       width: 11em;
+    }
+  }
+
+  @include media-md {
+    #navigation-drawer {
+      position: absolute;
     }
   }
 

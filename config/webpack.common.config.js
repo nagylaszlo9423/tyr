@@ -1,4 +1,3 @@
-const WorkboxPlugin = require('workbox-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const relativePath = require('./relative-path');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
@@ -89,8 +88,6 @@ module.exports = {
       from: relativePath('static'),
       to: relativePath('dist'),
       toType: 'dir'
-    }]),
-    new WorkboxPlugin.GenerateSW({
-    })
+    }])
   ]
 };

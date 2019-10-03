@@ -1,6 +1,6 @@
 import VueRouter, {RouteConfig} from "vue-router";
 import Pages from "./components/Pages.vue";
-import TyrMap from "./components/map/TyrMap.vue";
+import MapPage from "./components/map/MapPage.vue"
 import LoginPage from "./components/auth/LoginPage.vue";
 import RegistrationPage from "./components/auth/RegistrationPage.vue";
 import NotFoundPage from "./components/common/NotFoundPage.vue";
@@ -40,7 +40,7 @@ const routes: RouteConfig[] = [
       {
         path: 'map',
         name: 'map',
-        component: TyrMap
+        component: MapPage
       },
       {
         path: 'profile',
@@ -55,4 +55,4 @@ const routes: RouteConfig[] = [
   }
 ];
 
-export const router =  new VueRouter({routes})
+export const router =  new VueRouter({routes});
