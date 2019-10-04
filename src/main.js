@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
-import i18n from './i18n';
+import i18n from './i18n/I18n';
 import {router} from './Router';
 
 import 'bootstrap';
@@ -12,15 +12,13 @@ import VueRouter from 'vue-router';
 import {fab} from '@fortawesome/free-brands-svg-icons';
 import './style.scss';
 import VueTouch from 'vue-touch';
-import registerServiceWorker from './RegisterServiceWorker';
 import {store} from './store/Store';
+import {register} from './ServiceWorkerInitializer';
 
 library.add(fas);
 library.add(fab);
 
-if (process.env.NODE_ENV === 'production' || process.env.PWA) {
-  registerServiceWorker();
-}
+register();
 
 Vue.config.productionTip = false;
 

@@ -28,6 +28,7 @@
   "include": ["./src/vue.shims.d.ts"],
   "exclude": [
     "node_modules",
+    "service_worker",
     "dist"
   ]
 }

@@ -2,6 +2,7 @@ const merge = require('webpack-merge');
 const common = require('./webpack.common.config');
 const webpack = require('webpack');
 const relativePath = require('./relative-path');
+const HmrFilterPlugin = require('./hmr-filter-plugin');
 
 module.exports = merge(common, {
   mode: 'development',
@@ -12,6 +13,9 @@ module.exports = merge(common, {
     historyApiFallback: true,
     hot: true,
     compress: true,
+    watchOptions: {
+      ignored: [relativePath('service_worker')]
+    },
     headers: {
       'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, PATCH, OPTIONS',
@@ -28,6 +32,8 @@ module.exports = merge(common, {
     }
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
+    // TODO: Find better solution for excluding service worker of hmr.
+    new HmrFilterPlugin()
   ]
 });

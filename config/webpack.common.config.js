@@ -6,11 +6,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
   entry: {
-    main: relativePath('src/main.js')
+    main: relativePath('src/main.js'),
+    service_worker: relativePath('service_worker/ServiceWorkerEntry.ts')
   },
   output: {
     path: relativePath('dist'),
-    filename: 'main.js'
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -27,9 +28,24 @@ module.exports = {
       {
         test: /\.(ts|tsx)?$/,
         loader: 'ts-loader',
-        exclude: /node_modules/,
+        exclude: [
+          /node_modules/,
+          /service_worker/
+        ],
         options: {
-          appendTsSuffixTo: [/\.vue$/]
+          appendTsSuffixTo: [/\.vue$/],
+          instance: 'main'
+        }
+      },
+      {
+        test: /\.(ts|tsx)?$/,
+        loader: 'ts-loader?tsconfig=service_worker/tsconfig.json',
+        exclude: [
+          /node_modules/,
+          /src/
+        ],
+        options: {
+          instance: 'service_worker'
         }
       },
       {

@@ -109,7 +109,7 @@
       if (!this.email) {
         this.formErrors.push('INVALID_EMAIL_ADDRESS');
       }
-      if (!this.password || !this.password.match(environment.passwordRegex)) {
+      if (!this.password || !this.password.match(environment.password_regex)) {
         this.formErrors.push('INVALID_PASSWORD');
       }
 

@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": true,
+    "module": "es2015",
+    "moduleResolution": "node",
+    "sourceMap": false,
+    "target": "es5",
+    "lib": [
+      "es2016",
+      "webworker"
+    ],
+    "types": [
+      "node"
+    ]
+  },
+  "files": [
+    "ServiceWorkerEntry.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
