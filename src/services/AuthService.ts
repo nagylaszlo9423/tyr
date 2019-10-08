@@ -12,13 +12,13 @@ let isRefreshing = false;
 
 export const authService =  {
   refreshPromise: Promise.resolve<TokenResponse>(new TokenResponse()),
-  login(email: string, password: string): Promise<void> {
+  login(request: {email: string, password: string}): Promise<LoginResponse> {
     return post<LoginResponse>('/oauth/login', new LoginRequest({
-      email: email,
-      password: password,
+      email: request.email,
+      password: request.password,
       clientId: environment.client_id,
       redirectUri: environment.redirect_uri
-    })).then(response => this.exchangeCode(response.code, response.redirectUri, environment.client_id)).then(() => {});
+    }));
   },
   register(email: string, password: string): Promise<RegistrationResponse> {
     return post<RegistrationResponse>('/oauth/register', new RegistrationRequest({
@@ -32,6 +32,9 @@ export const authService =  {
       'code': code,
       'redirect_uri': redirectUri,
       'client_id': clientId
+    }).then((response: TokenResponse) => {
+      store.commit('auth/setTokens', response);
+      return response;
     })
   },
   refreshTokens(token: string): Promise<TokenResponse> {
@@ -45,9 +48,14 @@ export const authService =  {
       return this.refreshPromise;
     }
   },
-  logout() {
-    store.commit('auth/clear');
-    router.push('/login');
+  logout(shouldNavigate = true): Promise<void> {
+    const localLogout = () => {
+      store.commit('auth/clear');
+      if (shouldNavigate) {
+        router.push('/login');
+      }
+    };
+    return post('/oauth/logout').then(localLogout).catch(localLogout);
   },
   async isLoggedIn(): Promise<boolean> {
     try {
@@ -56,14 +64,14 @@ export const authService =  {
       if (!navigator.onLine && tokens.accessToken && tokens.accessToken !== '' && tokens.refreshToken && tokens.refreshToken !== '') {
         return true;
       }
-      if (tokens.accessTokenExpiration && tokens.accessTokenExpiration < now) {
-        if (tokens.refreshTokenExpiration && tokens.refreshTokenExpiration < now) {
-          return false;
-        }
-
-        await store.dispatch('auth/refreshToken');
-        return true;
+      if (tokens.refreshTokenExpiration && tokens.refreshTokenExpiration < now) {
+        return false;
       }
+      if (tokens.accessTokenExpiration && tokens.accessTokenExpiration < now) {
+        await store.dispatch('auth/refreshToken');
+      }
+
+      return true;
     } catch (e) {
       console.error(e);
     }

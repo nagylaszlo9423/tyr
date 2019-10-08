@@ -14,6 +14,7 @@ import './style.scss';
 import VueTouch from 'vue-touch';
 import {store} from './store/Store';
 import {register} from './ServiceWorkerInitializer';
+import Toasted from 'vue-toasted';
 
 library.add(fas);
 library.add(fab);
@@ -25,6 +26,12 @@ Vue.config.productionTip = false;
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 Vue.use(VueTouch);
 Vue.use(VueRouter);
+Vue.use(Toasted, {
+  position: 'bottom-right',
+  duration: 2000,
+  closeOnSwipe: true,
+  singleton: true
+});
 
 new Vue({
   i18n,

@@ -1,6 +1,8 @@
+@import "mixins";
 
 .form-control, .btn {
-  border-radius: 10px;
+  @include italic-border;
+  font-style: italic;
 }
 
 input.form-control {

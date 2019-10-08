@@ -1,6 +1,9 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
 import environment from "../environment/environment";
 import {ErrorResponse} from "./dtos/error/ErrorResponse";
+import {interceptRequests} from './HttpInterceptor';
+
+interceptRequests();
 
 function getUrl(path: string) {
   let url = environment.backend_url;

@@ -1,7 +1,9 @@
 <template>
   <div id="auth-page">
     <div class="auth-page-overlay d-flex justify-content-center align-items-center">
-      <slot></slot>
+      <div class="auth-page-content">
+        <slot></slot>
+      </div>
     </div>
   </div>
 </template>
@@ -15,6 +17,9 @@
 </script>
 
 <style lang="scss" scoped>
+  @import "../../style/media";
+  @import "../../style/theme";
+
   #auth-page {
     background-image: url("../../assets/background1.jpg");
     background-repeat: no-repeat;
@@ -29,6 +34,31 @@
       left: 0;
       top: 0;
       background-color: #FFFFFF77;
+
+      .auth-page-content {
+        background-color: transparentize($background, .2);
+        border-radius: 10px;
+        max-width: 450px;
+        width: 40%;
+      }
+
+      @include media-lg {
+        .auth-page-content {
+          width: 55%;
+        }
+      }
+
+      @include media-md {
+        .auth-page-content {
+          width: 80%;
+        }
+      }
+
+      @include media-sm {
+        .auth-page-content {
+          width: 95%;
+        }
+      }
     }
   }
 </style>

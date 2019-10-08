@@ -15,26 +15,25 @@ export class NetworkFirstCache extends ServiceWorker {
   }
 
   protected onFetch(event: FetchEvent) {
-    event.respondWith(
-      caches.match(event.request)
-        .catch(_ => this.error(_))
-        .then(async (cachedResponse: Response) => {
-          try {
-            const networkResponse = await fetch(event.request);
-            const cache = await this.getCache();
-            await cache.put(event.request, networkResponse.clone());
-            return networkResponse;
-          } catch (e) {
-            if (cachedResponse) {
-              return cachedResponse;
-            } else {
-              this.warn('Unable to fetch any responses')
-            }
-          }
-        })
-    );
+    event.respondWith(this.fromNetwork(event.request, 300).catch(() => this.fromCache(event.request)));
   }
 
   protected onInstall(event: ExtendableEvent) {
+  }
+
+  private fromNetwork(request: Request, timeout: number): Promise<Response> {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(reject, timeout);
+      fetch(request).then((response: Response) => {
+        clearTimeout(timeoutId);
+        resolve(response);
+      }).catch(reject);
+    });
+  }
+
+  private fromCache(request: Request): Promise<Response> {
+    return this.getCache().then(cache => {
+      return cache.match(request).catch(() => Promise.reject('no-match'));
+    })
   }
 }

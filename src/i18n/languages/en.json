@@ -4,14 +4,22 @@
   "MAP": "Map",
   "PROFILE": "Profile",
   "REGISTRATION": "Registration",
+  "REGISTER": "Register",
   "LOGIN": "Login",
+  "LOGOUT": "Logout",
+  "FAILED_TO_LOGOUT": "Failed to logout",
   "ADVANCED_SEARCH": "Advanced search",
   "ENTER_EMAIL": "Enter email",
   "ENTER_PASSWORD": "Enter password",
+  "ENTER_PASSWORD_AGAIN": "Enter password again",
+  "NOT_MATCHING_PASSWORDS": "Not matching passwords",
   "PLEASE_CORRECT_FOLLOWING_ERRORS": "Please correct the following errors",
   "errors": {
+    "UNKNOWN_ERROR": "Unknown error occurred",
     "LOGIN_DENIED": "Login denied",
+    "LOGIN_FAILED": "Login failed",
     "INVALID_EMAIL_ADDRESS": "Invalid email address",
-    "INVALID_PASSWORD": "Invalid password"
+    "INVALID_PASSWORD": "Invalid password",
+    "EMAIL_ALREADY_REGISTERED": "Email already registered"
   }
 }

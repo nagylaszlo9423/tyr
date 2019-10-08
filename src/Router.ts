@@ -6,7 +6,6 @@ import RegistrationPage from "./components/auth/RegistrationPage.vue";
 import NotFoundPage from "./components/common/NotFoundPage.vue";
 import ProfilePage from "./components/profile/ProfilePage.vue";
 import SearchPage from "./components/search/SearchPage.vue"
-import {authGuard} from "./guards/AuthGuard";
 
 const routes: RouteConfig[] = [
   {
@@ -26,26 +25,37 @@ const routes: RouteConfig[] = [
   {
     path: '/pages',
     component: Pages,
-    beforeEnter: authGuard,
     children: [
       {
         path: '',
-        redirect: '/pages/map'
+        redirect: '/pages/map',
+        meta: {
+          isAuthenticated: true
+        }
       },
       {
         path: 'search',
         name: 'search',
-        component: SearchPage
+        component: SearchPage,
+        meta: {
+          isAuthenticated: true
+        }
       },
       {
         path: 'map',
         name: 'map',
-        component: MapPage
+        component: MapPage,
+        meta: {
+          isAuthenticated: true
+        }
       },
       {
         path: 'profile',
         name: 'profile',
-        component: ProfilePage
+        component: ProfilePage,
+        meta: {
+          isAuthenticated: true
+        }
       }
     ]
   },
@@ -55,4 +65,4 @@ const routes: RouteConfig[] = [
   }
 ];
 
-export const router =  new VueRouter({routes});
+export const router = new VueRouter({routes});

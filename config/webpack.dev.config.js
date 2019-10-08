@@ -11,6 +11,7 @@ module.exports = merge(common, {
     contentBase: [relativePath('src')],
     port: 3000,
     historyApiFallback: true,
+    disableHostCheck: true,
     hot: true,
     compress: true,
     watchOptions: {

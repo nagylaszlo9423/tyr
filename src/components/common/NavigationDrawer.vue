@@ -5,13 +5,21 @@
         <ul class="navbar-nav mr-auto">
           <li v-for="item in items" class="nav-item">
             <router-link :to="item.to" v-on:click.native="setActive(item.name)"
-                         :class="{'nav-link': true, active: isActive(item.name)}"
-                         class="d-flex flex-row align-items-center">
+                         :class="{active: isActive(item.name)}"
+                         class="d-flex flex-row align-items-center nav-link">
               <font-awesome-icon class="fa-1x" :icon="item.icon"/>
               <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
                 <span>{{$t(item.title)}}</span>
               </div>
             </router-link>
+          </li>
+          <li>
+            <a @click="logout" class="d-flex flex-row align-items-center nav-link">
+              <font-awesome-icon class="fa-1x" icon="sign-out-alt"></font-awesome-icon>
+              <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
+                <span>{{ $t('LOGOUT') }}</span>
+              </div>
+            </a>
           </li>
         </ul>
       </nav>
@@ -24,10 +32,11 @@
 </template>
 
 <script lang="ts">
-
-  import {Component, Vue} from "vue-property-decorator";
+  import {Component} from "vue-property-decorator";
   import {EventBus} from '../../services/EventBus';
   import TitleBar from './TitleBar.vue';
+  import {authService} from '../../services/AuthService';
+  import {BaseComponent} from './BaseComponent';
 
   interface NavBarItem {
     name: string;
@@ -37,7 +46,7 @@
   }
 
   @Component
-  export default class NavigationDrawer extends Vue {
+  export default class NavigationDrawer extends BaseComponent {
     isOpen = false;
     items: NavBarItem[] = [
       {
@@ -82,6 +91,10 @@
     setActive(item: string) {
       this.activeItem = item;
     }
+
+    logout() {
+      authService.logout();
+    }
   }
 
 </script>
@@ -97,7 +110,7 @@
     position: relative;
     top: 0;
     left: 0;
-    z-index: 100000;
+    z-index: 1000;
     transition: width $transition-time ease-in-out;
 
     .navbar.navbar-brand {
