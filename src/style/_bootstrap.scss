@@ -1,7 +1,6 @@
 @import "mixins";
 
 .form-control, .btn {
-  @include italic-border;
   font-style: italic;
 }
 

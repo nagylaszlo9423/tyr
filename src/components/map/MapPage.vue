@@ -1,5 +1,6 @@
 <template>
   <div id="map-page">
+    <button class="overlay-item" @click="recenter">Recenter</button>
     <button class="overlay-item" v-if="!isRecording" v-on:click="recordPath">Record</button>
     <button class="overlay-item" v-if="isRecording" v-on:click="stopRecording">Stop recording</button>
     <select class="overlay-item" v-model="country">
@@ -15,9 +16,11 @@
   import Countries from "../../assets/geojson/countries.json";
   import {FeatureCollection} from "geojson";
   import {GeoJSON} from "ol/format";
+  import {EventBus} from '../../services/EventBus';
 
   @Component
   export default class MapPage extends Vue {
+    public static readonly events = {recenter: 'tyr-map:recenter'};
     source: VectorSource = new VectorSource({
       features: (new GeoJSON()).readFeatures(Countries)
     });
@@ -29,6 +32,10 @@
     }
 
     stopRecording() {
+    }
+
+    recenter() {
+      EventBus.$emit(MapPage.events.recenter);
     }
   }
 </script>
