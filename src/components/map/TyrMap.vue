@@ -9,8 +9,6 @@
   import {OSM} from "ol/source";
   import {Component, Vue} from "vue-property-decorator";
   import {fromLonLat} from "ol/proj";
-  import {Icon, Style} from 'ol/style';
-  import VectorLayer from 'ol/layer/Vector';
   import {ComponentOptions} from 'vue';
   import {EventBus} from '../../services/EventBus';
   import MapPage from './MapPage.vue';
@@ -19,6 +17,7 @@
 
   @Component
   export default class TyrMap extends Vue implements ComponentOptions<TyrMap> {
+    private trackPosition = true;
     private nav: LocationNavigator;
     private map: Map = new Map({});
     private view: View = new View({
@@ -29,17 +28,7 @@
       source: new OSM(),
       preload: Infinity
     });
-    private currentPosition: PositionMarker;
-    private locationHeadingStyle = new Style({
-      image: new Icon({
-        src: 'direction.svg',
-        imgSize: [27, 27],
-        rotateWithView: true
-      })
-    });
-    private locationHeadingVectorLayer = new VectorLayer({
-      style: this.locationHeadingStyle
-    });
+    private positionMarker: PositionMarker;
 
     constructor() {
       super();
@@ -48,7 +37,7 @@
 
     created(): void {
       EventBus.$off(MapPage.events.recenter);
-      EventBus.$on(MapPage.events.recenter, () => this.nav.getPosition().subscribe((position) => this.goToPosition(position), error => console.log(error)));
+      EventBus.$on(MapPage.events.recenter, () => this.nav.getPosition().subscribe(this.goToPosition, error => console.error(error)));
     }
 
     mounted() {
@@ -58,19 +47,35 @@
         view: this.view,
         controls: []
       });
+      this.map.on('pointerdrag', () => {
+        this.trackPosition = false;
+      });
       this.nav.getPosition().subscribe(position => {
         this.goToPosition(position);
-        this.currentPosition = new PositionMarker(position);
-        this.map.addLayer(this.currentPosition.createVectorLayer())
+        this.positionMarker = new PositionMarker(position);
+        this.map.addLayer(this.positionMarker.createVectorLayer())
       });
-      this.nav.watchPosition().subscribe(this.onPositionChange.bind(this));
+      this.watchPosition();
+    }
+
+    watchPosition() {
+      this.nav.watchPosition().subscribe(this.onPositionChange.bind(this), (error) => {
+        if (error === 'TIME_OUT') {
+          this.watchPosition();
+        }
+      });
     }
 
     onPositionChange(position: Position) {
-      this.currentPosition.setPosition(position);
+      this.positionMarker.setPosition(position);
+      if (this.trackPosition) {
+        console.log('trackPosition', position.coords);
+        this.view.animate({center: fromLonLat([position.coords.longitude, position.coords.latitude])})
+      }
     }
 
     goToPosition(position: Position) {
+      this.trackPosition = true;
       this.view.animate({
         center: fromLonLat([position.coords.longitude, position.coords.latitude]),
         zoom: 15

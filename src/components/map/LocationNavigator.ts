@@ -3,8 +3,8 @@ import {Observable} from 'rxjs';
 
 export class LocationNavigator {
   private static readonly options: PositionOptions = {
-    timeout: 5000,
-    maximumAge: 20000,
+    timeout: 20000,
+    maximumAge: 60000,
     enableHighAccuracy: true
   };
 
@@ -13,11 +13,18 @@ export class LocationNavigator {
       let watchId: number = 0;
       if (navigator.geolocation) {
         watchId = navigator.geolocation.watchPosition(
-          position => subscriber.next(position),
-          error => subscriber.error(this.onPositionError(error)),
+          position => {
+            subscriber.next(position);
+            subscriber.complete();
+          },
+          error => {
+            subscriber.error(this.onPositionError(error));
+            subscriber.complete();
+          },
           LocationNavigator.options);
       } else {
-        return subscriber.error('NAVIGATION_UNAVAILABLE');
+        subscriber.error('NAVIGATION_UNAVAILABLE');
+        subscriber.complete();
       }
       return () => navigator.geolocation.clearWatch(watchId);
     });
