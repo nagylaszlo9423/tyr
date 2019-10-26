@@ -1,6 +1,7 @@
 <template>
   <div id="map-page">
-    <button class="overlay-item" @click="recenter">Recenter</button>
+    <floating-action-button class="btn btn-primary overlay-item" icon="street-view" @click="recenter">Recenter</floating-action-button>
+    <floating-action-button class="btn btn-primary overlay-item" icon="street-view" @click="recenter">Recenter</floating-action-button>
     <button class="overlay-item" v-if="!isRecording" v-on:click="recordPath">Record</button>
     <button class="overlay-item" v-if="isRecording" v-on:click="stopRecording">Stop recording</button>
     <select class="overlay-item" v-model="country">
@@ -17,8 +18,13 @@
   import {FeatureCollection} from "geojson";
   import {GeoJSON} from "ol/format";
   import {EventBus} from '../../services/EventBus';
+  import FloatingActionButton from '../common/FloatingActionButton.vue';
 
-  @Component
+  @Component({
+    components: {
+      FloatingActionButton
+    }
+  })
   export default class MapPage extends Vue {
     public static readonly events = {recenter: 'tyr-map:recenter'};
     source: VectorSource = new VectorSource({

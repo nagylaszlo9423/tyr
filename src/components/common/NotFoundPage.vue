@@ -1,12 +1,36 @@
 <template>
-  <h1>Not found</h1>
+  <div>
+    <h1>Not found</h1>
+    <b-button @click="goBack">{{$t('GO_BACK')}}</b-button>
+    <b-button @click="goHome">{{$t('GO_HOME')}}</b-button>
+  </div>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
+  import {ComponentOptions} from 'vue';
+  import {Route} from 'vue-router';
 
   @Component
-  export default class NotFoundPage extends Vue {
+  export default class NotFoundPage extends Vue implements ComponentOptions<NotFoundPage> {
+    fromRoute: Route;
+
+    beforeRouteEnter(to: Route, from: Route, next: (to: ((vm: NotFoundPage) => any)) => void) {
+      next((vm: NotFoundPage) => vm.fromRoute = from);
+    }
+
+    goBack() {
+      if (!this.fromRoute) {
+        this.$router.push('/');
+      } else {
+        this.$router.back();
+      }
+    }
+
+    goHome() {
+      this.$router.push('/');
+    }
+
   }
 </script>
 

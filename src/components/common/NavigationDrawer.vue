@@ -1,21 +1,40 @@
 <template>
   <div id="navigation-drawer" class="d-flex" :class="{'navigation-drawer-open': isOpen}">
-    <v-touch class="swipe-zone" @swiperight="isOpen = true" @swipeleft="isOpen = false" :class="{'navigation-drawer-open': isOpen}">
+    <v-touch class="swipe-zone" @swiperight="isOpen = true" @swipeleft="isOpen = false"
+             :class="{'navigation-drawer-open': isOpen}">
       <nav class="navbar navbar-brand">
         <ul class="navbar-nav mr-auto">
-          <li v-for="item in items" class="nav-item">
+          <li v-for="item in items" class="nav-item t-fade" :class="{'t-fade-away': !isOpen && item.hidden}">
             <router-link :to="item.to" v-on:click.native="setActive(item.name)"
                          :class="{active: isActive(item.name)}"
                          class="d-flex flex-row align-items-center nav-link">
-              <font-awesome-icon class="fa-1x" :icon="item.icon"/>
+              <font-awesome-icon class="fa-1x" fixed-width :icon="item.icon"/>
               <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
                 <span>{{$t(item.title)}}</span>
               </div>
             </router-link>
           </li>
-          <li>
+        </ul>
+      </nav>
+      <nav class="navbar navbar-brand">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item t-fade" :class="{'t-fade-away': !isOpen}">
+            <router-link :to="{name: 'settings'}" v-on:click.native="setActive('settings')"
+                         :class="{active: isActive('settings')}"
+                         class="d-flex flex-row align-items-center nav-link">
+              <div class="fa-icon">
+                <font-awesome-icon class="fa-1x" fixed-width icon="cog"></font-awesome-icon>
+              </div>
+              <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
+                <span>{{ $t('SETTINGS') }}</span>
+              </div>
+            </router-link>
+          </li>
+          <li class="nav-item t-fade" :class="{'t-fade-away': !isOpen}">
             <a @click="logout" class="d-flex flex-row align-items-center nav-link">
-              <font-awesome-icon class="fa-1x" icon="sign-out-alt"></font-awesome-icon>
+              <div class="fa-icon">
+                <font-awesome-icon class="fa-1x" fixed-width icon="sign-out-alt"></font-awesome-icon>
+              </div>
               <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
                 <span>{{ $t('LOGOUT') }}</span>
               </div>
@@ -26,7 +45,8 @@
     </v-touch>
     <v-touch :class="{'swipe-zone-open': !isOpen}" @swiperight="isOpen = true">
     </v-touch>
-    <div id="navigation-drawer-underlay" :class="{'navigation-drawer-underlay-visible': isOpen}" @click="isOpen = !isOpen">
+    <div id="navigation-drawer-underlay" :class="{'navigation-drawer-underlay-visible': isOpen}"
+         @click="isOpen = !isOpen">
     </div>
   </div>
 </template>
@@ -43,6 +63,7 @@
     title: string;
     icon: string;
     to: string;
+    hidden: boolean;
   }
 
   @Component
@@ -53,19 +74,29 @@
         name: 'search',
         title: 'ADVANCED_SEARCH',
         icon: 'search',
-        to: '/pages/search'
+        to: '/pages/search',
+        hidden: false
       },
       {
         name: 'map',
         title: 'MAP',
         icon: 'map-marked',
-        to: '/pages/map'
+        to: '/pages/map',
+        hidden: false
       },
       {
         name: 'profile',
         title: 'PROFILE',
         icon: 'user-alt',
-        to: '/pages/profile'
+        to: '/pages/profile',
+        hidden: true
+      },
+      {
+        name: 'groups',
+        title: 'GROUPS',
+        icon: 'users',
+        to: '/pages/groups',
+        hidden: true
       }
     ];
     activeItem = 'map';
@@ -114,9 +145,10 @@
     transition: width $transition-time ease-in-out;
 
     .navbar.navbar-brand {
-      margin: .8rem;
+      margin: .6rem;
       padding: 0;
       text-align: center;
+      overflow-x: hidden;
 
       .nav-link-text {
         overflow-x: hidden;
@@ -139,6 +171,10 @@
       overflow-x: hidden;
       background: #FFFFFFCC;
       transition: width .5s ease-in-out;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     #navigation-drawer-underlay {
@@ -184,7 +220,7 @@
     }
 
     .navigation-drawer-underlay-visible {
-      visibility: visible!important;
+      visibility: visible !important;
     }
   }
 </style>

@@ -6,3 +6,15 @@ h1, h2, h3, h4, h5, h6, p, span, label, strong, small {
 label {
   margin: .5rem;
 }
+
+.t-hidden {
+  visibility: hidden;
+}
+
+.t-fade {
+  transition: opacity .3s;
+  opacity: 1;
+  &.t-fade-away {
+    opacity: 0;
+  }
+}
