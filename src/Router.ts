@@ -5,7 +5,9 @@ import LoginPage from "./components/auth/LoginPage.vue";
 import RegistrationPage from "./components/auth/RegistrationPage.vue";
 import NotFoundPage from "./components/common/NotFoundPage.vue";
 import ProfilePage from "./components/profile/ProfilePage.vue";
-import SearchPage from "./components/search/SearchPage.vue"
+import SearchPage from "./components/search/SearchPage.vue";
+import GroupsPage from "./components/groups/GroupsPage.vue";
+import RoutesPage from "./components/routes/RoutesPage.vue";
 
 const routes: RouteConfig[] = [
   {
@@ -53,6 +55,22 @@ const routes: RouteConfig[] = [
         path: 'profile',
         name: 'profile',
         component: ProfilePage,
+        meta: {
+          isAuthenticated: true
+        }
+      },
+      {
+        path: 'groups',
+        name: 'groups',
+        component: GroupsPage,
+        meta: {
+          isAuthenticated: true
+        }
+      },
+      {
+        path: 'routes',
+        name: 'routes',
+        component: RoutesPage,
         meta: {
           isAuthenticated: true
         }

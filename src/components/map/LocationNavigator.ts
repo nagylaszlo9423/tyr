@@ -15,16 +15,13 @@ export class LocationNavigator {
         watchId = navigator.geolocation.watchPosition(
           position => {
             subscriber.next(position);
-            subscriber.complete();
           },
           error => {
             subscriber.error(this.onPositionError(error));
-            subscriber.complete();
           },
           LocationNavigator.options);
       } else {
         subscriber.error('NAVIGATION_UNAVAILABLE');
-        subscriber.complete();
       }
       return () => navigator.geolocation.clearWatch(watchId);
     });
@@ -35,14 +32,11 @@ export class LocationNavigator {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(position => {
           subscriber.next(position);
-          subscriber.complete();
         }, error => {
           subscriber.error(this.onPositionError(error));
-          subscriber.complete();
         }, LocationNavigator.options);
       } else {
         subscriber.error('NAVIGATION_UNAVAILABLE');
-        subscriber.complete();
       }
     });
   }

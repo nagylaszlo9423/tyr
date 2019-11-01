@@ -85,10 +85,10 @@
         hidden: false
       },
       {
-        name: 'profile',
-        title: 'PROFILE',
-        icon: 'user-alt',
-        to: '/pages/profile',
+        name: 'routes',
+        title: 'ROUTES',
+        icon: 'route',
+        to: '/pages/routes',
         hidden: true
       },
       {
@@ -96,6 +96,13 @@
         title: 'GROUPS',
         icon: 'users',
         to: '/pages/groups',
+        hidden: true
+      },
+      {
+        name: 'profile',
+        title: 'PROFILE',
+        icon: 'user-alt',
+        to: '/pages/profile',
         hidden: true
       }
     ];

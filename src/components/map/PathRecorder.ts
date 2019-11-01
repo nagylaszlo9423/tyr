@@ -1,36 +1,24 @@
 import {Feature} from "ol";
 import {fromLonLat} from "ol/proj";
 import {Coordinate} from "ol/coordinate";
-import {MultiLineString} from "ol/geom";
+import {LocationNavigator} from './LocationNavigator';
+import {Observable, of, Subscription} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 
 export class PathRecorder {
-    private route: Feature;
-    private path: Coordinate[][];
-    private watchId: number = -1;
+  private path: Coordinate[];
+  private nav: LocationNavigator;
 
-    constructor(private position: Position) {
-        const pos = fromLonLat([position.coords.longitude, position.coords.latitude]);
-        this.path = [[pos, pos]];
-        this.route = new Feature();
-    }
+  record(): Observable<Coordinate[]> {
+    this.path = [];
+    this.nav = new LocationNavigator();
+    return this.nav.watchPosition().pipe(map(pos => this.onPositionReceived(pos)));
+  }
 
-    record() {
-        this.watchId = navigator.geolocation.watchPosition(this.onPositionReceived.bind(this), positionError => new Error(positionError.message), {enableHighAccuracy: true});
-    }
-
-    stop(): Feature {
-        if (this.watchId !== -1) {
-            navigator.geolocation.clearWatch(this.watchId);
-            this.watchId = -1;
-        }
-        return new Feature(new MultiLineString(this.path));
-    }
-
-    onPositionReceived(position: Position) {
-        this.path.push([
-            this.path[this.path.length -1][1],
-            fromLonLat([position.coords.longitude, position.coords.latitude])
-        ]);
-    }
+  private onPositionReceived(position: Position): Coordinate[] {
+    const nextPos = fromLonLat([position.coords.longitude, position.coords.latitude]);
+    this.path.push(nextPos);
+    return this.path;
+  }
 }

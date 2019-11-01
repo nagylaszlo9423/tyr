@@ -14,9 +14,14 @@
   import MapPage from './MapPage.vue';
   import {LocationNavigator} from './LocationNavigator';
   import {PositionMarker} from './features/PositionMarker';
+  import {Subscription} from 'rxjs';
+  import {Path} from './features/Path';
 
   @Component
   export default class TyrMap extends Vue implements ComponentOptions<TyrMap> {
+    private subscriptions: {
+      pathRecording?: Subscription
+    } = {};
     private trackPosition = true;
     private nav: LocationNavigator;
     private map: Map = new Map({});
@@ -29,6 +34,7 @@
       preload: Infinity
     });
     private positionMarker: PositionMarker;
+    private path: Path;
 
     constructor() {
       super();
@@ -36,6 +42,10 @@
     }
 
     created(): void {
+      EventBus.$off(MapPage.events.recordPath);
+      EventBus.$on(MapPage.events.recordPath, () => this.recordPath());
+      EventBus.$off(MapPage.events.stopRecordingPath);
+      EventBus.$on(MapPage.events.stopRecordingPath, () => this.stopRecordingPath());
       EventBus.$off(MapPage.events.recenter);
       EventBus.$on(MapPage.events.recenter, () => this.nav.getPosition().subscribe(this.goToPosition, error => console.error(error)));
     }
@@ -69,7 +79,6 @@
     onPositionChange(position: Position) {
       this.positionMarker.setPosition(position);
       if (this.trackPosition) {
-        console.log('trackPosition', position.coords);
         this.view.animate({center: fromLonLat([position.coords.longitude, position.coords.latitude])})
       }
     }
@@ -80,6 +89,18 @@
         center: fromLonLat([position.coords.longitude, position.coords.latitude]),
         zoom: 15
       });
+    }
+
+    recordPath() {
+      this.path = new Path();
+      this.subscriptions.pathRecording = this.nav.watchPosition().subscribe(pos => this.path.setNextPosition(pos));
+      this.map.addLayer(this.path.createVectorLayer());
+    }
+
+    stopRecordingPath() {
+      if (this.subscriptions.pathRecording) {
+        this.subscriptions.pathRecording.unsubscribe();
+      }
     }
   }
 </script>

@@ -1,22 +1,15 @@
 <template>
   <div id="map-page">
-    <floating-action-button class="btn btn-primary overlay-item" icon="street-view" @click="recenter">Recenter</floating-action-button>
-    <floating-action-button class="btn btn-primary overlay-item" icon="street-view" @click="recenter">Recenter</floating-action-button>
-    <button class="overlay-item" v-if="!isRecording" v-on:click="recordPath">Record</button>
-    <button class="overlay-item" v-if="isRecording" v-on:click="stopRecording">Stop recording</button>
-    <select class="overlay-item" v-model="country">
-      <option v-for="country in countries.features" v-bind:value="country['id']">{{country.properties.name}}
-      </option>
-    </select>
+    <div class="map-page-controls">
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="circle" :title="$t('RECORD')" v-if="!isRecording" @click="recordPath">Record</floating-action-button>
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="stop" :title="$t('RECENTER')" v-if="isRecording" @click="stopRecording">Stop recording</floating-action-button>
+      <floating-action-button class="btn btn-primary overlay-item" icon="street-view" :title="$t('STOP_RECORDING')" @click="recenter">Recenter</floating-action-button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import VectorSource from 'ol/source/Vector';
-  import Countries from "../../assets/geojson/countries.json";
-  import {FeatureCollection} from "geojson";
-  import {GeoJSON} from "ol/format";
   import {EventBus} from '../../services/EventBus';
   import FloatingActionButton from '../common/FloatingActionButton.vue';
 
@@ -26,18 +19,25 @@
     }
   })
   export default class MapPage extends Vue {
-    public static readonly events = {recenter: 'tyr-map:recenter'};
-    source: VectorSource = new VectorSource({
-      features: (new GeoJSON()).readFeatures(Countries)
-    });
-    countries: FeatureCollection = Countries as FeatureCollection;
-    country: string = '';
+    public static readonly events = {
+      recenter: 'tyr-map:recenter',
+      recordPath: 'tye-map:record-path',
+      stopRecordingPath: 'tyr-map:stop-recording-path'
+    };
     isRecording = false;
 
-    recordPath() {
+    async recordPath() {
+      if (!this.isRecording) {
+        this.isRecording = true;
+        EventBus.$emit(MapPage.events.recordPath);
+      }
     }
 
     stopRecording() {
+      if (this.isRecording) {
+        this.isRecording = false;
+        EventBus.$emit(MapPage.events.stopRecordingPath);
+      }
     }
 
     recenter() {
@@ -57,6 +57,13 @@
 
     * {
       pointer-events: all;
+    }
+
+    .map-page-controls {
+      position: absolute;
+      display: flex;
+      right: 0;
+      bottom: 0;
     }
   }
 </style>

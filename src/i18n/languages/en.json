@@ -16,6 +16,10 @@
   "PLEASE_CORRECT_FOLLOWING_ERRORS": "Please correct the following errors",
   "GROUPS": "Groups",
   "SETTINGS": "Settings",
+  "ROUTES": "Routes",
+  "RECENTER": "Recenter",
+  "RECORD": "Record",
+  "STOP_RECORDING": "Stop recording",
   "errors": {
     "UNKNOWN_ERROR": "Unknown error occurred",
     "LOGIN_DENIED": "Login denied",

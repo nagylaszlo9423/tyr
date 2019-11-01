@@ -7,7 +7,6 @@ for(let idx in languages) {
     translations[languages[idx]] = require(`./languages/${languages[idx]}.json`);
 }
 
-
 Vue.use(VueI18n);
 
 export default new VueI18n({
