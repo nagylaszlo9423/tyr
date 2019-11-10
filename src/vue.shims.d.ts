@@ -1,3 +1,5 @@
+import {Vue as _Vue} from "vue-property-decorator";
+
 declare module "*.vue" {
   import Vue from "Vue";
   export default Vue;

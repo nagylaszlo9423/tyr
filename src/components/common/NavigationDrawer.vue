@@ -53,7 +53,7 @@
 
 <script lang="ts">
   import {Component} from "vue-property-decorator";
-  import {EventBus} from '../../services/EventBus';
+  import {eventBus} from '../../services/EventBus';
   import TitleBar from './TitleBar.vue';
   import {authService} from '../../services/AuthService';
   import {BaseComponent} from './BaseComponent';
@@ -109,8 +109,8 @@
     activeItem = 'map';
 
     created() {
-      EventBus.$off(TitleBar.events.toggle);
-      EventBus.$on(TitleBar.events.toggle, this.toggleHandler);
+      eventBus.$off(TitleBar.events.toggle);
+      eventBus.$on(TitleBar.events.toggle, this.toggleHandler);
       for (let item of this.items) {
         if (this.$route.path.indexOf(item.to) > -1) {
           this.activeItem = item.name;

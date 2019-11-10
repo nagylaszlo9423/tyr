@@ -10,21 +10,23 @@
   import {Component, Vue} from "vue-property-decorator";
   import {fromLonLat} from "ol/proj";
   import {ComponentOptions} from 'vue';
-  import {EventBus} from '../../services/EventBus';
+  import {eventBus} from '../../services/EventBus';
   import MapPage from './MapPage.vue';
   import {LocationNavigator} from './LocationNavigator';
   import {PositionMarker} from './features/PositionMarker';
-  import {Subscription} from 'rxjs';
-  import {Path} from './features/Path';
+  import {PathRecorder} from './plugins/PathRecorder';
 
   @Component
   export default class TyrMap extends Vue implements ComponentOptions<TyrMap> {
-    private subscriptions: {
-      pathRecording?: Subscription
-    } = {};
+    public static readonly events = {
+      stoppedRecording: 'map-page:stopped-recording'
+    };
     private trackPosition = true;
+    private positionMarker: PositionMarker;
     private nav: LocationNavigator;
-    private map: Map = new Map({});
+    private pathRecorder: PathRecorder;
+
+    private map: Map;
     private view: View = new View({
       center: [0, 0],
       zoom: 1
@@ -33,21 +35,13 @@
       source: new OSM(),
       preload: Infinity
     });
-    private positionMarker: PositionMarker;
-    private path: Path;
-
-    constructor() {
-      super();
-      this.nav = new LocationNavigator();
-    }
 
     created(): void {
-      EventBus.$off(MapPage.events.recordPath);
-      EventBus.$on(MapPage.events.recordPath, () => this.recordPath());
-      EventBus.$off(MapPage.events.stopRecordingPath);
-      EventBus.$on(MapPage.events.stopRecordingPath, () => this.stopRecordingPath());
-      EventBus.$off(MapPage.events.recenter);
-      EventBus.$on(MapPage.events.recenter, () => this.nav.getPosition().subscribe(this.goToPosition, error => console.error(error)));
+      eventBus.$offOn(MapPage.events.recordPath, () => this.pathRecorder.recordPath());
+      eventBus.$offOn(MapPage.events.stopRecordingPath, () => {
+        eventBus.$emit(TyrMap.events.stoppedRecording, this.pathRecorder.stopRecordingPath());
+      });
+      eventBus.$offOn(MapPage.events.recenter, () => this.nav.getPosition().subscribe(this.goToPosition, error => console.error(error)));
     }
 
     mounted() {
@@ -60,6 +54,10 @@
       this.map.on('pointerdrag', () => {
         this.trackPosition = false;
       });
+
+
+      this.pathRecorder = new PathRecorder(this.map);
+      this.nav = new LocationNavigator();
       this.nav.getPosition().subscribe(position => {
         this.goToPosition(position);
         this.positionMarker = new PositionMarker(position);
@@ -89,18 +87,6 @@
         center: fromLonLat([position.coords.longitude, position.coords.latitude]),
         zoom: 15
       });
-    }
-
-    recordPath() {
-      this.path = new Path();
-      this.subscriptions.pathRecording = this.nav.watchPosition().subscribe(pos => this.path.setNextPosition(pos));
-      this.map.addLayer(this.path.createVectorLayer());
-    }
-
-    stopRecordingPath() {
-      if (this.subscriptions.pathRecording) {
-        this.subscriptions.pathRecording.unsubscribe();
-      }
     }
   }
 </script>

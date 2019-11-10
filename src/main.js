@@ -15,6 +15,9 @@ import VueTouch from 'vue-touch';
 import {store} from './store/Store';
 import {register} from './ServiceWorkerInitializer';
 import Toasted from 'vue-toasted';
+import Simplert from 'vue2-simplert-plugin';
+require('vue2-simplert-plugin/dist/vue2-simplert-plugin.css');
+
 
 library.add(fas);
 library.add(fab);
@@ -32,6 +35,7 @@ Vue.use(Toasted, {
   closeOnSwipe: true,
   singleton: true
 });
+Vue.use(Simplert);
 
 new Vue({
   i18n,

@@ -1,6 +1,7 @@
 <template>
   <div id="map-page">
     <div class="map-page-controls">
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="save" @click="saveModal.open()"></floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item mr-1" icon="circle" :title="$t('RECORD')" v-if="!isRecording" @click="recordPath">Record</floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item mr-1" icon="stop" :title="$t('RECENTER')" v-if="isRecording" @click="stopRecording">Stop recording</floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item" icon="street-view" :title="$t('STOP_RECORDING')" @click="recenter">Recenter</floating-action-button>
@@ -9,16 +10,20 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
-  import {EventBus} from '../../services/EventBus';
+  import {Component} from 'vue-property-decorator';
+  import {eventBus} from '../../services/EventBus';
   import FloatingActionButton from '../common/FloatingActionButton.vue';
+  import {Vue} from '../../Types';
+  import {ComponentOptions} from 'vue';
+  import TyrMap from './TyrMap.vue';
+  import {Path} from './features/Path';
 
   @Component({
     components: {
       FloatingActionButton
     }
   })
-  export default class MapPage extends Vue {
+  export default class MapPage extends Vue implements ComponentOptions<MapPage> {
     public static readonly events = {
       recenter: 'tyr-map:recenter',
       recordPath: 'tye-map:record-path',
@@ -26,22 +31,33 @@
     };
     isRecording = false;
 
+    created(): void {
+      eventBus.$offOn(TyrMap.events.stoppedRecording, (path: Path) => {
+        this.$store.commit('route/setRecordedRoute', path);
+        this.$router.push('/pages/route/edit');
+      });
+    }
+
     async recordPath() {
       if (!this.isRecording) {
         this.isRecording = true;
-        EventBus.$emit(MapPage.events.recordPath);
+        eventBus.$emit(MapPage.events.recordPath);
       }
     }
 
     stopRecording() {
       if (this.isRecording) {
         this.isRecording = false;
-        EventBus.$emit(MapPage.events.stopRecordingPath);
+        eventBus.$emit(MapPage.events.stopRecordingPath);
       }
     }
 
     recenter() {
-      EventBus.$emit(MapPage.events.recenter);
+      eventBus.$emit(MapPage.events.recenter);
+    }
+
+    savePath() {
+
     }
   }
 </script>

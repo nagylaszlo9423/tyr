@@ -25,6 +25,7 @@
     "path": "^0.12.7",
     "popper.js": "^1.15.0",
     "rxjs": "^6.5.3",
+    "tyr-api": "git+https://899d2b9e2342eddbe3dc22c4c8771c24c0fdc814:x-oauth-basic@github.com/nagylaszlo9423/tyr-api.git#master",
     "vue": "^2.6.10",
     "vue-class-component": "^7.1.0",
     "vue-i18n": "^8.14.1",
@@ -32,6 +33,8 @@
     "vue-router": "^3.1.3",
     "vue-toasted": "^1.1.27",
     "vue-touch": "^2.0.0-beta.4",
+    "vue2-simplert": "^1.0.0",
+    "vue2-simplert-plugin": "^0.5.3",
     "vuex": "^3.1.1",
     "vuex-persistedstate": "^2.5.4"
   },

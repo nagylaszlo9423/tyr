@@ -13,7 +13,7 @@
 
 <script lang="ts">
   import {Vue, Component} from 'vue-property-decorator';
-  import {EventBus} from '../../services/EventBus';
+  import {eventBus} from '../../services/EventBus';
 
   @Component
   export default class TitleBar extends Vue {
@@ -21,7 +21,7 @@
     isSearchFieldOpen = false;
 
     toggleNavDrawer() {
-      EventBus.$emit(TitleBar.events.toggle);
+      eventBus.$emit(TitleBar.events.toggle);
     }
   }
 </script>

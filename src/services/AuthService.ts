@@ -1,16 +1,17 @@
 import {TokenResponse} from "./dtos/auth/TokenResponse";
 import {post} from './HttpService';
-import {LoginRequest} from "./dtos/auth/LoginRequest";
 import {LoginResponse} from "./dtos/auth/LoginResponse";
 import environment from "../environment/environment";
 import {RegistrationResponse} from "./dtos/auth/RegistrationResponse";
 import {RegistrationRequest} from "./dtos/auth/RegistrationRequest";
 import {store} from "../store/Store";
 import {router} from "../Router";
+import {LoginRequest} from './dtos/auth/LoginRequest';
+import {RouteResponse} from './dtos/route/RouteResponse';
 
 let isRefreshing = false;
 
-export const authService =  {
+export const authService = {
   refreshPromise: Promise.resolve<TokenResponse>(new TokenResponse()),
   login(request: {email: string, password: string}): Promise<LoginResponse> {
     return post<LoginResponse>('/oauth/login', new LoginRequest({

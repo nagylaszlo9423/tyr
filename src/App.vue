@@ -1,5 +1,7 @@
 <template>
   <div id="app" :class="`theme-${theme}`">
+    <simplert>
+    </simplert>
     <router-view></router-view>
   </div>
 </template>
@@ -10,9 +12,14 @@
   import Component from "vue-class-component";
   import BootstrapVue from "bootstrap-vue";
   import {authGuard} from './guards/AuthGuard';
+  import {AxiosClient} from 'tyr-api';
+  const Simplert = require('vue2-simplert');
 
   @Component({
-    name: 'App'
+    name: 'App',
+    components: {
+      Simplert
+    }
   })
   export default class App extends Vue implements ComponentOptions<App> {
     private theme = 'default';
