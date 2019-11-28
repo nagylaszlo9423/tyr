@@ -1,7 +1,7 @@
 import {ActionContext, Module} from 'vuex';
-import {TokenResponse} from "../../services/dtos/auth/TokenResponse";
 import {authService} from "../../services/AuthService";
 import environment from '../../environment/environment';
+import {TokenResponse} from 'tyr-api';
 
 class State {
   code = '';

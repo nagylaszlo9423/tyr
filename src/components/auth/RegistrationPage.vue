@@ -73,7 +73,6 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import AuthPage from './AuthPage.vue';
-  import {RegistrationRequest} from '../../services/dtos/auth/RegistrationRequest';
   import environment from '../../environment/environment';
   import {authService} from '../../services/AuthService';
 

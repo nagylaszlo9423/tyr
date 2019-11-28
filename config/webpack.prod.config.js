@@ -3,6 +3,7 @@ const common = require('./webpack.common.config');
 const webpack = require('webpack');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const relativePath = require('./relative-path');
+const WebpackMd5Hash = require('webpack-md5-hash');
 
 module.exports = merge(common, {
   mode: 'production',

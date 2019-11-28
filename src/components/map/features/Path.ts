@@ -9,7 +9,7 @@ import Stroke from 'ol/style/Stroke';
 
 
 export class Path extends Feature {
-  path: LineString;
+  private readonly path: LineString;
 
   constructor(options?: Geometry | { [key: string]: any }) {
     super(options);

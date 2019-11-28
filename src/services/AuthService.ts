@@ -1,31 +1,26 @@
-import {TokenResponse} from "./dtos/auth/TokenResponse";
 import {post} from './HttpService';
-import {LoginResponse} from "./dtos/auth/LoginResponse";
 import environment from "../environment/environment";
-import {RegistrationResponse} from "./dtos/auth/RegistrationResponse";
-import {RegistrationRequest} from "./dtos/auth/RegistrationRequest";
 import {store} from "../store/Store";
 import {router} from "../Router";
-import {LoginRequest} from './dtos/auth/LoginRequest';
-import {RouteResponse} from './dtos/route/RouteResponse';
+import {LoginRequest, LoginResponse, RegistrationRequest, RegistrationResponse, TokenResponse} from 'tyr-api';
 
 let isRefreshing = false;
 
 export const authService = {
   refreshPromise: Promise.resolve<TokenResponse>(new TokenResponse()),
   login(request: {email: string, password: string}): Promise<LoginResponse> {
-    return post<LoginResponse>('/oauth/login', new LoginRequest({
+    return post<LoginResponse>('/oauth/login', <LoginRequest>{
       email: request.email,
       password: request.password,
       clientId: environment.client_id,
       redirectUri: environment.redirect_uri
-    }));
+    });
   },
   register(email: string, password: string): Promise<RegistrationResponse> {
-    return post<RegistrationResponse>('/oauth/register', new RegistrationRequest({
+    return post<RegistrationResponse>('/oauth/register', <RegistrationRequest>{
       email: email,
       password: password
-    }));
+    });
   },
   exchangeCode(code: string, redirectUri: string, clientId: string): Promise<TokenResponse> {
     return post<TokenResponse>('/oauth/token', undefined, {
@@ -65,10 +60,10 @@ export const authService = {
       if (!navigator.onLine && tokens.accessToken && tokens.accessToken !== '' && tokens.refreshToken && tokens.refreshToken !== '') {
         return true;
       }
-      if (tokens.refreshTokenExpiration && tokens.refreshTokenExpiration < now) {
+      if (tokens.refreshTokenExpiration && new Date(tokens.refreshTokenExpiration) < now) {
         return false;
       }
-      if (tokens.accessTokenExpiration && tokens.accessTokenExpiration < now) {
+      if (tokens.accessTokenExpiration && new Date(tokens.accessTokenExpiration) < now) {
         await store.dispatch('auth/refreshToken');
       }
 

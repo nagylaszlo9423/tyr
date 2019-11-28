@@ -57,6 +57,7 @@
   import TitleBar from './TitleBar.vue';
   import {authService} from '../../services/AuthService';
   import {BaseComponent} from './BaseComponent';
+  import {ComponentOptions} from 'vue';
 
   interface NavBarItem {
     name: string;
@@ -67,7 +68,7 @@
   }
 
   @Component
-  export default class NavigationDrawer extends BaseComponent {
+  export default class NavigationDrawer extends BaseComponent implements ComponentOptions<NavigationDrawer> {
     isOpen = false;
     items: NavBarItem[] = [
       {

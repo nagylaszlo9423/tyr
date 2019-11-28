@@ -17,6 +17,7 @@
   import {ComponentOptions} from 'vue';
   import TyrMap from './TyrMap.vue';
   import {Path} from './features/Path';
+  import LineString from 'ol/geom/LineString';
 
   @Component({
     components: {
@@ -29,12 +30,18 @@
       recordPath: 'tye-map:record-path',
       stopRecordingPath: 'tyr-map:stop-recording-path'
     };
+
     isRecording = false;
 
     created(): void {
       eventBus.$offOn(TyrMap.events.stoppedRecording, (path: Path) => {
         this.$store.commit('route/setRecordedRoute', path);
-        this.$router.push('/pages/route/edit');
+        this.$router.push({
+          path: '/pages/route/edit',
+          query: {
+            path: (path.getGeometry() as LineString).getCoordinates()
+          }
+        });
       });
     }
 

@@ -26,9 +26,11 @@ module.exports = merge(common, {
   optimization: {
     splitChunks: {
       cacheGroups: {
-        test: /[\\/]node_modules[\\/]/,
-        name: 'vendors',
-        chunks: 'all'
+        node_modules: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all'
+        }
       }
     }
   },

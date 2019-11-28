@@ -8,6 +8,7 @@ import ProfilePage from "./components/profile/ProfilePage.vue";
 import SearchPage from "./components/search/SearchPage.vue";
 import GroupsPage from "./components/groups/GroupsPage.vue";
 import RoutesPage from "./components/routes/RoutesPage.vue";
+import SettingsPage from "./components/settings/SettingsPage.vue";
 
 const routes: RouteConfig[] = [
   {
@@ -71,6 +72,14 @@ const routes: RouteConfig[] = [
         path: 'routes',
         name: 'routes',
         component: RoutesPage,
+        meta: {
+          isAuthenticated: true
+        }
+      },
+      {
+        path: 'settings',
+        name: 'settings',
+        component: SettingsPage,
         meta: {
           isAuthenticated: true
         }
