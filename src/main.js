@@ -10,12 +10,13 @@ import {fas} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import VueRouter from 'vue-router';
 import {fab} from '@fortawesome/free-brands-svg-icons';
-import './style.scss';
 import VueTouch from 'vue-touch';
 import {store} from './store/Store';
 import {register} from './ServiceWorkerInitializer';
 import Toasted from 'vue-toasted';
 import Simplert from 'vue2-simplert-plugin';
+import './style.scss';
+import './utils/validation';
 require('vue2-simplert-plugin/dist/vue2-simplert-plugin.css');
 
 

@@ -29,7 +29,6 @@
 </script>
 
 <style>
-  @import "../node_modules/normalize.css/normalize.css";
 
   #app {
     height: 100vh;

@@ -16,7 +16,7 @@ function getUrl(path: string) {
 
 function handleError(error: AxiosError<ErrorResponse>) {
   if (!error.response) {
-    console.error(`Unknown error occurred!`);
+    console.error(`Unknown error occurred!`, error);
     throw new Error('UNKNOWN_ERROR');
   }
   if (error.response.status === 401) {

@@ -56,9 +56,12 @@ export const authService = {
   async isLoggedIn(): Promise<boolean> {
     try {
       const now = new Date();
-      const tokens = store.getters['auth/tokens'] as TokenResponse;
+      const tokens = store.getters['auth/tokens'];
       if (!navigator.onLine && tokens.accessToken && tokens.accessToken !== '' && tokens.refreshToken && tokens.refreshToken !== '') {
         return true;
+      }
+      if (!tokens || Object.keys(tokens).length === 0) {
+        return false;
       }
       if (tokens.refreshTokenExpiration && new Date(tokens.refreshTokenExpiration) < now) {
         return false;

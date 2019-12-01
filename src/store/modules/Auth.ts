@@ -5,7 +5,7 @@ import {TokenResponse} from 'tyr-api';
 
 class State {
   code = '';
-  tokens = new TokenResponse();
+  tokens: TokenResponse | null = null;
 }
 
 export default {
@@ -34,6 +34,9 @@ export default {
       store.commit('setTokens', tokenResponse);
     },
     async refreshToken(store: ActionContext<State, any>) {
+      if (!store.state.tokens) {
+        throw new Error('errors.UNAUTHORIZED');
+      }
       const tokens = await authService.refreshTokens(store.state.tokens.refreshToken);
       store.commit('setTokens', tokens);
     }

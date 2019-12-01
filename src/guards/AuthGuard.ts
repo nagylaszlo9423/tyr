@@ -8,8 +8,7 @@ export const authGuard: NavigationGuard = async (to: Route, from: Route, next: (
       return next();
     }
 
-    const isLoggedIn = await authService.isLoggedIn();
-    if (isLoggedIn) {
+    if (await authService.isLoggedIn()) {
       return next();
     }
 

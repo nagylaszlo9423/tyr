@@ -1,24 +1,33 @@
 <template>
-  <b-form>
-    <div></div>
-  </b-form>
+  <ValidationObserver >
+    <div class="row">
+      <div class="col">
+        <input />
+      </div>
+    </div>
+  </ValidationObserver>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import {Route} from '../../models/Route';
   import {ComponentOptions} from 'vue';
-  import {routeService} from '../../services/route/RouteService';
+  import {routeService} from '../../services/Services';
+  import {RouteResponse} from 'tyr-api';
+  import {ValidationObserver} from 'vee-validate';
 
-  @Component
+  @Component({
+    components: {
+      ValidationObserver
+    }
+  })
   export default class EditRoutePage extends Vue implements ComponentOptions<EditRoutePage> {
-    route: Route;
+    route: RouteResponse;
 
     created(): void {
       if (this.$route.params.id) {
-        routeService.getById(this.$route.params.id).then(route => this.route = route);
+        routeService.getRouteById(this.$route.params.id).then(response => this.route = response.data);
       } else {
-        this.route = new Route();
+        this.route = new RouteResponse();
       }
     }
   }

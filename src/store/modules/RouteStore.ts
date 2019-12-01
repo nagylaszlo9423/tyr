@@ -1,5 +1,4 @@
-import {ActionContext, Module} from 'vuex';
-import {TokenResponse} from "../../services/dtos/auth/TokenResponse";
+import {Module} from 'vuex';
 import {Path} from '../../components/map/features/Path';
 
 class State {
