@@ -86,7 +86,7 @@
 </script>
 
 <style lang="scss">
-  @import "../../style/variables";
+  @import "../../../style/variables";
 
   .tyr-input-field {
     display: block;

@@ -12,7 +12,7 @@
 <script lang="ts">
   import {Component} from 'vue-property-decorator';
   import {eventBus} from '../../services/EventBus';
-  import FloatingActionButton from '../common/FloatingActionButton.vue';
+  import FloatingActionButton from '../common/controls/FloatingActionButton.vue';
   import {Vue} from '../../Types';
   import {ComponentOptions} from 'vue';
   import TyrMap from './TyrMap.vue';
