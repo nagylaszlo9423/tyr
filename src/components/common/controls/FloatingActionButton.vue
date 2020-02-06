@@ -9,9 +9,9 @@
 
   @Component
   export default class FloatingActionButton extends Vue {
-    @Prop()
+    @Prop({default: ''})
     icon: string;
-    @Prop()
+    @Prop({default: ''})
     title: string;
 
     @Emit()

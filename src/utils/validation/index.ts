@@ -1,6 +1,6 @@
 import * as rules from 'vee-validate/dist/rules';
 import {extend, configure} from 'vee-validate';
-import i18n from '../../i18n/I18n'
+import i18n from '../../i18n/I18n';
 import {ValidationMessageGenerator} from 'vee-validate/dist/types/types';
 
 for (let rule in rules) {
@@ -12,7 +12,7 @@ configure({
     const params = [i18n.t(`validation.names.${field}`)];
     if (values) {
       if (values.length !== undefined) {
-        params.push(values.length)
+        params.push(values.length);
       }
       return i18n.t(`validation.messages.${values._rule_}`, params);
     }

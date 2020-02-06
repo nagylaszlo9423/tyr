@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {AxiosRequestConfig} from 'axios'
+import {AxiosRequestConfig} from 'axios';
 import {store} from '../store/Store';
 import {authService} from './AuthService';
 import {TokenResponse} from 'tyr-api';

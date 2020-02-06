@@ -5,10 +5,10 @@
 </template>
 
 <script lang="ts">
-  import "./Router";
+  import './Router';
   import Vue, {ComponentOptions} from 'vue';
-  import Component from "vue-class-component";
-  import BootstrapVue from "bootstrap-vue";
+  import Component from 'vue-class-component';
+  import BootstrapVue from 'bootstrap-vue';
   import {authGuard} from './guards/AuthGuard';
 
   @Component({

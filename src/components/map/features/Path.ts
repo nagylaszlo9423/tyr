@@ -20,7 +20,7 @@ export class Path extends Feature {
         color: '#FF0000',
         width: 2
       })
-    }))
+    }));
   }
 
   createVectorLayer(): VectorLayer {

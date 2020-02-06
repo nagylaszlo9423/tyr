@@ -4,11 +4,11 @@
 
 <script lang="ts">
   import 'ol/ol.css';
-  import {Map, View} from "ol";
-  import TileLayer from "ol/layer/Tile";
-  import {OSM} from "ol/source";
-  import {Component, Vue} from "vue-property-decorator";
-  import {fromLonLat} from "ol/proj";
+  import {Map, View} from 'ol';
+  import TileLayer from 'ol/layer/Tile';
+  import {OSM} from 'ol/source';
+  import {Component, Vue} from 'vue-property-decorator';
+  import {fromLonLat} from 'ol/proj';
   import {ComponentOptions} from 'vue';
   import {eventBus} from '../../services/EventBus';
   import MapPage from './MapPage.vue';
@@ -61,7 +61,7 @@
       this.nav.getPosition().subscribe(position => {
         this.goToPosition(position);
         this.positionMarker = new PositionMarker(position);
-        this.map.addLayer(this.positionMarker.createVectorLayer())
+        this.map.addLayer(this.positionMarker.createVectorLayer());
       });
       this.watchPosition();
     }
@@ -77,7 +77,7 @@
     onPositionChange(position: Position) {
       this.positionMarker.setPosition(position);
       if (this.trackPosition) {
-        this.view.animate({center: fromLonLat([position.coords.longitude, position.coords.latitude])})
+        this.view.animate({center: fromLonLat([position.coords.longitude, position.coords.latitude])});
       }
     }
 

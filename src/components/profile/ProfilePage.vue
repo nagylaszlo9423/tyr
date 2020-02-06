@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>ProfilePage</h1>
-    <ValidationObserver ref="validator" v-slot="{ invalid, handleSubmit }" tag="form"
+    <ValidationObserver ref="validator" v-slot="{ }" tag="form"
                         novalidate @submit.prevent="onSubmit">
       <input-field id="wow"
                    info="asdqwe"

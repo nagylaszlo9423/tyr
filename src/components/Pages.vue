@@ -12,9 +12,9 @@
 </template>
 
 <script lang="ts">
-  import {Vue, Component, Watch} from "vue-property-decorator";
-  import NavigationDrawer from "./common/NavigationDrawer.vue";
-  import TitleBar from "./common/TitleBar.vue";
+  import {Vue, Component, Watch} from 'vue-property-decorator';
+  import NavigationDrawer from './common/NavigationDrawer.vue';
+  import TitleBar from './common/TitleBar.vue';
   import TyrMap from './map/TyrMap.vue';
   import {Route} from 'vue-router';
 

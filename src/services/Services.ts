@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from 'axios';
 import {AxiosApi} from 'tyr-api';
 import {Configuration} from 'tyr-api/types/axios';
 import environment from '../environment/environment';

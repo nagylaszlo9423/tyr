@@ -52,10 +52,10 @@
 </template>
 
 <script lang="ts">
-  import {Component} from "vue-property-decorator";
-  import {eventBus} from '../../services/EventBus';
+  import {Component} from 'vue-property-decorator';
+  import {eventBus} from '@/services/EventBus';
   import TitleBar from './TitleBar.vue';
-  import {authService} from '../../services/AuthService';
+  import {authService} from '@/services/AuthService';
   import {BaseComponent} from './BaseComponent';
   import {ComponentOptions} from 'vue';
 

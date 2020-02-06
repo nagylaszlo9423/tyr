@@ -7,7 +7,7 @@
   import {ComponentOptions} from 'vue';
 
   @Component
-  export default class FormModal extends Vue implements ComponentOptions<FormModal> {
+  export default class FormModal extends Vue {
 
   }
 </script>

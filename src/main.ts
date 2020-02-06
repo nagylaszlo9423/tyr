@@ -10,14 +10,15 @@ import {fas} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome';
 import VueRouter from 'vue-router';
 import {fab} from '@fortawesome/free-brands-svg-icons';
-import VueTouch from 'vue-touch';
 import {store} from './store/Store';
 import {register} from './ServiceWorkerInitializer';
 import Toasted from 'vue-toasted';
-import Simplert from 'vue2-simplert-plugin';
 import './style.scss';
 import './utils/validation';
 require('vue2-simplert-plugin/dist/vue2-simplert-plugin.css');
+
+const Simplert = require('vue2-simplert-plugin');
+const VueTouch = require('vue-touch');
 
 
 library.add(fas);

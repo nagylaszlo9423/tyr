@@ -1,5 +1,5 @@
 import VueI18n, {LocaleMessages} from 'vue-i18n';
-import Vue from "vue";
+import Vue from 'vue';
 
 const translations: LocaleMessages = {};
 const languages: string[] = ['en', 'hu'];

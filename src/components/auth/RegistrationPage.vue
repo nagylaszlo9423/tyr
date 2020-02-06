@@ -122,7 +122,7 @@
         this.formErrors.push('INVALID_PASSWORD');
       }
       if (this.formModel.password !== this.formModel.confirmPassword) {
-        this.formErrors.push('NOT_MATCHING_PASSWORDS')
+        this.formErrors.push('NOT_MATCHING_PASSWORDS');
       }
 
       return this.formErrors.length === 0;

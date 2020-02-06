@@ -1,5 +1,5 @@
 import axios, { AxiosResponse, AxiosError } from 'axios';
-import environment from "../environment/environment";
+import environment from '../environment/environment';
 import {interceptRequests} from './HttpInterceptor';
 import {ErrorResponse} from 'tyr-api';
 
@@ -16,7 +16,7 @@ function getUrl(path: string) {
 
 function handleError(error: AxiosError<ErrorResponse>) {
   if (!error.response) {
-    console.error(`Unknown error occurred!`, error);
+    console.error('Unknown error occurred!', error);
     throw new Error('UNKNOWN_ERROR');
   }
   if (error.response.status === 401) {
@@ -26,7 +26,7 @@ function handleError(error: AxiosError<ErrorResponse>) {
     throw new Error('FORBIDDEN');
   }
   if (error.response.status === 404) {
-    throw new Error('NOT_FOUND')
+    throw new Error('NOT_FOUND');
   }
   if (error.response.status === 422) {
     throw new Error(error.response.data.cause);

@@ -1,7 +1,7 @@
 import {post} from './HttpService';
-import environment from "../environment/environment";
-import {store} from "../store/Store";
-import {router} from "../Router";
+import environment from '../environment/environment';
+import {store} from '../store/Store';
+import {router} from '../Router';
 import {LoginRequest, LoginResponse, RegistrationRequest, RegistrationResponse, TokenResponse} from 'tyr-api';
 
 let isRefreshing = false;
@@ -31,7 +31,7 @@ export const authService = {
     }).then((response: TokenResponse) => {
       store.commit('auth/setTokens', response);
       return response;
-    })
+    });
   },
   refreshTokens(token: string): Promise<TokenResponse> {
     if (!isRefreshing) {

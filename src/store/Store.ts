@@ -1,8 +1,8 @@
 import Vuex from 'vuex';
 import auth from './modules/Auth';
 import routeStore from './modules/RouteStore';
-import createPersistedState from "vuex-persistedstate";
-import Vue from "vue";
+import createPersistedState from 'vuex-persistedstate';
+import Vue from 'vue';
 
 Vue.use(Vuex);
 

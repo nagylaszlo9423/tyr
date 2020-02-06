@@ -1,5 +1,5 @@
-import {NavigationGuard, Route} from "vue-router";
-import {authService} from "../services/AuthService";
+import {NavigationGuard, Route} from 'vue-router';
+import {authService} from '../services/AuthService';
 
 
 export const authGuard: NavigationGuard = async (to: Route, from: Route, next: (to?: any) => void) => {

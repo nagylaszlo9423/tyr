@@ -61,7 +61,7 @@ export class PositionMarker extends Feature {
     return [
       pointTo[0] - pointFrom[0],
       pointTo[1] - pointFrom[1]
-    ]
+    ];
   }
 
   private static vectorLength(vectorPoint: any[]): number {

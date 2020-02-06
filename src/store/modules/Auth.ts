@@ -1,5 +1,5 @@
 import {ActionContext, Module} from 'vuex';
-import {authService} from "../../services/AuthService";
+import {authService} from '../../services/AuthService';
 import environment from '../../environment/environment';
 import {TokenResponse} from 'tyr-api';
 
