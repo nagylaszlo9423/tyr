@@ -11,13 +11,13 @@
 
 <script lang="ts">
   import {Component} from 'vue-property-decorator';
-  import {eventBus} from '../../services/EventBus';
+  import {eventBus} from '@/services/EventBus';
   import FloatingActionButton from '../common/controls/FloatingActionButton.vue';
-  import {Vue} from '../../Types';
+  import {Vue} from '@/Types';
   import {ComponentOptions} from 'vue';
-  import TyrMap from './TyrMap.vue';
   import {Path} from './features/Path';
   import LineString from 'ol/geom/LineString';
+  import {Events} from '@/components/Events';
 
   @Component({
     components: {
@@ -25,16 +25,11 @@
     }
   })
   export default class MapPage extends Vue implements ComponentOptions<MapPage> {
-    public static readonly events = {
-      recenter: 'tyr-map:recenter',
-      recordPath: 'tye-map:record-path',
-      stopRecordingPath: 'tyr-map:stop-recording-path'
-    };
 
     isRecording = false;
 
     created(): void {
-      eventBus.$offOn(TyrMap.events.stoppedRecording, (path: Path) => {
+      eventBus.$offOn(Events.map.mapPage.stopRecordingPath, (path: Path) => {
         this.$store.commit('route/setRecordedRoute', path);
         this.$router.push({
           path: '/pages/route/edit',
@@ -48,19 +43,19 @@
     async recordPath() {
       if (!this.isRecording) {
         this.isRecording = true;
-        eventBus.$emit(MapPage.events.recordPath);
+        eventBus.$emit(Events.map.mapPage.recordPath);
       }
     }
 
     stopRecording() {
       if (this.isRecording) {
         this.isRecording = false;
-        eventBus.$emit(MapPage.events.stopRecordingPath);
+        eventBus.$emit(Events.map.mapPage.stopRecordingPath);
       }
     }
 
     recenter() {
-      eventBus.$emit(MapPage.events.recenter);
+      eventBus.$emit(Events.map.mapPage.recenter);
     }
 
     savePath() {

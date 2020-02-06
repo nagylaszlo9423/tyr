@@ -13,15 +13,15 @@
 
 <script lang="ts">
   import {Vue, Component} from 'vue-property-decorator';
-  import {eventBus} from '../../services/EventBus';
+  import {eventBus} from '@/services/EventBus';
+  import {Events} from '@/components/Events';
 
   @Component
   export default class TitleBar extends Vue {
-    public static readonly events = {toggle: 'navigation-drawer:toggle'};
     isSearchFieldOpen = false;
 
     toggleNavDrawer() {
-      eventBus.$emit(TitleBar.events.toggle);
+      eventBus.$emit(Events.common.titleBar.toggle);
     }
   }
 </script>

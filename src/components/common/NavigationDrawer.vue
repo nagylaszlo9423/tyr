@@ -14,10 +14,6 @@
               </div>
             </router-link>
           </li>
-        </ul>
-      </nav>
-      <nav class="navbar navbar-brand">
-        <ul class="navbar-nav mr-auto">
           <li class="nav-item t-fade" :class="{'t-fade-away': !isOpen}">
             <router-link :to="{name: 'settings'}" v-on:click.native="setActive('settings')"
                          :class="{active: isActive('settings')}"
@@ -54,10 +50,10 @@
 <script lang="ts">
   import {Component} from 'vue-property-decorator';
   import {eventBus} from '@/services/EventBus';
-  import TitleBar from './TitleBar.vue';
   import {authService} from '@/services/AuthService';
   import {BaseComponent} from './BaseComponent';
   import {ComponentOptions} from 'vue';
+  import {Events} from '@/components/Events';
 
   interface NavBarItem {
     name: string;
@@ -110,8 +106,8 @@
     activeItem = 'map';
 
     created() {
-      eventBus.$off(TitleBar.events.toggle);
-      eventBus.$on(TitleBar.events.toggle, this.toggleHandler);
+      eventBus.$off(Events.common.titleBar.toggle);
+      eventBus.$on(Events.common.titleBar.toggle, this.toggleHandler);
       for (let item of this.items) {
         if (this.$route.path.indexOf(item.to) > -1) {
           this.activeItem = item.name;
@@ -156,7 +152,6 @@
       margin: .6rem;
       padding: 0;
       text-align: center;
-      overflow-x: hidden;
 
       .nav-link-text {
         overflow-x: hidden;

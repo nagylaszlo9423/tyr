@@ -10,17 +10,14 @@
   import {Component, Vue} from 'vue-property-decorator';
   import {fromLonLat} from 'ol/proj';
   import {ComponentOptions} from 'vue';
-  import {eventBus} from '../../services/EventBus';
-  import MapPage from './MapPage.vue';
+  import {eventBus} from '@/services/EventBus';
   import {LocationNavigator} from './LocationNavigator';
   import {PositionMarker} from './features/PositionMarker';
   import {PathRecorder} from './plugins/PathRecorder';
+  import {Events} from '@/components/Events';
 
   @Component
   export default class TyrMap extends Vue implements ComponentOptions<TyrMap> {
-    public static readonly events = {
-      stoppedRecording: 'map-page:stopped-recording'
-    };
     private trackPosition = true;
     private positionMarker: PositionMarker;
     private nav: LocationNavigator;
@@ -37,11 +34,11 @@
     });
 
     created(): void {
-      eventBus.$offOn(MapPage.events.recordPath, () => this.pathRecorder.recordPath());
-      eventBus.$offOn(MapPage.events.stopRecordingPath, () => {
-        eventBus.$emit(TyrMap.events.stoppedRecording, this.pathRecorder.stopRecordingPath());
+      eventBus.$offOn(Events.map.mapPage.recordPath, () => this.pathRecorder.recordPath());
+      eventBus.$offOn(Events.map.mapPage.stopRecordingPath, () => {
+        eventBus.$emit(Events.map.tyrMap.stoppedRecording, this.pathRecorder.stopRecordingPath());
       });
-      eventBus.$offOn(MapPage.events.recenter, () => this.nav.getPosition().subscribe(this.goToPosition, error => console.error(error)));
+      eventBus.$offOn(Events.map.mapPage.recenter, () => this.nav.getPosition().subscribe(this.goToPosition, error => console.error(error)));
     }
 
     mounted() {

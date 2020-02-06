@@ -11,7 +11,7 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
-  import {routeService} from '../../services/Services';
+  import {routeService} from '@/services/Services';
   import {RouteResponse} from 'tyr-api';
   import {ValidationObserver} from 'vee-validate';
 
