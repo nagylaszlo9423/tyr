@@ -1,6 +1,6 @@
 <template>
   <auth-page>
-    <b-form>
+    <b-form @submit.prevent>
       <b-container fluid class="p-3">
         <b-row>
           <b-col class="d-flex justify-content-center my-3">
@@ -49,7 +49,7 @@
         </b-row>
         <b-row class="my-2">
           <b-col>
-            <b-button variant="primary" size="sm" @click="login">{{$t('LOGIN')}}</b-button>
+            <b-button type="submit" variant="primary" size="sm" @click="login">{{$t('LOGIN')}}</b-button>
           </b-col>
         </b-row>
         <b-row class="my-2">

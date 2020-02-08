@@ -1,15 +1,15 @@
-import {post} from './HttpService';
 import environment from '../environment/environment';
 import {store} from '../store/Store';
 import {router} from '../Router';
 import {LoginRequest, LoginResponse, RegistrationRequest, RegistrationResponse, TokenResponse} from 'tyr-api';
+import {Http} from '@/services/HttpService';
 
 let isRefreshing = false;
 
 export const authService = {
   refreshPromise: Promise.resolve<TokenResponse>(new TokenResponse()),
   login(request: {email: string, password: string}): Promise<LoginResponse> {
-    return post<LoginResponse>('/oauth/login', <LoginRequest>{
+    return Http.post<LoginResponse>('/oauth/login', <LoginRequest>{
       email: request.email,
       password: request.password,
       clientId: environment.client_id,
@@ -17,13 +17,13 @@ export const authService = {
     });
   },
   register(email: string, password: string): Promise<RegistrationResponse> {
-    return post<RegistrationResponse>('/oauth/register', <RegistrationRequest>{
+    return Http.post<RegistrationResponse>('/oauth/register', <RegistrationRequest>{
       email: email,
       password: password
     });
   },
   exchangeCode(code: string, redirectUri: string, clientId: string): Promise<TokenResponse> {
-    return post<TokenResponse>('/oauth/token', undefined, {
+    return Http.post<TokenResponse>('/oauth/token', undefined, {
       'grant_type': 'authorization_code',
       'code': code,
       'redirect_uri': redirectUri,
@@ -36,7 +36,7 @@ export const authService = {
   refreshTokens(token: string): Promise<TokenResponse> {
     if (!isRefreshing) {
       isRefreshing = true;
-      return post<TokenResponse>('/oauth/token', undefined, {
+      return Http.post<TokenResponse>('/oauth/token', undefined, {
         'grant_type': 'refresh_token',
         'refresh_token': token
       }).finally(() => isRefreshing = false);
@@ -51,7 +51,7 @@ export const authService = {
         router.push('/login');
       }
     };
-    return post('/oauth/logout').then(localLogout).catch(localLogout);
+    return Http.post('/oauth/logout').then(localLogout).catch(localLogout);
   },
   async isLoggedIn(): Promise<boolean> {
     try {

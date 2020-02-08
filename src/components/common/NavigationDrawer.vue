@@ -38,6 +38,16 @@
           </li>
         </ul>
       </nav>
+      <nav class="navbar navbar-brand">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <font-awesome-icon @click="toggleHandler"
+                               class="fa-1x chevron"
+                               :class="{'chevron-open': isOpen}"
+                               fixed-width icon="chevron-right"></font-awesome-icon>
+          </li>
+        </ul>
+      </nav>
     </v-touch>
     <v-touch :class="{'swipe-zone-open': !isOpen}" @swiperight="isOpen = true">
     </v-touch>
@@ -49,11 +59,9 @@
 
 <script lang="ts">
   import {Component} from 'vue-property-decorator';
-  import {eventBus} from '@/services/EventBus';
   import {authService} from '@/services/AuthService';
   import {BaseComponent} from './BaseComponent';
   import {ComponentOptions} from 'vue';
-  import {Events} from '@/components/Events';
 
   interface NavBarItem {
     name: string;
@@ -106,8 +114,6 @@
     activeItem = 'map';
 
     created() {
-      eventBus.$off(Events.common.titleBar.toggle);
-      eventBus.$on(Events.common.titleBar.toggle, this.toggleHandler);
       for (let item of this.items) {
         if (this.$route.path.indexOf(item.to) > -1) {
           this.activeItem = item.name;
@@ -193,6 +199,14 @@
 
     &.navigation-drawer-open, .swipe-zone.navigation-drawer-open {
       width: 11em;
+    }
+  }
+
+  .chevron {
+    transition: .3s;
+
+    &.chevron-open {
+      transform: rotateZ(180deg);
     }
   }
 

@@ -1,8 +1,7 @@
 
 
 export default {
-  backend_url: 'http://localhost',
-  backend_port: 3001,
+  api_path: '/api',
   client_id: 'client_id',
   redirect_uri: 'http://localhost/login',
   password_regex: '^(?=.*[0-9@#$%^&+=.])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$',
