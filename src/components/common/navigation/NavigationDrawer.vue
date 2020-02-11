@@ -7,44 +7,22 @@
           <li v-for="item in items" class="nav-item t-fade" :class="{'t-fade-away': !isOpen && item.hidden}">
             <router-link :to="item.to" v-on:click.native="setActive(item.name)"
                          :class="{active: isActive(item.name)}"
-                         class="d-flex flex-row align-items-center nav-link">
+                         class="d-flex nav-link">
               <font-awesome-icon class="fa-1x" fixed-width :icon="item.icon"/>
-              <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
+              <div class="nav-link-text pl-1" :class="{'nav-link-text-open': isOpen}">
                 <span>{{$t(item.title)}}</span>
               </div>
             </router-link>
           </li>
-          <li class="nav-item t-fade" :class="{'t-fade-away': !isOpen}">
-            <router-link :to="{name: 'settings'}" v-on:click.native="setActive('settings')"
-                         :class="{active: isActive('settings')}"
-                         class="d-flex flex-row align-items-center nav-link">
-              <div class="fa-icon">
-                <font-awesome-icon class="fa-1x" fixed-width icon="cog"></font-awesome-icon>
-              </div>
-              <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
-                <span>{{ $t('SETTINGS') }}</span>
-              </div>
-            </router-link>
-          </li>
-          <li class="nav-item t-fade" :class="{'t-fade-away': !isOpen}">
-            <a @click="logout" class="d-flex flex-row align-items-center nav-link">
-              <div class="fa-icon">
-                <font-awesome-icon class="fa-1x" fixed-width icon="sign-out-alt"></font-awesome-icon>
-              </div>
-              <div class="nav-link-text ml-2" :class="{'nav-link-text-open': isOpen}">
+          <li class="nav-item t-fade">
+            <a @click="logout"
+               class="d-flex nav-link"
+               :class="{active: isActive('logout')}">
+              <font-awesome-icon class="fa-1x" fixed-width icon="sign-out-alt"></font-awesome-icon>
+              <div class="nav-link-text pl-1" :class="{'nav-link-text-open': isOpen}">
                 <span>{{ $t('LOGOUT') }}</span>
               </div>
             </a>
-          </li>
-        </ul>
-      </nav>
-      <nav class="navbar navbar-brand">
-        <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <font-awesome-icon @click="toggleHandler"
-                               class="fa-1x chevron"
-                               :class="{'chevron-open': isOpen}"
-                               fixed-width icon="chevron-right"></font-awesome-icon>
           </li>
         </ul>
       </nav>
@@ -59,61 +37,23 @@
 
 <script lang="ts">
   import {Component} from 'vue-property-decorator';
+  import {eventBus} from '@/services/EventBus';
   import {authService} from '@/services/AuthService';
-  import {BaseComponent} from './BaseComponent';
+  import {BaseComponent} from '../BaseComponent';
   import {ComponentOptions} from 'vue';
-
-  interface NavBarItem {
-    name: string;
-    title: string;
-    icon: string;
-    to: string;
-    hidden: boolean;
-  }
+  import {Events} from '@/components/Events';
+  import {NavBarItems} from '@/components/common/navigation/NavBarItems';
+  import {NavBarItem} from '@/components/common/navigation/NavBarItem';
 
   @Component
   export default class NavigationDrawer extends BaseComponent implements ComponentOptions<NavigationDrawer> {
     isOpen = false;
-    items: NavBarItem[] = [
-      {
-        name: 'search',
-        title: 'ADVANCED_SEARCH',
-        icon: 'search',
-        to: '/pages/search',
-        hidden: false
-      },
-      {
-        name: 'map',
-        title: 'MAP',
-        icon: 'map-marked',
-        to: '/pages/map',
-        hidden: false
-      },
-      {
-        name: 'routes',
-        title: 'ROUTES',
-        icon: 'route',
-        to: '/pages/routes',
-        hidden: true
-      },
-      {
-        name: 'groups',
-        title: 'GROUPS',
-        icon: 'users',
-        to: '/pages/groups',
-        hidden: true
-      },
-      {
-        name: 'profile',
-        title: 'PROFILE',
-        icon: 'user-alt',
-        to: '/pages/profile',
-        hidden: true
-      }
-    ];
+    items: NavBarItem[] = NavBarItems;
     activeItem = 'map';
 
     created() {
+      eventBus.$off(Events.common.titleBar.toggle);
+      eventBus.$on(Events.common.titleBar.toggle, this.toggleHandler);
       for (let item of this.items) {
         if (this.$route.path.indexOf(item.to) > -1) {
           this.activeItem = item.name;
@@ -141,23 +81,22 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../style/media";
+  @import "../../../style/media";
 
   $transition-time: .5s;
 
   #navigation-drawer {
-    height: 100%;
-    width: 3rem;
-    position: relative;
-    top: 0;
-    left: 0;
-    z-index: 1000;
     transition: width $transition-time ease-in-out;
 
     .navbar.navbar-brand {
       margin: .6rem;
       padding: 0;
-      text-align: center;
+      text-align: right;
+
+      svg {
+        display: block;
+        margin: auto;
+      }
 
       .nav-link-text {
         overflow-x: hidden;
@@ -207,12 +146,6 @@
 
     &.chevron-open {
       transform: rotateZ(180deg);
-    }
-  }
-
-  @include media-md {
-    #navigation-drawer {
-      position: absolute;
     }
   }
 

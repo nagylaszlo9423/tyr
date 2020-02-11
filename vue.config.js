@@ -19,12 +19,13 @@ module.exports = {
       '/api': {
         target: 'http://192.168.1.103:3001/',
         changeOrigin: true,
-        secure: false,
+        secure: true,
         pathRewrite: {
           '^/api': ''
         },
         logLevel: 'debug'
       }
-    }
+    },
+    http2: true
   }
 };

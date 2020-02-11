@@ -28,9 +28,12 @@
   }
 </script>
 
-<style>
-
+<style lang="scss" scoped>
   #app {
-    height: 100vh;
+    left: 0;
+    top: 0;
+    position: fixed;
+    min-height: 100%;
+    min-width: 100%;
   }
 </style>

@@ -1,8 +1,5 @@
 import VueRouter, {RouteConfig} from 'vue-router';
-import Pages from './components/Pages.vue';
 import MapPage from './components/map/MapPage.vue';
-import LoginPage from './components/auth/LoginPage.vue';
-import RegistrationPage from './components/auth/RegistrationPage.vue';
 import NotFoundPage from './components/common/NotFoundPage.vue';
 import ProfilePage from './components/profile/ProfilePage.vue';
 import SearchPage from './components/search/SearchPage.vue';
@@ -18,16 +15,16 @@ const routes: RouteConfig[] = [
   {
     path: '/login',
     name: 'login',
-    component: LoginPage
+    component: () => import('./components/auth/LoginPage.vue')
   },
   {
     path: '/register',
     name: 'registration',
-    component: RegistrationPage
+    component: () => import('./components/auth/RegistrationPage.vue')
   },
   {
     path: '/pages',
-    component: Pages,
+    component: () => import('./components/Pages.vue'),
     children: [
       {
         path: '',

@@ -1,6 +1,7 @@
 <template>
   <div id="title-bar" class="d-flex p-1">
     <div id="title-bar-left-controls" class="d-flex flex-row mr-auto">
+      <b-button variant="link" @click="toggleNavDrawer"><font-awesome-icon class="fa-1x" icon="bars"></font-awesome-icon></b-button>
       <h3>Logo</h3>
     </div>
     <div id="title-bar-right-controls" class="d-flex flex-row justify-content-end align-items-center pl-2">
@@ -12,10 +13,16 @@
 
 <script lang="ts">
   import {Vue, Component} from 'vue-property-decorator';
+  import {eventBus} from '@/services/EventBus';
+  import {Events} from '@/components/Events';
 
   @Component
   export default class TitleBar extends Vue {
     isSearchFieldOpen = false;
+
+    toggleNavDrawer() {
+      eventBus.$emit(Events.common.titleBar.toggle);
+    }
   }
 </script>
 
@@ -23,11 +30,6 @@
   @import "../../style/variables";
 
   #title-bar {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
     background-color: $primary;
     color: $text-light;
     svg {

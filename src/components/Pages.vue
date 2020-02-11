@@ -1,19 +1,17 @@
 <template>
-  <div class="pages d-flex flex-column align-items-stretch">
+  <div id="pages">
     <title-bar></title-bar>
-    <div class="pages-container d-flex flex-row">
-      <navigation-drawer></navigation-drawer>
-      <div class="pages-content container-fluid p-2 overflow-hidden" :class="{map: isMapPageOpen}">
-        <router-view></router-view>
-      </div>
-      <tyr-map></tyr-map>
+    <navigation-drawer></navigation-drawer>
+    <div class="pages-content overflow-hidden" :class="{map: isMapPageOpen}">
+      <router-view></router-view>
     </div>
+    <tyr-map></tyr-map>
   </div>
 </template>
 
 <script lang="ts">
   import {Vue, Component, Watch} from 'vue-property-decorator';
-  import NavigationDrawer from './common/NavigationDrawer.vue';
+  import NavigationDrawer from './common/navigation/NavigationDrawer.vue';
   import TitleBar from './common/TitleBar.vue';
   import TyrMap from './map/TyrMap.vue';
   import {Route} from 'vue-router';
@@ -39,17 +37,49 @@
   @import "../style/media";
   @import "../style/theme";
 
-  .pages, .pages-container {
+  $titleBarHeight: 3rem;
+
+  #pages {
+    position: fixed;
+    left: 0;
+    top: 0;
     height: 100%;
+    width: 100%;
   }
 
-  .pages-container {
+  #tyr-map {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+  }
+
+  #navigation-drawer {
+    height: calc(100% - #{$titleBarHeight});
+    width: 3rem;
+    float: left;
     position: relative;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+  }
+
+  #title-bar {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    height: $titleBarHeight;
   }
 
   .pages-content {
+    position: relative;
     z-index: 11;
     background-color: $background;
+    height: calc(100% - #{$titleBarHeight});
   }
 
   .pages-content.map {
