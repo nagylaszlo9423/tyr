@@ -45,13 +45,11 @@ export const authService = {
     }
   },
   logout(shouldNavigate = true): Promise<void> {
-    const localLogout = () => {
-      store.commit('auth/clear');
-      if (shouldNavigate) {
-        router.push('/login');
-      }
-    };
-    return Http.post('/oauth/logout').then(localLogout).catch(localLogout);
+    store.commit('auth/clear');
+    if (shouldNavigate) {
+      router.push('/login');
+    }
+    return Http.post('/oauth/logout');
   },
   async isLoggedIn(): Promise<boolean> {
     try {

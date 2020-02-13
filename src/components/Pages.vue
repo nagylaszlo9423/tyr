@@ -2,7 +2,7 @@
   <div id="pages">
     <title-bar></title-bar>
     <navigation-drawer></navigation-drawer>
-    <div class="pages-content overflow-hidden" :class="{map: isMapPageOpen}">
+    <div class="pages-content" :class="{map: isMapPageOpen}">
       <router-view></router-view>
     </div>
     <tyr-map></tyr-map>
@@ -36,8 +36,7 @@
 <style lang="scss" scoped>
   @import "../style/media";
   @import "../style/theme";
-
-  $titleBarHeight: 3rem;
+  @import "../style/variables";
 
   #pages {
     position: fixed;
@@ -58,12 +57,6 @@
 
   #navigation-drawer {
     height: calc(100% - #{$titleBarHeight});
-    width: 3rem;
-    float: left;
-    position: relative;
-    top: 0;
-    left: 0;
-    z-index: 1000;
   }
 
   #title-bar {
@@ -80,6 +73,8 @@
     z-index: 11;
     background-color: $background;
     height: calc(100% - #{$titleBarHeight});
+    overflow-x: hidden;
+    padding: 1rem 1rem 0 1rem;
   }
 
   .pages-content.map {

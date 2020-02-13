@@ -24,8 +24,11 @@
     background-image: url("../../assets/background1.jpg");
     background-repeat: no-repeat;
     background-size: cover;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    position: relative;
 
     .auth-page-overlay {
       position: relative;

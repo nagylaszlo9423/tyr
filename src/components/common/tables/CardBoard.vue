@@ -1,8 +1,6 @@
 <template>
-  <div class="tyr-card-board row d-flex justify-content-center">
-    <div v-for="(item, name, index) in items" class=" col-sm-12 col-md-6 col-lg-4 col-xl-3">
-      <card :name="'card' + index" :item="item"></card>
-    </div>
+  <div class="tyr-card-board">
+    <card v-for="(item, name, index) in items" :key="index" :name="'card' + index" :item="item"></card>
   </div>
 </template>
 
@@ -26,10 +24,36 @@
 </script>
 
 <style lang="scss" scoped>
+  @import "../../../style/media";
 
   .tyr-card-board {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+
     .tyr-card {
-      height: 300px;
+      box-shadow: 0 1px 4px grey;
+      width: calc(100% / 5);
+      overflow: hidden;
+
+      @include media-lg() {
+        & {
+          width: calc(100% / 4);
+        }
+      }
+
+      @include media-md {
+        & {
+          width: calc(100% / 3);
+        }
+      }
+
+      @include media-sm {
+        & {
+          width: calc(100% / 2);
+        }
+      }
     }
   }
 

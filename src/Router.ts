@@ -25,6 +25,9 @@ const routes: RouteConfig[] = [
   {
     path: '/pages',
     component: () => import('./components/Pages.vue'),
+    meta: {
+      isAuthenticated: true
+    },
     children: [
       {
         path: '',

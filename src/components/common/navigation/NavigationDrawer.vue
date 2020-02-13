@@ -82,11 +82,18 @@
 
 <style lang="scss" scoped>
   @import "../../../style/media";
+  @import "../../../style/variables";
 
   $transition-time: .5s;
 
   #navigation-drawer {
     transition: width $transition-time ease-in-out;
+    width: $navigationDrawerWidth;
+    float: left;
+    position: relative;
+    z-index: 1000;
+    top: 0;
+    left: 0;
 
     .navbar.navbar-brand {
       margin: .6rem;
@@ -114,11 +121,20 @@
       }
     }
 
+    .t-fade {
+      transition: max-height .3s ease-in-out;
+      max-height: 3rem;
+
+      &.t-fade-away {
+        max-height: 0;
+      }
+    }
+
     .swipe-zone {
       width: 3rem;
       overflow-x: hidden;
       background: #FFFFFFCC;
-      transition: width .5s ease-in-out;
+      transition: width $transition-time ease-in-out;
       position: relative;
       display: flex;
       flex-direction: column;
@@ -149,6 +165,17 @@
     }
   }
 
+  @include media-md {
+    #navigation-drawer {
+      position: absolute;
+      top: $titleBarHeight;
+
+      .navigation-drawer-underlay-visible {
+        visibility: visible !important;
+      }
+    }
+  }
+
   @include media-sm {
     #navigation-drawer, .swipe-zone {
       width: 0;
@@ -167,10 +194,6 @@
       z-index: 10000;
       height: 100%;
       width: 1rem;
-    }
-
-    .navigation-drawer-underlay-visible {
-      visibility: visible !important;
     }
   }
 </style>

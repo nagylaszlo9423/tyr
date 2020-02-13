@@ -1,5 +1,5 @@
 <template>
-  <div class="row d-flex justify-content-center">
+  <div>
     <card-board :items="items"></card-board>
   </div>
 </template>
