@@ -1,6 +1,11 @@
 <template>
   <div class="tyr-card-board">
-    <card v-for="(item, name, index) in items" :key="index" :name="'card' + index" :item="item"></card>
+    <div v-if="items.length">
+      <card v-for="(item, name, index) in items" :key="index" :name="'card' + index" :item="item"></card>
+    </div>
+    <div v-if="!items.length">
+      <card v-if="!items.length" :item="emptyCard"></card>
+    </div>
   </div>
 </template>
 
@@ -18,6 +23,12 @@
     }
   })
   export default class CardBoard extends Vue {
+    private readonly emptyCard: CardBoardModel = {
+      title: 'EMPTY_LIST',
+      description: '',
+      imgSrc: ''
+    };
+
     @Prop()
     items: CardBoardModel[];
   }
@@ -30,7 +41,6 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center;
 
     .tyr-card {
       width: calc(100% / 5);

@@ -8,6 +8,10 @@ import {Http} from '@/services/HttpService';
 
 export const enableInterceptor = () => {
   Http.axios().interceptors.request.use(async (config: AxiosRequestConfig) => {
+    if (config.url && config.url.indexOf('/oauth') > -1) {
+      return config;
+    }
+
     let tokens = store.getters['auth/tokens'] as TokenResponse;
 
     if (tokens && Object.keys(tokens).length === 4) {
@@ -26,8 +30,9 @@ export const enableInterceptor = () => {
   });
 
   Http.axios().interceptors.response.use(async (res: AxiosResponse) => {
+    console.log('itt', res.status);
     if (res.status === StatusCodes.UNAUTHORIZED) {
-      await authService.logout();
+      await store.dispatch('auth/refreshToken');
     }
 
     return res;

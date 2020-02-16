@@ -38,7 +38,7 @@ export const authService = {
       isRefreshing = true;
       return Http.post<TokenResponse>('/oauth/token', undefined, {
         'grant_type': 'refresh_token',
-        'refresh_token': token
+        'refresh_token': store.getters('auth/refreshToken')
       }).finally(() => isRefreshing = false);
     } else {
       return this.refreshPromise;

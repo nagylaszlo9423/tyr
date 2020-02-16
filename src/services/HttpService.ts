@@ -1,7 +1,9 @@
 import axios, {AxiosResponse, AxiosError, AxiosInstance} from 'axios';
 import {enableInterceptor} from './HttpInterceptor';
 import {ErrorResponse} from 'tyr-api';
-import {axiosConfig} from '@/services/AxiosConfig';
+import {Environment} from '@/environment/environment';
+
+const path = require('path');
 
 export interface IHttpService {
 
@@ -21,7 +23,9 @@ class HttpService implements IHttpService {
   private readonly _axiosInstance: AxiosInstance;
 
   private constructor() {
-    this._axiosInstance = axios.create(axiosConfig);
+    this._axiosInstance = axios.create({
+      baseURL: Environment.api_path
+    });
   }
 
   static get instance(): HttpService {
