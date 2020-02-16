@@ -1,13 +1,12 @@
 import axios, {AxiosResponse, AxiosError, AxiosInstance} from 'axios';
-import environment from '../environment/environment';
-import {interceptRequests} from './HttpInterceptor';
+import {enableInterceptor} from './HttpInterceptor';
 import {ErrorResponse} from 'tyr-api';
-
-const __path = require('path');
-
-interceptRequests();
+import {axiosConfig} from '@/services/AxiosConfig';
 
 export interface IHttpService {
+
+  axios(): AxiosInstance;
+
   get<T>(path: string, params?: { [key: string]: string | number }): Promise<T>
 
   post<T>(path: string, data?: any, params?: { [key: string]: string | number }): Promise<T>
@@ -18,44 +17,47 @@ export interface IHttpService {
 }
 
 class HttpService implements IHttpService {
-  private static _instance: HttpService | null = null;
+  private static _instance: HttpService;
+  private readonly _axiosInstance: AxiosInstance;
 
-  private constructor() {}
+  private constructor() {
+    this._axiosInstance = axios.create(axiosConfig);
+  }
 
   static get instance(): HttpService {
-    if (HttpService._instance === null) {
-      HttpService._instance = new HttpService();
+    if (!HttpService._instance) {
+      this._instance = new HttpService();
     }
 
     return HttpService._instance;
   }
 
+  axios(): AxiosInstance {
+    return this._axiosInstance;
+  }
+
   get<T>(path: string, params?: { [key: string]: string | number }): Promise<T> {
-    return this.resolveResponse(axios.get<T>(this.composePath(path), {
+    return this.resolveResponse(this._axiosInstance.get<T>(path, {
       params: params
     }));
   }
 
   post<T>(path: string, data?: any, params?: { [key: string]: string | number }): Promise<T> {
-    return this.resolveResponse(axios.post<T>(this.composePath(path), data, {
+    return this.resolveResponse(this._axiosInstance.post<T>(path, data, {
       params: params
     }));
   }
 
   put<T>(path: string, data?: any, params?: { [key: string]: string | number }): Promise<T> {
-    return this.resolveResponse(axios.put<T>(this.composePath(path), data, {
+    return this.resolveResponse(this._axiosInstance.put<T>(path, data, {
       params: params
     }));
   }
 
   del<T>(path: string, params?: { [key: string]: string | number }): Promise<void> {
-    return this.resolveResponse(axios.delete<void>(this.composePath(path), {
+    return this.resolveResponse(this._axiosInstance.delete<void>(path, {
       params: params
     }));
-  }
-
-  private composePath(path: string): string {
-    return __path.join(environment.api_path, path);
   }
 
   private resolveResponse<T>(response: Promise<AxiosResponse<T>>): Promise<T> {
@@ -86,3 +88,4 @@ class HttpService implements IHttpService {
 }
 
 export const Http: IHttpService = HttpService.instance;
+enableInterceptor();

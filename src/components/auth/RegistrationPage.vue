@@ -73,8 +73,8 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import AuthPage from './AuthPage.vue';
-  import environment from '../../environment/environment';
-  import {authService} from '../../services/AuthService';
+  import {authService} from '@/services/AuthService';
+  import {Environment} from '@/environment/environment';
 
   class FormModel {
     email: string;
@@ -118,7 +118,7 @@
       if (!this.formModel.email) {
         this.formErrors.push('INVALID_EMAIL_ADDRESS');
       }
-      if (!this.formModel.password || !this.formModel.password.match(environment.password_regex)) {
+      if (!this.formModel.password || !this.formModel.password.match(Environment.password_regex)) {
         this.formErrors.push('INVALID_PASSWORD');
       }
       if (this.formModel.password !== this.formModel.confirmPassword) {

@@ -1,11 +1,13 @@
-import axios from 'axios';
+import { AxiosResponse } from 'axios';
 import {AxiosRequestConfig} from 'axios';
-import {store} from '../store/Store';
+import {store} from '@/store/Store';
 import {authService} from './AuthService';
 import {TokenResponse} from 'tyr-api';
+import {StatusCodes} from '@/services/StatusCodes';
+import {Http} from '@/services/HttpService';
 
-export const interceptRequests = () => {
-  axios.interceptors.request.use(async (config: AxiosRequestConfig) => {
+export const enableInterceptor = () => {
+  Http.axios().interceptors.request.use(async (config: AxiosRequestConfig) => {
     let tokens = store.getters['auth/tokens'] as TokenResponse;
 
     if (tokens && Object.keys(tokens).length === 4) {
@@ -21,6 +23,14 @@ export const interceptRequests = () => {
     }
 
     return config;
+  });
+
+  Http.axios().interceptors.response.use(async (res: AxiosResponse) => {
+    if (res.status === StatusCodes.UNAUTHORIZED) {
+      await authService.logout();
+    }
+
+    return res;
   });
 };
 

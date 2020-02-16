@@ -1,7 +1,7 @@
 
 
-export default {
-  api_path: '/api',
+export const Environment =  {
+  api_path: process.env.VUE_APP_PATH_PREFIX,
   client_id: 'client_id',
   redirect_uri: 'http://localhost/login',
   password_regex: '^(?=.*[0-9@#$%^&+=.])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$',

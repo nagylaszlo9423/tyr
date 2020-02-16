@@ -82,6 +82,7 @@
       display: flex;
       right: 0;
       bottom: 0;
+      padding: 1rem;
     }
   }
 </style>

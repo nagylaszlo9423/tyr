@@ -18,7 +18,7 @@
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
-    "bootstrap-vue": "^2.4.0",
+    "bootstrap-vue": "^2.4.2",
     "core-js": "^3.6.4",
     "jquery": "^3.4.1",
     "normalize.css": "^8.0.1",
@@ -27,9 +27,9 @@
     "popper.js": "^1.16.1",
     "rxjs": "^6.5.4",
     "tyr-api": "git+https://899d2b9e2342eddbe3dc22c4c8771c24c0fdc814:x-oauth-basic@github.com/nagylaszlo9423/tyr-api.git#master",
-    "vee-validate": "^3.2.4",
+    "vee-validate": "^3.2.5",
     "vue": "^2.6.11",
-    "vue-class-component": "^7.2.2",
+    "vue-class-component": "^7.2.3",
     "vue-i18n": "^8.15.3",
     "vue-property-decorator": "^8.4.0",
     "vue-router": "^3.1.5",
@@ -57,9 +57,9 @@
     "sass-loader": "^8.0.2",
     "typescript": "^3.5.3",
     "vue-template-compiler": "^2.6.11",
-    "webpack": "^4.41.5",
+    "webpack": "^4.41.6",
     "webpack-bundle-analyzer": "^3.6.0",
-    "webpack-cli": "^3.3.10"
+    "webpack-cli": "^3.3.11"
   },
   "eslintConfig": {
     "root": true,

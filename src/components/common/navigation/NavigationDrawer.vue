@@ -100,6 +100,10 @@
       padding: 0;
       text-align: right;
 
+      .nav-item {
+        overflow: hidden;
+      }
+
       svg {
         display: block;
         margin: auto;

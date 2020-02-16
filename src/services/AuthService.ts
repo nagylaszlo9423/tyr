@@ -1,8 +1,8 @@
-import environment from '../environment/environment';
-import {store} from '../store/Store';
-import {router} from '../Router';
+import {store} from '@/store/Store';
+import {router} from '@/Router';
 import {LoginRequest, LoginResponse, RegistrationRequest, RegistrationResponse, TokenResponse} from 'tyr-api';
 import {Http} from '@/services/HttpService';
+import {Environment} from '@/environment/environment';
 
 let isRefreshing = false;
 
@@ -12,8 +12,8 @@ export const authService = {
     return Http.post<LoginResponse>('/oauth/login', <LoginRequest>{
       email: request.email,
       password: request.password,
-      clientId: environment.client_id,
-      redirectUri: environment.redirect_uri
+      clientId: Environment.client_id,
+      redirectUri: Environment.redirect_uri
     });
   },
   register(email: string, password: string): Promise<RegistrationResponse> {

@@ -31,6 +31,8 @@
   .tyr-card {
     position: relative;
     margin: 1rem;
+    border-radius: 5px;
+    box-shadow: 0 1px 15px grey;
 
     .tyr-card-content {
       position: absolute;

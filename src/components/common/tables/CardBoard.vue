@@ -33,7 +33,6 @@
     justify-content: center;
 
     .tyr-card {
-      box-shadow: 0 1px 4px grey;
       width: calc(100% / 5);
       overflow: hidden;
 

@@ -1,7 +1,7 @@
 import {ActionContext, Module} from 'vuex';
 import {authService} from '../../services/AuthService';
-import environment from '../../environment/environment';
 import {TokenResponse} from 'tyr-api';
+import {Environment} from '@/environment/environment';
 
 class State {
   code = '';
@@ -30,7 +30,7 @@ export default {
     async login(store: ActionContext<State, any>, request: {email: string, password: string}) {
       const loginResponse = await authService.login(request);
       store.commit('setCode', loginResponse.code);
-      const tokenResponse = await authService.exchangeCode(loginResponse.code, loginResponse.redirectUri, environment.client_id);
+      const tokenResponse = await authService.exchangeCode(loginResponse.code, loginResponse.redirectUri, Environment.client_id);
       store.commit('setTokens', tokenResponse);
     },
     async refreshToken(store: ActionContext<State, any>) {
