@@ -9,7 +9,6 @@
   import Vue, {ComponentOptions} from 'vue';
   import Component from 'vue-class-component';
   import BootstrapVue from 'bootstrap-vue';
-  import {authGuard} from './guards/AuthGuard';
 
   @Component({
     name: 'App'
@@ -19,7 +18,6 @@
 
     created() {
       Vue.use(BootstrapVue);
-      this.$router.beforeEach(authGuard);
     }
 
     errorCaptured(error: Error) {

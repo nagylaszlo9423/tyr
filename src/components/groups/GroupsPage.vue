@@ -37,7 +37,7 @@
     }
 
     private async load() {
-      const response = await groupService.getGroupsPaged({page: this.currentPage, size: 10});
+      const response = await groupService.getGroupsPaged(this.currentPage, 10);
       const cardModels: CardBoardModel[] = this.mapGroupsToModel(response.data.items as Array<GroupResponse>);
       this.items.push(...cardModels);
       this.currentPage++;

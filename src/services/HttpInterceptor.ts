@@ -30,7 +30,6 @@ export const enableInterceptor = () => {
   });
 
   Http.axios().interceptors.response.use(async (res: AxiosResponse) => {
-    console.log('itt', res.status);
     if (res.status === StatusCodes.UNAUTHORIZED) {
       await store.dispatch('auth/refreshToken');
     }

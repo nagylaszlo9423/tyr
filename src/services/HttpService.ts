@@ -3,8 +3,6 @@ import {enableInterceptor} from './HttpInterceptor';
 import {ErrorResponse} from 'tyr-api';
 import {Environment} from '@/environment/environment';
 
-const path = require('path');
-
 export interface IHttpService {
 
   axios(): AxiosInstance;
