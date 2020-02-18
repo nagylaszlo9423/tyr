@@ -1,30 +1,35 @@
 import axios, {AxiosResponse, AxiosError, AxiosInstance} from 'axios';
-import {enableInterceptor} from './HttpInterceptor';
+import {addInterceptors} from './HttpInterceptor';
 import {ErrorResponse} from 'tyr-api';
 import {Environment} from '@/environment/environment';
 
-export interface IHttpService {
+export abstract class AbstractHttpService {
+  protected readonly _axiosInstance: AxiosInstance;
 
-  axios(): AxiosInstance;
-
-  get<T>(path: string, params?: { [key: string]: string | number }): Promise<T>
-
-  post<T>(path: string, data?: any, params?: { [key: string]: string | number }): Promise<T>
-
-  put<T>(path: string, data?: any, params?: { [key: string]: string | number }): Promise<T>
-
-  del<T>(path: string, params?: { [key: string]: string | number }): Promise<void>
-}
-
-class HttpService implements IHttpService {
-  private static _instance: HttpService;
-  private readonly _axiosInstance: AxiosInstance;
-
-  private constructor() {
+  protected constructor() {
     this._axiosInstance = axios.create({
-      baseURL: Environment.api_path
+      baseURL: Environment.api_path,
+      validateStatus: function (status) {
+        return status >= 200 && status < 500;
+      }
     });
   }
+
+  get axios() {
+    return this._axiosInstance;
+  }
+
+  abstract get<T>(path: string, params?: { [key: string]: string | number }): Promise<T>
+
+  abstract post<T>(path: string, data?: any, params?: { [key: string]: string | number }): Promise<T>
+
+  abstract put<T>(path: string, data?: any, params?: { [key: string]: string | number }): Promise<T>
+
+  abstract del<T>(path: string, params?: { [key: string]: string | number }): Promise<void>
+}
+
+class HttpService extends AbstractHttpService {
+  private static _instance: HttpService;
 
   static get instance(): HttpService {
     if (!HttpService._instance) {
@@ -32,10 +37,6 @@ class HttpService implements IHttpService {
     }
 
     return HttpService._instance;
-  }
-
-  axios(): AxiosInstance {
-    return this._axiosInstance;
   }
 
   get<T>(path: string, params?: { [key: string]: string | number }): Promise<T> {
@@ -89,5 +90,6 @@ class HttpService implements IHttpService {
   }
 }
 
-export const Http: IHttpService = HttpService.instance;
-enableInterceptor();
+const instance = HttpService.instance;
+addInterceptors(instance);
+export const Http: AbstractHttpService = instance;

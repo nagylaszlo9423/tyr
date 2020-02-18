@@ -1,14 +1,14 @@
 <template>
-  <div class="groups-page">
-    <router-view></router-view>
+  <div>
+    Group details
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
 
-  @Component({})
-  export default class GroupsPage extends Vue {
+  @Component
+  export default class GroupDetailsPage extends Vue {
   }
 </script>
 

@@ -25,7 +25,6 @@ module.exports = {
         },
         logLevel: 'debug'
       }
-    },
-    http2: true
+    }
   }
 };

@@ -2,13 +2,14 @@ import {ActionContext, Module} from 'vuex';
 import {authService} from '@/services/AuthService';
 import {TokenResponse} from 'tyr-api';
 import {Environment} from '@/environment/environment';
+import {RootState} from '../RootState';
 
 class State {
   code = '';
-  tokens: TokenResponse | null = null;
+  tokens: TokenResponse | null = new TokenResponse();
 }
 
-export default {
+export const authStoreModule: Module<State, RootState> = {
   namespaced: true,
   state: new State(),
   getters: {
@@ -27,13 +28,13 @@ export default {
     }
   },
   actions: {
-    async login(store: ActionContext<State, any>, request: {email: string, password: string}) {
+    async login(store: ActionContext<State, RootState>, request: {email: string, password: string}) {
       const loginResponse = await authService.login(request);
       store.commit('setCode', loginResponse.code);
       const tokenResponse = await authService.exchangeCode(loginResponse.code, loginResponse.redirectUri, Environment.client_id);
       store.commit('setTokens', tokenResponse);
     },
-    async refreshToken(store: ActionContext<State, any>) {
+    async refreshToken(store: ActionContext<State, RootState>) {
       if (!store.state.tokens) {
         throw new Error('errors.UNAUTHORIZED');
       }
@@ -41,4 +42,4 @@ export default {
       store.commit('setTokens', tokens);
     }
   }
-} as Module<State, any>;
+};

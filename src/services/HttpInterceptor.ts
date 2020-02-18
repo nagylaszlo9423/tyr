@@ -4,10 +4,10 @@ import {store} from '@/store/Store';
 import {authService} from './AuthService';
 import {TokenResponse} from 'tyr-api';
 import {StatusCodes} from '@/services/StatusCodes';
-import {Http} from '@/services/HttpService';
+import {AbstractHttpService} from '@/services/HttpService';
 
-export const enableInterceptor = () => {
-  Http.axios().interceptors.request.use(async (config: AxiosRequestConfig) => {
+export const addInterceptors = (httpService: AbstractHttpService) => {
+  httpService.axios.interceptors.request.use(async (config: AxiosRequestConfig) => {
     if (config.url && config.url.indexOf('/oauth') > -1) {
       return config;
     }
@@ -29,9 +29,13 @@ export const enableInterceptor = () => {
     return config;
   });
 
-  Http.axios().interceptors.response.use(async (res: AxiosResponse) => {
+  httpService.axios.interceptors.response.use(async (res: AxiosResponse) => {
     if (res.status === StatusCodes.UNAUTHORIZED) {
       await store.dispatch('auth/refreshToken');
+    }
+
+    if (res.status >= 400) {
+      return Promise.reject(res.data);
     }
 
     return res;

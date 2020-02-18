@@ -1,15 +1,19 @@
-import Vuex from 'vuex';
-import auth from './modules/Auth';
-import routeStore from './modules/RouteStore';
+import Vuex, {Store, StoreOptions} from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import Vue from 'vue';
+import {RootState} from '@/store/RootState';
+import {authStoreModule} from '@/store/modules/AuthStoreModule';
+import {routeStoreModule} from '@/store/modules/RouteStoreModule';
 
 Vue.use(Vuex);
 
-export const store = new Vuex.Store({
+const storeOptions: StoreOptions<RootState> = {
+  state: {
+    version: '1.0.0'
+  },
   modules: {
-    auth,
-    routeStore
+    auth: authStoreModule,
+    route: routeStoreModule
   },
   plugins: [
     createPersistedState({
@@ -20,4 +24,6 @@ export const store = new Vuex.Store({
       ]
     })
   ]
-});
+};
+
+export const store: Store<RootState> = new Vuex.Store(storeOptions);

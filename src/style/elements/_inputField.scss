@@ -1,0 +1,70 @@
+@import "../variables";
+
+.tyr-input-field {
+  display: block;
+  position: relative;
+  padding: 1.7rem 0 1rem 0;
+  margin: .3rem .6rem;
+
+  input {
+    padding: 1rem .3rem .3rem .8rem;
+    border-radius: .5rem;
+    border: solid $primary 2px;
+    width: 100%;
+  }
+
+  .tyr-input-field-label {
+    position: absolute;
+    transition: left .3s ease-in-out, top .3s ease-in-out, font-size .3s ease-in-out;
+    top: 0;
+    left: .5rem;
+    font-size: 1rem;
+    color: #AAAAAA;
+
+    &.focus {
+      top: -.3rem;
+      left: 0;
+      font-size: .5rem;
+    }
+  }
+
+  .error-icon {
+    position: absolute;
+    right: 1rem;
+    top: .4rem;
+    color: red;
+  }
+
+  .info {
+    position: absolute;
+    bottom: -1.2rem;
+    font-size: .5rem;
+    color: grey;
+
+    &.fade-enter-active, &.fade-leave-active {
+      transition: opacity .2s;
+    }
+    &.fade-enter, &.fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
+  }
+
+  .error-field {
+    position: absolute;
+    z-index: 10;
+    top: 0;
+    left: -.3rem;
+    border-radius: 1.4rem;
+    padding: .2rem .4rem;
+    background-color: $error;
+    color: white;
+    margin: .1rem 1rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 2px #999999;
+
+    span {
+      font-size: .6rem;
+    }
+  }
+}

@@ -12,7 +12,7 @@ export const authGuard: NavigationGuard = async (to: Route, from: Route, next: (
       return next();
     }
 
-    authService.logout(true).catch();
+    authService.logout().catch();
     return next(false);
   }
 

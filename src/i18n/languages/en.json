@@ -20,6 +20,9 @@
   "RECENTER": "Recenter",
   "RECORD": "Record",
   "STOP_RECORDING": "Stop recording",
+  "groups": {
+    "EDIT_GROUP": "Edit group {name}"
+  },
   "errors": {
     "UNKNOWN_ERROR": "Unknown error occurred",
     "LOGIN_DENIED": "Login denied",

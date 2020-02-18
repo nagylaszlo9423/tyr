@@ -1,27 +1,44 @@
 import {store} from '@/store/Store';
 import {router} from '@/Router';
-import {LoginRequest, LoginResponse, RegistrationRequest, RegistrationResponse, TokenResponse} from 'tyr-api';
+import {
+  LoginRequest,
+  LoginResponse,
+  LogoutRequest,
+  RegistrationRequest,
+  RegistrationResponse,
+  TokenResponse
+} from 'tyr-api';
 import {Http} from '@/services/HttpService';
 import {Environment} from '@/environment/environment';
 
-let isRefreshing = false;
 
-export const authService = {
-  refreshPromise: Promise.resolve<TokenResponse>(new TokenResponse()),
-  login(request: {email: string, password: string}): Promise<LoginResponse> {
+export class AuthService  {
+  private isRefreshing = false;
+  private refreshPromise = Promise.resolve<TokenResponse>(new TokenResponse());
+  private static _instance: AuthService;
+
+  constructor() {}
+
+  static get instance(): AuthService {
+    return this._instance ? this._instance : this._instance = new AuthService();
+  }
+
+  login(request: { email: string, password: string }): Promise<LoginResponse> {
     return Http.post<LoginResponse>('/oauth/login', <LoginRequest>{
       email: request.email,
       password: request.password,
       clientId: Environment.client_id,
       redirectUri: Environment.redirect_uri
     });
-  },
+  }
+
   register(email: string, password: string): Promise<RegistrationResponse> {
     return Http.post<RegistrationResponse>('/oauth/register', <RegistrationRequest>{
       email: email,
       password: password
     });
-  },
+  }
+
   exchangeCode(code: string, redirectUri: string, clientId: string): Promise<TokenResponse> {
     return Http.post<TokenResponse>('/oauth/token', undefined, {
       'grant_type': 'authorization_code',
@@ -32,25 +49,29 @@ export const authService = {
       store.commit('auth/setTokens', response);
       return response;
     });
-  },
+  }
+
   refreshTokens(token: string): Promise<TokenResponse> {
-    if (!isRefreshing) {
-      isRefreshing = true;
+    if (!this.isRefreshing) {
+      this.isRefreshing = true;
       return Http.post<TokenResponse>('/oauth/token', undefined, {
         'grant_type': 'refresh_token',
-        'refresh_token': store.getters('auth/refreshToken')
-      }).finally(() => isRefreshing = false);
+        'refresh_token': store.getters['auth/tokens'].refreshToken,
+        'client_id': Environment.client_id
+      }).finally(() => this.isRefreshing = false);
     } else {
       return this.refreshPromise;
     }
-  },
-  logout(shouldNavigate = true): Promise<void> {
-    store.commit('auth/clear');
-    if (shouldNavigate) {
-      router.push('/login');
-    }
-    return Http.post('/oauth/logout');
-  },
+  }
+
+  logout(): Promise<void> {
+    return Http.post('/oauth/logout', this.logOutLocallyAndCreateLogoutRequest());
+  }
+
+  logoutEverywhere(): Promise<void> {
+    return Http.post('/oauth/logout/all', this.logOutLocallyAndCreateLogoutRequest());
+  }
+
   async isLoggedIn(): Promise<boolean> {
     try {
       const now = new Date();
@@ -74,4 +95,14 @@ export const authService = {
     }
     return false;
   }
-};
+
+  private logOutLocallyAndCreateLogoutRequest(): LogoutRequest {
+    const request = new LogoutRequest();
+    request.accessToken = store.getters['auth/tokens'].accessToken;
+    store.commit('auth/clear');
+    router.push('/login');
+    return request;
+  }
+}
+
+export const authService: AuthService = AuthService.instance;

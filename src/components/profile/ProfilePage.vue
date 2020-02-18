@@ -14,9 +14,9 @@
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
-  import InputField from '../common/controls/InputComponent.vue';
+  import InputField from '../common/controls/InputField.vue';
   import {ValidationObserver} from 'vee-validate';
-  import {VeeValidator} from '../../Types';
+  import {VeeValidator} from '@/Types';
 
   @Component({
     components: {

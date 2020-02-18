@@ -1,11 +1,12 @@
 import {Module} from 'vuex';
-import {Path} from '../../components/map/features/Path';
+import {Path} from '@/components/map/features/Path';
+import {RootState} from '@/store/RootState';
 
 class State {
   recordedPath: Path
 }
 
-export default {
+export const routeStoreModule: Module<State, RootState> = {
   namespaced: true,
   state: new State(),
   getters: {
@@ -20,4 +21,4 @@ export default {
     async saveRecordedPath() {
     }
   }
-} as Module<State, any>;
+};
