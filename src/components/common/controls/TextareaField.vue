@@ -1,17 +1,17 @@
 <template>
   <ValidationProvider :rules="rules" v-slot="{ errors }">
-    <div class="tyr-input-field form-group">
+    <div class="tyr-textarea-field form-group">
       <div class="input-group">
-        <input :id="id"
-               :name="id"
-               ref="inputField"
-               :type="type"
-               :value="value_"
-               @input="updateValue"
-               @focus="isFocused = true"
-               @blur="isFocused=false"/>
+        <textarea :id="id"
+                  :name="id"
+                  ref="textareaField"
+                  :type="type"
+                  :value="value_"
+                  @input="updateValue"
+                  @focus="isFocused = true"
+                  @blur="isFocused=false"></textarea>
         <label v-if="!errors || !errors[0]"
-               class="tyr-input-field-label"
+               class="tyr-textarea-field-label"
                :class="{focus: isFocused || value_}"
                :for="id">
           {{ label_ }}
@@ -37,15 +37,14 @@
   import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
   import {ValidationProvider} from 'vee-validate';
   import {ComponentOptions} from 'vue';
-  import {TranslateResult} from 'vue-i18n';
 
   @Component({
-    name: 'input-field',
+    name: 'textarea-field',
     components: {
       ValidationProvider
     }
   })
-  export default class InputField extends Vue implements ComponentOptions<InputField> {
+  export default class TextareaField extends Vue implements ComponentOptions<TextareaField> {
     @Prop({required: true}) id: string;
     @Prop() rules: string;
     @Prop() value: string;
@@ -58,12 +57,12 @@
     isFocused = false;
 
     $refs: {
-      inputField: HTMLInputElement
+      textareaField: HTMLInputElement
     };
 
     created(): void {
-      this.label_ = this.label;
-      this.info_ = this.info;
+      this.label_ = this.$t(this.label) as string;
+      this.info_ = this.$t(this.info) as string;
     }
 
     @Watch('label')
@@ -82,12 +81,12 @@
     }
 
     updateValue() {
-      this.value_ = this.$refs.inputField.value;
-      this.$emit('input', this.$refs.inputField.value);
+      this.value_ = this.$refs.textareaField.value;
+      this.$emit('input', this.$refs.textareaField.value);
     }
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 </style>
