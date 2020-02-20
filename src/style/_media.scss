@@ -1,13 +1,13 @@
 
 
 @mixin media-sm {
-  @media screen and (max-width: 479px) { @content; }
+  @media screen and (max-width: 479px) and (orientation: portrait), screen and (max-height: 479px) and (orientation: landscape) { @content; }
 }
 
 @mixin media-md {
-  @media screen and (max-width: 767px) { @content; }
+  @media screen and (max-width: 767px) and (orientation: portrait), screen and (max-height: 767px) and (orientation: landscape) { @content; }
 }
 
 @mixin media-lg {
-  @media screen and (max-width: 991px) { @content; }
+  @media screen and (max-width: 991px) and (orientation: portrait), screen and (max-height: 991px) and (orientation: landscape) { @content; }
 }

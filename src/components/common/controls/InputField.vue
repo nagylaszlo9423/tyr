@@ -1,5 +1,7 @@
 <template>
-  <ValidationProvider :rules="rules" v-slot="{ errors }">
+  <ValidationProvider :name="id"
+                      :rules="rules"
+                      v-slot="{ errors }">
     <div class="tyr-input-field form-group">
       <div class="input-group">
         <input :id="id"
@@ -26,7 +28,8 @@
       </div>
       <transition name="fade">
         <div v-if="errors && errors[0]" class="error-field">
-          <span>{{ errors[0] }}</span>
+          <span class="errors">{{ errors[0] }}</span>
+          <span class="arrow-down"></span>
         </div>
       </transition>
     </div>

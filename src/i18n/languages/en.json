@@ -21,6 +21,9 @@
   "RECORD": "Record",
   "STOP_RECORDING": "Stop recording",
   "groups": {
+    "NAME": "Group name",
+    "DESCRIPTION": "Description",
+    "ACCESS": "Access level",
     "EDIT_GROUP": "Edit group {name}"
   },
   "errors": {
@@ -30,5 +33,15 @@
     "INVALID_EMAIL_ADDRESS": "Invalid email address",
     "INVALID_PASSWORD": "Invalid password",
     "EMAIL_ALREADY_REGISTERED": "Email already registered"
+  },
+  "validation": {
+    "names": {
+      "name": "Name",
+      "access": "Access",
+      "description": "Description"
+    },
+    "messages": {
+      "required": "{0} field required"
+    }
   }
 }

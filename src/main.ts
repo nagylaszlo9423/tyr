@@ -7,7 +7,7 @@ import {store} from './store/Store';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './style.scss';
-import './utils/validation';
+import './utils/validation/VeeValidate';
 import './initialize';
 
 Vue.config.productionTip = false;

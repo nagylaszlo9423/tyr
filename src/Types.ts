@@ -1,9 +1,7 @@
 import {Vue as _Vue} from 'vue-property-decorator';
 import {ProviderInstance} from 'vee-validate/dist/types/types';
+import {ValidationObserver} from 'vee-validate';
 
-export interface Bv {
-
-}
 
 export interface SimplertOptions {
   title?: string;
@@ -40,5 +38,9 @@ export interface VeeValidator {
 }
 
 export class Vue extends _Vue {
+  // @ts-ignore
+  $refs: {
+    validator: InstanceType<typeof ValidationObserver>;
+  };
   $Simplert: Simplert;
 }

@@ -1,0 +1,34 @@
+@import "../media";
+
+.t-page {
+  position: relative;
+  border: solid #CCCCCC 1px;
+  border-radius: 5px;
+  box-shadow: 0 0 3px #AAAAAA;
+  background: white;
+  margin: 4rem;
+  padding: 6rem;
+
+  .t-page-title {
+    span {
+      font-size: .6rem;
+    }
+  }
+
+  @include media-lg() {
+    margin: 2rem;
+    padding: 4rem;
+  }
+
+  @include media-md() {
+    margin: 1rem;
+    padding: 2rem;
+  }
+
+  @include media-sm() {
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+    padding: .5rem;
+  }
+}

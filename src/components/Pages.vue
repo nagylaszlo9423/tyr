@@ -74,7 +74,6 @@
     background-color: $background;
     height: calc(100% - #{$titleBarHeight});
     overflow-x: hidden;
-    padding: 1rem 1rem 0 1rem;
   }
 
   .pages-content.map {

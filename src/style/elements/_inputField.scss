@@ -1,16 +1,17 @@
 @import "../variables";
 
+$animation-speed: .2s;
+
 .tyr-input-field, .tyr-textarea-field {
   display: block;
   position: relative;
   padding: 1rem 0 0 0;
-  margin: 1rem .3rem .3rem .3rem;
+  margin: 1rem 0 .3rem 0;
 
   textarea {
-    min-height: 2rem;
-    height: 3rem;
-    max-height: 10rem;
+    height: 6rem;
     overflow-y: auto;
+    resize: none;
   }
 
   input, textarea {
@@ -21,7 +22,7 @@
 
   .tyr-input-field-label, .tyr-textarea-field-label {
     position: absolute;
-    transition: color .3s ease-in-out, left .3s ease-in-out, top .3s ease-in-out, font-size .3s ease-in-out;
+    transition: color $animation-speed ease-in-out, left $animation-speed ease-in-out, top $animation-speed ease-in-out, font-size $animation-speed ease-in-out;
     top: -.3rem;
     left: .5rem;
     font-size: 1rem;
@@ -59,7 +60,7 @@
     z-index: 10;
     top: 0;
     left: -.3rem;
-    border-radius: 1.4rem;
+    border-radius: 5px;
     padding: .2rem .4rem;
     background-color: $error;
     color: white;
@@ -68,8 +69,16 @@
     align-items: center;
     box-shadow: 2px 2px #999999;
 
-    span {
+    span.errors {
       font-size: .6rem;
+    }
+
+    span.arrow-down {
+      position: absolute;
+      bottom: -.3rem;
+      border-left: .4rem solid transparent;
+      border-right: .4rem solid transparent;
+      border-top: .4rem solid $error;
     }
   }
 }

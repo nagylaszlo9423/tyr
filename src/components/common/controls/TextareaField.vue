@@ -1,5 +1,7 @@
 <template>
-  <ValidationProvider :rules="rules" v-slot="{ errors }">
+  <ValidationProvider :name="id"
+                      :rules="rules"
+                      v-slot="{ errors }">
     <div class="tyr-textarea-field form-group">
       <div class="input-group">
         <textarea :id="id"
