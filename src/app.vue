@@ -11,7 +11,7 @@
   import BootstrapVue from 'bootstrap-vue';
 
   @Component({
-    name: 'App'
+    name: 'app'
   })
   export default class App extends Vue implements ComponentOptions<App> {
     private theme = 'default';
