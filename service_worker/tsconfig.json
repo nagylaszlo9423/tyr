@@ -17,7 +17,7 @@
     ]
   },
   "files": [
-    "ServiceWorkerEntry.ts"
+    "service-worker-entry.ts"
   ],
   "exclude": [
     "node_modules"

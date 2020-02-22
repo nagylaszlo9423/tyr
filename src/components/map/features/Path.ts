@@ -3,9 +3,9 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Geometry from 'ol/geom/Geometry';
 import LineString from 'ol/geom/LineString';
-import {MapHelper} from '../MapHelper';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
+import {MapHelper} from '@/components/map/map-helper';
 
 
 export class Path extends Feature {
@@ -36,7 +36,6 @@ export class Path extends Feature {
       ...this.path.getCoordinates(),
       MapHelper.fromLonLat(pos)
     ]);
-    console.log(JSON.stringify(this.path.getCoordinates()));
   }
 
 }

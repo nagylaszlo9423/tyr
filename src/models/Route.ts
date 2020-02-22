@@ -1,4 +1,4 @@
-import {Path} from '../components/map/features/Path';
+import {Path} from '@/components/map/features/path';
 
 
 export class Route {

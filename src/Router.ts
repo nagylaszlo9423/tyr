@@ -1,6 +1,6 @@
 import VueRouter, {RouteConfig} from 'vue-router';
-import NotFoundPage from './components/common/NotFoundPage.vue';
-import {pagesRoutes} from '@/components/PagesRoutes';
+import NotFoundPage from './components/common/not-found.page.vue';
+import {pagesRoutes} from '@/components/pages.routes';
 
 const routes: RouteConfig[] = [
   {
@@ -10,12 +10,12 @@ const routes: RouteConfig[] = [
   {
     path: '/login',
     name: 'login',
-    component: () => import('./components/auth/LoginPage.vue')
+    component: () => import('./components/auth/login.page.vue')
   },
   {
     path: '/register',
     name: 'registration',
-    component: () => import('./components/auth/RegistrationPage.vue')
+    component: () => import('./components/auth/registration.page.vue')
   },
   pagesRoutes,
   {

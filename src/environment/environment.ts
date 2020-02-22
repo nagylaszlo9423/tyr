@@ -1,6 +1,6 @@
 
 
-export const Environment =  {
+export const environment =  {
   api_path: process.env.VUE_APP_PATH_PREFIX,
   client_id: 'client_id',
   redirect_uri: 'http://localhost/login',

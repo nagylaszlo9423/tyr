@@ -11,9 +11,9 @@
 
 <script lang="ts">
   import {Vue, Component, Watch} from 'vue-property-decorator';
-  import NavigationDrawer from './common/navigation/NavigationDrawer.vue';
-  import TitleBar from './common/TitleBar.vue';
-  import TyrMap from './map/TyrMap.vue';
+  import NavigationDrawer from './common/navigation/navigation-drawer.vue';
+  import TitleBar from './common/title-bar.vue';
+  import TyrMap from './map/tyr-map.vue';
   import {Route} from 'vue-router';
 
   @Component({

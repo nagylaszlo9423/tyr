@@ -24,7 +24,12 @@
     "NAME": "Group name",
     "DESCRIPTION": "Description",
     "ACCESS": "Access level",
-    "EDIT_GROUP": "Edit group {name}"
+    "EDIT_GROUP": "Edit group {name}",
+    "joinPolicies": {
+      "INVITE_ONLY": "Invite only",
+      "REQUEST": "Request",
+      "PUBLIC": "Public"
+    }
   },
   "errors": {
     "UNKNOWN_ERROR": "Unknown error occurred",

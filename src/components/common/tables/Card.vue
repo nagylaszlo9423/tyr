@@ -12,8 +12,8 @@
 
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
-  import {CardBoardModel} from './CardBoardModel';
-  import ImageView from '../ImageView.vue';
+  import ImageView from '../image-view.vue';
+  import {CardBoardModel} from '@/components/common/tables/card-board-model';
 
   @Component({
     components: {

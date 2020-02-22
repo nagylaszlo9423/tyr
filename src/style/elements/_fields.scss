@@ -1,0 +1,102 @@
+@import "../variables";
+
+$animation-speed: .2s;
+
+.tyr-input-field, .tyr-textarea-field, .tyr-select-field {
+  display: block;
+  position: relative;
+  padding: 1rem 0 0 0;
+  margin: 1rem 0 .3rem 0;
+
+  textarea {
+    height: 6rem;
+    overflow-y: auto;
+    resize: none;
+  }
+
+  select {
+    font-size: .72rem;
+  }
+
+  input, textarea, select {
+    padding: .5rem 1.2rem .5rem 1.2rem;
+    border-radius: 5px;
+    width: 100%;
+  }
+
+  .tyr-select-field-label {
+    top: .8rem;
+
+    &.focus {
+      top: -1rem;
+    }
+  }
+
+  .tyr-input-field-label, .tyr-textarea-field-label {
+    top: -.3rem;
+
+    &.focus {
+      top: -1.9rem;
+    }
+  }
+
+  .tyr-input-field-label, .tyr-textarea-field-label, .tyr-select-field-label {
+    position: absolute;
+    transition: color $animation-speed ease-in-out, left $animation-speed ease-in-out, top $animation-speed ease-in-out, font-size $animation-speed ease-in-out;
+    left: .5rem;
+    font-size: 1rem;
+
+    &.focus {
+      left: 0;
+      font-size: .8rem;
+    }
+  }
+
+  .error-icon {
+    position: absolute;
+    right: .5rem;
+    top: .5rem;
+    color: red;
+  }
+
+  .info {
+    position: absolute;
+    bottom: -1.2rem;
+    font-size: .5rem;
+    color: grey;
+
+    &.fade-enter-active, &.fade-leave-active {
+      transition: opacity .2s;
+    }
+    &.fade-enter, &.fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+      opacity: 0;
+    }
+  }
+
+  .error-popup {
+    position: absolute;
+    z-index: 10;
+    top: -.6rem;
+    left: -.3rem;
+    border-radius: 5px;
+    padding: .2rem .4rem;
+    background-color: $error;
+    color: white;
+    margin: .1rem 1rem;
+    display: flex;
+    align-items: center;
+    box-shadow: 2px 2px #999999;
+
+    span.error-popup {
+      font-size: .6rem;
+    }
+
+    span.arrow-down {
+      position: absolute;
+      bottom: -.4rem;
+      border-left: .4rem solid transparent;
+      border-right: .4rem solid transparent;
+      border-top: .4rem solid $error;
+    }
+  }
+}
