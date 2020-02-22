@@ -1,19 +1,22 @@
 <template>
   <div class="tyr-card-board">
     <div v-if="items.length">
-      <card v-for="(item, name, index) in items" :key="index" :name="'card' + index" :item="item"></card>
-    </div>
-    <div v-if="!items.length">
-      <card v-if="!items.length" :item="emptyCard"></card>
+      <div v-for="(item, index) in items_"
+           :key="index"
+           class="tyr-card"
+           @click="cardClick(item.id)">
+        <slot v-bind:item="item"></slot>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import {Component, Prop, Vue} from 'vue-property-decorator';
-  import {CardBoardModel} from '@/components/common/tables/card-board-model';
+  import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
   import ImageView from '@/components/common/image-view.vue';
   import Card from '@/components/common/tables/card.vue';
+
+  const path = require('path');
 
   @Component({
     name: 'card-board',
@@ -23,14 +26,22 @@
     }
   })
   export default class CardBoard extends Vue {
-    private readonly emptyCard: CardBoardModel = {
-      title: 'EMPTY_LIST',
-      description: '',
-      imgSrc: ''
-    };
+    @Prop() items: any[];
+    @Prop() itemNavigationPath: string;
 
-    @Prop()
-    items: CardBoardModel[];
+    items_: any[] = [];
+
+    cardClick(id: string) {
+      if (id) {
+        this.$router.push(path.join(this.itemNavigationPath, id));
+      }
+    }
+
+    @Watch('items')
+    watchItems(items: any[]) {
+      items.forEach(item => console.log(JSON.stringify(item)));
+      this.items_ = items;
+    }
   }
 </script>
 
@@ -41,28 +52,16 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+    justify-content: space-between;
 
     .tyr-card {
-      width: calc(100% / 5);
       overflow: hidden;
-
-      @include media-lg() {
-        & {
-          width: calc(100% / 4);
-        }
-      }
-
-      @include media-md {
-        & {
-          width: calc(100% / 3);
-        }
-      }
-
-      @include media-sm {
-        & {
-          width: calc(100% / 2);
-        }
-      }
+      position: relative;
+      margin: 1rem;
+      border-radius: 5px;
+      box-shadow: 0 1px 15px grey;
+      padding: .5rem;
+      cursor: pointer;
     }
   }
 

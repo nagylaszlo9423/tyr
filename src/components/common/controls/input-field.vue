@@ -10,7 +10,7 @@
                :type="type"
                :value="value_"
                @input="updateValue"
-               @focus="isFocused = true"
+               @focus="isFocused=true"
                @blur="isFocused=false"/>
         <label v-if="!errors || !errors[0]"
                class="tyr-input-field-label"

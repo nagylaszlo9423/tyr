@@ -21,7 +21,7 @@
     }
 
     errorCaptured(error: Error) {
-      this.$bvToast.toast(error.message, {variant: 'danger'});
+      this.$toasted.show(error.message, {type: 'error'});
     }
   }
 </script>

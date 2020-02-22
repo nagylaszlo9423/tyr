@@ -11,7 +11,7 @@
                 @input="updateValue"
                 @focus="isFocused = true"
                 @blur="isFocused=false">
-          <option v-for="(option, idx) in options" :key="idx" value="option">{{$t(option)}}</option>
+          <option v-for="(option, idx) in options" :key="idx" :value="option">{{$t(option)}}</option>
         </select>
         <label v-if="!errors || !errors[0]"
                class="tyr-select-field-label"

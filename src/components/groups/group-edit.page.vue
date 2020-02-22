@@ -7,14 +7,14 @@
           <input-field
             id="name"
             :label="$t('groups.NAME')"
-            :value="request.name"
+            v-model="request.name"
             rules="required"></input-field>
         </b-col>
         <b-col md="12" lg="6">
           <select-field id="accessLevel"
                         label="asdqwe"
                         :options="joinPolicies"
-                        :value="request.access"
+                        v-model="request.joinPolicy"
                         rules="required"></select-field>
         </b-col>
       </b-row>
@@ -22,7 +22,7 @@
         <b-col md="12" lg="6">
           <textarea-field id="description"
                           :label="$t('groups.DESCRIPTION')"
-                          :value="request.description"
+                          v-model="request.description"
                           rules="required"></textarea-field>
         </b-col>
       </b-row>
@@ -57,11 +57,7 @@
     joinPolicies = ['INVITE_ONLY', 'REQUEST', 'PUBLIC'];
 
     created(): void {
-      this.request = {
-        name: '',
-        joinPolicy: undefined,
-        description: ''
-      };
+      this.request = {} as CreateGroupRequest;
     }
 
     async onSubmit() {

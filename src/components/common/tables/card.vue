@@ -13,7 +13,6 @@
 <script lang="ts">
   import {Component, Prop, Vue} from 'vue-property-decorator';
   import ImageView from '../image-view.vue';
-  import {CardBoardModel} from '@/components/common/tables/card-board-model';
 
   @Component({
     components: {
@@ -21,7 +20,7 @@
     }
   })
   export default class Card extends Vue {
-    @Prop() item: CardBoardModel;
+    @Prop() item: any;
 
     isDescriptionClosed = true;
   }

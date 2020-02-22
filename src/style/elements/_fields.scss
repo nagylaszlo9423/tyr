@@ -1,6 +1,6 @@
 @import "../variables";
 
-$animation-speed: .2s;
+$transition-speed: .2s;
 
 .tyr-input-field, .tyr-textarea-field, .tyr-select-field {
   display: block;
@@ -42,7 +42,7 @@ $animation-speed: .2s;
 
   .tyr-input-field-label, .tyr-textarea-field-label, .tyr-select-field-label {
     position: absolute;
-    transition: color $animation-speed ease-in-out, left $animation-speed ease-in-out, top $animation-speed ease-in-out, font-size $animation-speed ease-in-out;
+    transition: color $transition-speed ease-in-out, left $transition-speed ease-in-out, top $transition-speed ease-in-out, font-size $transition-speed ease-in-out;
     left: .5rem;
     font-size: 1rem;
 

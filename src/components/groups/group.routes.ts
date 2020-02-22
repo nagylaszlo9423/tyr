@@ -21,7 +21,7 @@ export const groupRoutes: RouteConfig = {
       }
     },
     {
-      path: 'edit',
+      path: 'edit/:id',
       component: EditGroupPage,
       meta: {
         isAuthenticated: true
