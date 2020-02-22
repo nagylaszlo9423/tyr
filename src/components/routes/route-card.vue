@@ -1,5 +1,5 @@
 <template>
-  <div class="route-card" @click="">
+  <div class="route-card">
     <img :src="route.images[0]" />
     <h3>{{ route.title }}</h3>
     <span>{{ route.description }}</span>

@@ -27,7 +27,7 @@
       if (this.$route.params.id) {
         routeService.getRouteById(this.$route.params.id).then(response => this.route = response.data);
       } else {
-        this.route = <RouteResponse>{};
+        this.route = {} as RouteResponse;
       }
     }
   }
