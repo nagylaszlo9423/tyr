@@ -1,3 +1,5 @@
+import {PageType} from '@/utils/utils';
+import {PageType} from '@/utils/utils';
 <template>
   <ValidationObserver ref="validator" tag="form"
                       class="layout-container layout-vertical" novalidate @submit.prevent="onSubmit">
@@ -12,7 +14,7 @@
         </b-col>
         <b-col md="12" lg="6">
           <select-field id="accessLevel"
-                        label="asdqwe"
+                        :label="$t('groups.JOIN_POLICY')"
                         :options="joinPolicies"
                         v-model="request.joinPolicy"
                         rules="required"></select-field>
@@ -29,7 +31,7 @@
       <b-row class="my-3">
         <b-col sm="0" md="6" lg="9"></b-col>
         <b-col sm="12" md="6" lg="3">
-          <b-button block type="submit" variant="primary">{{$t('CREATE')}}</b-button>
+          <b-button block type="submit" variant="primary">{{$t(pageType === pageTypes.CREATE ? 'CREATE' : 'UPDATE')}}</b-button>
         </b-col>
       </b-row>
     </page>
@@ -41,31 +43,56 @@
   import {ComponentOptions} from 'vue';
   import {ValidationObserver} from 'vee-validate';
   import {Vue} from '@/types';
-  import {CreateGroupRequest} from 'tyr-api/types/axios';
   import {groupService} from '@/services/generated-services';
   import Page from '@/components/common/page.vue';
   import TextareaField from '@/components/common/controls/textarea-field.vue';
   import InputField from '@/components/common/controls/input-field.vue';
   import SelectField from '@/components/common/controls/select-field.vue';
+  import {PageType} from '@/utils/utils';
+  import {GroupRequest} from 'tyr-api/types/axios';
+  import {GroupJoinPolicy} from '@/components/groups/group-join-policy';
 
   @Component({
     components: {SelectField, TextareaField, InputField, Page, ValidationObserver}
   })
-  export default class EditGroupPage extends Vue implements ComponentOptions<EditGroupPage> {
-    private request: CreateGroupRequest;
+  export default class GroupEditPage extends Vue implements ComponentOptions<GroupEditPage> {
+    private request: GroupRequest = {};
+    private id: string;
+    private pageType: PageType;
+    private pageTypes = PageType;
 
-    joinPolicies = ['INVITE_ONLY', 'REQUEST', 'PUBLIC'];
+    joinPolicies = Object.keys(GroupJoinPolicy);
 
     created(): void {
-      this.request = {} as CreateGroupRequest;
+      this.id = this.$route.params.id;
+      if (this.id) {
+        this.pageType = PageType.EDIT;
+        this.loadGroup(this.id).then(group => this.request = group);
+      } else {
+        this.pageType = PageType.CREATE;
+        this.request = {} as GroupRequest;
+      }
     }
 
     async onSubmit() {
       const valid = await this.$refs.validator.validate();
 
       if (valid) {
-        await groupService.createGroup(this.request);
+        if (this.id) {
+          await groupService.updateGroup(this.id, this.request);
+        } else {
+          await groupService.createGroup(this.request);
+        }
       }
+    }
+
+    async loadGroup(id: string): Promise<GroupRequest> {
+      const groupResponse = (await groupService.findById(id)).data;
+      return {
+        name: groupResponse.name,
+        description: groupResponse.description,
+        joinPolicy: groupResponse.joinPolicy
+      };
     }
   }
 </script>

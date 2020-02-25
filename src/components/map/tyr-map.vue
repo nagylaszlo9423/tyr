@@ -10,17 +10,16 @@
   import {Component, Vue} from 'vue-property-decorator';
   import {fromLonLat} from 'ol/proj';
   import {ComponentOptions} from 'vue';
-  import {PositionMarker} from '@/components/map/features/position-marker';
-  import {LocationNavigator} from '@/components/map/location-navigator';
+  import {locationService} from '@/components/map/location-service';
   import {PathRecorder} from '@/components/map/plugins/path-recorder';
   import {eventBus} from '@/services/event-bus';
   import {Events} from '@/components/events';
+  import {PositionMarker} from '@/components/map/features/position-marker';
 
   @Component
   export default class TyrMap extends Vue implements ComponentOptions<TyrMap> {
     private trackPosition = true;
     private positionMarker: PositionMarker;
-    private nav: LocationNavigator;
     private pathRecorder: PathRecorder;
 
     private map: Map;
@@ -35,10 +34,8 @@
 
     created(): void {
       eventBus.$offOn(Events.map.mapPage.recordPath, () => this.pathRecorder.recordPath());
-      eventBus.$offOn(Events.map.mapPage.stopRecordingPath, () => {
-        eventBus.$emit(Events.map.tyrMap.stoppedRecording, this.pathRecorder.stopRecordingPath());
-      });
-      eventBus.$offOn(Events.map.mapPage.recenter, () => this.nav.getPosition().subscribe(this.goToPosition, error => console.error(error)));
+      eventBus.$offOn(Events.map.mapPage.stopRecordingPath, this.pathRecorder.stopRecordingPath.bind(this));
+      eventBus.$offOn(Events.map.mapPage.recenter, () => locationService.getPosition().subscribe(this.goToPosition, this.handleError.bind(this)));
     }
 
     mounted() {
@@ -54,8 +51,7 @@
 
 
       this.pathRecorder = new PathRecorder(this.map);
-      this.nav = new LocationNavigator();
-      this.nav.getPosition().subscribe(position => {
+      locationService.getPosition().subscribe(position => {
         this.goToPosition(position);
         this.positionMarker = new PositionMarker(position);
         this.map.addLayer(this.positionMarker.createVectorLayer());
@@ -64,7 +60,7 @@
     }
 
     watchPosition() {
-      this.nav.watchPosition().subscribe(this.onPositionChange.bind(this), (error) => {
+      locationService.watchPosition().subscribe(this.onPositionChange.bind(this), (error) => {
         if (error === 'TIME_OUT') {
           this.watchPosition();
         }
@@ -84,6 +80,10 @@
         center: fromLonLat([position.coords.longitude, position.coords.latitude]),
         zoom: 15
       });
+    }
+
+    handleError(error: string) {
+      this.$toasted.error(this.$tc(`errors.${error}`));
     }
   }
 </script>

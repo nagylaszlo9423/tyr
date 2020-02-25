@@ -6,3 +6,7 @@ export function randomImageFileName(): string {
   const idx = Math.floor(Math.random() * environment.background_images.length);
   return environment.background_images[idx];
 }
+
+export enum PageType {
+  EDIT, CREATE
+}

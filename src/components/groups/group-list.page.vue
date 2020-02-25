@@ -1,7 +1,7 @@
 <template>
   <page>
     <b-button @click="toCreateGroupPage">Create group</b-button>
-    <card-board :items="items" :item-navigation-path="editPagePath">
+    <card-board :items="items" :item-navigation-path="detailsPagePath">
       <template v-slot="{item}">
         <image-view class="card-image" fit="frame" src="https://via.placeholder.com/150"></image-view>
         <div class="card-content">
@@ -30,7 +30,7 @@
   })
   export default class GroupListPage extends Vue implements ComponentOptions<GroupListPage> {
     currentPage: number;
-    editPagePath = '/pages/groups/edit';
+    detailsPagePath = '/pages/groups';
     items: GroupResponse[];
 
     constructor() {

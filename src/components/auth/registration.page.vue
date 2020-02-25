@@ -29,7 +29,7 @@
                 name="email"
                 type="email"
                 v-model="formModel.email"
-                :placeholder="$t('ENTER_EMAIL')"
+                :placeholder="$t('auth.ENTER_EMAIL')"
                 required></b-form-input>
             </b-form-group>
           </b-col>
@@ -42,7 +42,7 @@
                 name="password"
                 type="password"
                 v-model="formModel.password"
-                :placeholder="$t('ENTER_PASSWORD')"
+                :placeholder="$t('auth.ENTER_PASSWORD')"
                 required></b-form-input>
             </b-form-group>
           </b-col>
@@ -55,7 +55,7 @@
                 name="confirm-password"
                 type="password"
                 v-model="formModel.confirmPassword"
-                :placeholder="$t('ENTER_PASSWORD_AGAIN')"
+                :placeholder="$t('auth.ENTER_PASSWORD_AGAIN')"
                 required></b-form-input>
             </b-form-group>
           </b-col>
@@ -75,6 +75,7 @@
   import {environment} from '@/environment/environment';
   import AuthPage from '@/components/auth/auth.page.vue';
   import {authService} from '@/services/auth.service';
+  import {catchError} from 'rxjs/operators';
 
   class FormModel {
     email: string;

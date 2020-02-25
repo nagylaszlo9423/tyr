@@ -15,8 +15,9 @@
             <div v-if="formErrors.length" class="alert alert-danger" role="alert">
               <small>{{$t('PLEASE_CORRECT_FOLLOWING_ERRORS')}}</small>
               <ul>
-                <li :key="`error_${index}`" v-for="(error, index) in formErrors"><small>{{ $t(`errors.${error}`)
-                  }}</small></li>
+                <li :key="`error_${index}`" v-for="(error, index) in formErrors">
+                  <small>{{ $t(`errors.${error}`)}}</small>
+                </li>
               </ul>
             </div>
           </b-col>
@@ -29,7 +30,7 @@
                 name="email"
                 type="email"
                 v-model="formModel.email"
-                :placeholder="$t('ENTER_EMAIL')"
+                :placeholder="$t('auth.ENTER_EMAIL')"
                 required></b-form-input>
             </b-form-group>
           </b-col>
@@ -42,7 +43,7 @@
                 name="password"
                 type="password"
                 v-model="formModel.password"
-                :placeholder="$t('ENTER_PASSWORD')"
+                :placeholder="$t('auth.ENTER_PASSWORD')"
                 required></b-form-input>
             </b-form-group>
           </b-col>

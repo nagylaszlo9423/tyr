@@ -1,10 +1,17 @@
 <template>
   <div id="map-page">
     <div class="map-page-controls">
-      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="save" @click="saveModal.open()"></floating-action-button>
-      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="circle" :title="$t('RECORD')" v-if="!isRecording" @click="recordPath">Record</floating-action-button>
-      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="stop" :title="$t('RECENTER')" v-if="isRecording" @click="stopRecording">Stop recording</floating-action-button>
-      <floating-action-button class="btn btn-primary overlay-item" icon="street-view" :title="$t('STOP_RECORDING')" @click="recenter">Recenter</floating-action-button>
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="save"
+                              @click="saveModal.open()"></floating-action-button>
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="circle" :title="$t('RECORD')"
+                              v-if="!isRecording" @click="recordPath">Record
+      </floating-action-button>
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="stop" :title="$t('RECENTER')"
+                              v-if="isRecording" @click="stopRecording">Stop recording
+      </floating-action-button>
+      <floating-action-button class="btn btn-primary overlay-item" icon="street-view" :title="$t('STOP_RECORDING')"
+                              @click="recenter">Recenter
+      </floating-action-button>
     </div>
   </div>
 </template>
@@ -18,6 +25,7 @@
   import FloatingActionButton from '@/components/common/controls/floating-action-button.vue';
   import LineString from 'ol/geom/LineString';
   import {Events} from '@/components/events';
+  import {locationService} from '@/components/map/location-service';
 
   @Component({
     components: {

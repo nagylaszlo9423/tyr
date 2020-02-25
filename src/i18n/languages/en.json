@@ -1,25 +1,32 @@
 {
   "EMAIL": "Email",
   "PASSWORD": "Password",
-  "MAP": "Map",
   "PROFILE": "Profile",
+  "FAILED_TO_LOGOUT": "Failed to logout",
+  "ADVANCED_SEARCH": "Advanced search",
+  "NOT_MATCHING_PASSWORDS": "Not matching passwords",
+  "PLEASE_CORRECT_FOLLOWING_ERRORS": "Please correct the following errors",
+  "CREATE": "Create",
+  "UPDATE": "Update",
+  "SETTINGS": "Settings",
+  "ROUTES": "Routes",
+  "GROUPS": "Groups",
+  "MAP": "Map",
   "REGISTRATION": "Registration",
   "REGISTER": "Register",
   "LOGIN": "Login",
   "LOGOUT": "Logout",
-  "FAILED_TO_LOGOUT": "Failed to logout",
-  "ADVANCED_SEARCH": "Advanced search",
-  "ENTER_EMAIL": "Enter email",
-  "ENTER_PASSWORD": "Enter password",
-  "ENTER_PASSWORD_AGAIN": "Enter password again",
-  "NOT_MATCHING_PASSWORDS": "Not matching passwords",
-  "PLEASE_CORRECT_FOLLOWING_ERRORS": "Please correct the following errors",
-  "GROUPS": "Groups",
-  "SETTINGS": "Settings",
-  "ROUTES": "Routes",
-  "RECENTER": "Recenter",
-  "RECORD": "Record",
-  "STOP_RECORDING": "Stop recording",
+  "auth": {
+    "ENTER_EMAIL": "Enter email",
+    "ENTER_PASSWORD": "Enter password",
+    "ENTER_PASSWORD_AGAIN": "Enter password again"
+  },
+  "map": {
+    "RECENTER": "Recenter",
+    "RECORD": "Record",
+    "STOP_RECORDING": "Stop recording",
+    "LOCATION_UNAVAILABLE": "Location unavailable"
+  },
   "groups": {
     "NAME": "Group name",
     "DESCRIPTION": "Description",
@@ -37,7 +44,10 @@
     "LOGIN_FAILED": "Login failed",
     "INVALID_EMAIL_ADDRESS": "Invalid email address",
     "INVALID_PASSWORD": "Invalid password",
-    "EMAIL_ALREADY_REGISTERED": "Email already registered"
+    "EMAIL_ALREADY_REGISTERED": "Email already registered",
+    "PERMISSION_DENIED": "Permission denied",
+    "POSITION_UNAVAILABLE": "Position unavailable",
+    "TIME_OUT": "Time out"
   },
   "validation": {
     "names": {

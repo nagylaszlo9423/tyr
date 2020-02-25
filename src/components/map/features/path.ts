@@ -23,6 +23,10 @@ export class Path extends Feature {
     }));
   }
 
+  get lineString() {
+    return this.path;
+  }
+
   createVectorLayer(): VectorLayer {
     return new VectorLayer({
       source: new VectorSource({

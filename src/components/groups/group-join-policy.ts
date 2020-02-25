@@ -1,7 +1,7 @@
 
 
 export enum GroupJoinPolicy {
-  INVITEONLY = 'INVITE_ONLY',
+  INVITE_ONLY = 'INVITE_ONLY',
   REQUEST = 'REQUEST',
   PUBLIC = 'PUBLIC'
 }
