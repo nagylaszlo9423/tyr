@@ -6,6 +6,8 @@ import LineString from 'ol/geom/LineString';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
 import {MapHelper} from '@/components/map/map-helper';
+import Fill from 'ol/style/Fill';
+import CircleStyle from 'ol/style/Circle';
 
 
 export class Path extends Feature {
@@ -23,7 +25,7 @@ export class Path extends Feature {
     }));
   }
 
-  get lineString() {
+  get lineString(): LineString {
     return this.path;
   }
 
@@ -31,6 +33,21 @@ export class Path extends Feature {
     return new VectorLayer({
       source: new VectorSource({
         features: [this]
+      }),
+      style: new Style({
+        fill: new Fill({
+          color: 'rgba(255, 255, 255, 0.2)'
+        }),
+        stroke: new Stroke({
+          color: '#ffcc33',
+          width: 2
+        }),
+        image: new CircleStyle({
+          radius: 7,
+          fill: new Fill({
+            color: '#ffcc33'
+          })
+        })
       })
     });
   }

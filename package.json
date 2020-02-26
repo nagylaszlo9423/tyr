@@ -27,6 +27,7 @@
     "path": "^0.12.7",
     "popper.js": "^1.16.1",
     "rxjs": "^6.5.4",
+    "simplify-geometry": "0.0.2",
     "tyr-api": "git+https://899d2b9e2342eddbe3dc22c4c8771c24c0fdc814:x-oauth-basic@github.com/nagylaszlo9423/tyr-api.git#master",
     "vee-validate": "^3.2.5",
     "vue": "^2.6.11",

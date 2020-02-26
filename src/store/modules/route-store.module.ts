@@ -1,9 +1,9 @@
 import {Module} from 'vuex';
-import {Path} from '@/components/map/features/Path';
 import {RootState} from '@/store/root-state';
+import LineString from 'ol/geom/LineString';
 
 class State {
-  recordedPath: Path
+  recordedPath: LineString
 }
 
 export const routeStoreModule: Module<State, RootState> = {
@@ -13,7 +13,7 @@ export const routeStoreModule: Module<State, RootState> = {
     recordedPath: (state: State) => state.recordedPath
   },
   mutations: {
-    setRecordedPath(state: State, path: Path) {
+    setRecordedPath(state: State, path: LineString) {
       state.recordedPath = path;
     }
   },

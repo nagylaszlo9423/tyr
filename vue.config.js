@@ -17,7 +17,7 @@ module.exports = {
     port: 3000,
     proxy: {
       '/api': {
-        target: 'http://192.168.1.103:3001/',
+        target: 'http://localhost:3001/',
         changeOrigin: true,
         secure: true,
         pathRewrite: {

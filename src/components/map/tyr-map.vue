@@ -33,9 +33,6 @@
     });
 
     created(): void {
-      eventBus.$offOn(Events.map.mapPage.recordPath, () => this.pathRecorder.recordPath());
-      eventBus.$offOn(Events.map.mapPage.stopRecordingPath, this.pathRecorder.stopRecordingPath.bind(this));
-      eventBus.$offOn(Events.map.mapPage.recenter, () => locationService.getPosition().subscribe(this.goToPosition, this.handleError.bind(this)));
     }
 
     mounted() {
@@ -49,14 +46,17 @@
         this.trackPosition = false;
       });
 
-
-      this.pathRecorder = new PathRecorder(this.map);
       locationService.getPosition().subscribe(position => {
         this.goToPosition(position);
         this.positionMarker = new PositionMarker(position);
         this.map.addLayer(this.positionMarker.createVectorLayer());
       });
       this.watchPosition();
+
+      this.pathRecorder = new PathRecorder(this.map);
+      eventBus.$offOn(Events.map.mapPage.recordPath, () => this.pathRecorder.recordPath());
+      eventBus.$offOn(Events.map.mapPage.stopRecordingPath, () => this.pathRecorder.stopRecordingPath());
+      eventBus.$offOn(Events.map.mapPage.recenter, () => locationService.getPosition().subscribe(this.goToPosition, this.handleError.bind(this)));
     }
 
     watchPosition() {

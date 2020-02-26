@@ -1,4 +1,4 @@
-import {Observable, Subject} from 'rxjs';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 import {finalize} from 'rxjs/operators';
 
 
@@ -17,7 +17,7 @@ export class LocationService {
   }
 
   private init() {
-    this.watchSubject = new Subject<Position>();
+    this.watchSubject = new ReplaySubject<Position>(1);
     new Observable<Position>(subscriber => {
       if (navigator.geolocation) {
         this.watchId = navigator.geolocation.watchPosition(
