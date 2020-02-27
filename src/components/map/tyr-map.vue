@@ -56,6 +56,7 @@
       this.pathRecorder = new PathRecorder(this.map);
       eventBus.$offOn(Events.map.mapPage.recordPath, () => this.pathRecorder.recordPath());
       eventBus.$offOn(Events.map.mapPage.stopRecordingPath, () => this.pathRecorder.stopRecordingPath());
+      eventBus.$offOn(Events.map.mapPage.saveRecordedPath, () => this.pathRecorder.saveRecordedPath());
       eventBus.$offOn(Events.map.mapPage.recenter, () => locationService.getPosition().subscribe(this.goToPosition, this.handleError.bind(this)));
     }
 

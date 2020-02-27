@@ -1,15 +1,16 @@
 <template>
   <div id="map-page">
     <div class="map-page-controls">
-      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="save"
-                              @click="saveModal.open()"></floating-action-button>
-      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="circle" :title="$t('RECORD')"
-                              v-if="!isRecording" @click="recordPath">Record
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="save" :title="$t('map.SAVE')"
+                              v-if="recordingState === pathRecordingStates.EDITING" @click="saveRecordedPath">
       </floating-action-button>
-      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="stop" :title="$t('RECENTER')"
-                              v-if="isRecording" @click="stopRecording">Stop recording
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="circle" :title="$t('map.RECORD')"
+                              v-if="recordingState === pathRecordingStates.NOT_RECORDING" @click="startRecordingPath">Record
       </floating-action-button>
-      <floating-action-button class="btn btn-primary overlay-item" icon="street-view" :title="$t('STOP_RECORDING')"
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="stop" :title="$t('map.RECENTER')"
+                              v-if="recordingState === pathRecordingStates.RECORDING" @click="stopRecordingPath">Stop recording
+      </floating-action-button>
+      <floating-action-button class="btn btn-primary overlay-item" icon="street-view" :title="$t('map.STOP_RECORDING')"
                               @click="recenter">Recenter
       </floating-action-button>
     </div>
@@ -25,7 +26,7 @@
   import FloatingActionButton from '@/components/common/controls/floating-action-button.vue';
   import LineString from 'ol/geom/LineString';
   import {Events} from '@/components/events';
-  import {locationService} from '@/components/map/location-service';
+  import {PathRecodingState} from '@/components/map/path-recoding-state';
 
   @Component({
     components: {
@@ -34,7 +35,8 @@
   })
   export default class MapPage extends Vue implements ComponentOptions<MapPage> {
 
-    isRecording = false;
+    pathRecordingStates = PathRecodingState;
+    recordingState: PathRecodingState = PathRecodingState.NOT_RECORDING;
 
     created(): void {
       eventBus.$offOn(Events.map.mapPage.stopRecordingPath, (path: Path) => {
@@ -48,26 +50,30 @@
       });
     }
 
-    async recordPath() {
-      if (!this.isRecording) {
-        this.isRecording = true;
+    startRecordingPath() {
+      if (this.recordingState === PathRecodingState.NOT_RECORDING) {
+        this.recordingState = PathRecodingState.RECORDING;
         eventBus.$emit(Events.map.mapPage.recordPath);
       }
     }
 
-    stopRecording() {
-      if (this.isRecording) {
-        this.isRecording = false;
+    stopRecordingPath() {
+      if (this.recordingState === PathRecodingState.RECORDING) {
+        this.recordingState = PathRecodingState.EDITING;
         eventBus.$emit(Events.map.mapPage.stopRecordingPath);
+      }
+    }
+
+    saveRecordedPath() {
+      if (this.recordingState === PathRecodingState.EDITING) {
+        this.recordingState = PathRecodingState.NOT_RECORDING;
+        eventBus.$emit(Events.map.mapPage.saveRecordedPath);
+        this.$router.push('/pages/routes/edit');
       }
     }
 
     recenter() {
       eventBus.$emit(Events.map.mapPage.recenter);
-    }
-
-    savePath() {
-
     }
   }
 </script>

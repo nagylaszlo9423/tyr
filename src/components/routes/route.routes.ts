@@ -6,7 +6,6 @@ import RouteEditPage from '@/components/routes/route-edit.page.vue';
 
 export const routeRoutes: RouteConfig = {
   path: 'routes',
-  name: 'routes',
   component: RoutesPage,
   meta: {
     isAuthenticated: true
@@ -14,7 +13,15 @@ export const routeRoutes: RouteConfig = {
   children: [
     {
       path: '',
+      name: 'routes',
       component: RouteListPage,
+      meta: {
+        isAuthenticated: true
+      }
+    },
+    {
+      path: 'edit',
+      component: RouteEditPage,
       meta: {
         isAuthenticated: true
       }

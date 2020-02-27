@@ -7,7 +7,6 @@ import GroupDetailsPage from '@/components/groups/group-details.page.vue';
 
 export const groupRoutes: RouteConfig = {
   path: 'groups',
-  name: 'groups',
   component: GroupsPage,
   meta: {
     isAuthenticated: true
@@ -15,6 +14,7 @@ export const groupRoutes: RouteConfig = {
   children: [
     {
       path: '',
+      name: 'groups',
       component: GroupListPage,
       meta: {
         isAuthenticated: true

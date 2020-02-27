@@ -23,7 +23,7 @@
 
   @Component
   export default class RoutesPage extends Vue implements ComponentOptions<RoutesPage> {
-    routes: RouteResponse[];
+    routes: RouteResponse[] = [];
 
     created(): void {
       routeService.getMostPopularRoutes().then(response => this.routes = response.data);

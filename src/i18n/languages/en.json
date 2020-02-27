@@ -25,7 +25,8 @@
     "RECENTER": "Recenter",
     "RECORD": "Record",
     "STOP_RECORDING": "Stop recording",
-    "LOCATION_UNAVAILABLE": "Location unavailable"
+    "LOCATION_UNAVAILABLE": "Location unavailable",
+    "SAVE": "Save path"
   },
   "groups": {
     "NAME": "Group name",

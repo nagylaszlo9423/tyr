@@ -9,8 +9,7 @@ import VectorSource from 'ol/source/Vector';
 import Snap from 'ol/interaction/Snap';
 import Select from 'ol/interaction/Select';
 import Modify from 'ol/interaction/Modify';
-import {altKeyOnly, doubleClick} from 'ol/events/condition';
-import MapBrowserEvent from 'ol/MapBrowserEvent';
+import {doubleClick} from 'ol/events/condition';
 
 export class PathRecorder {
   private subscription: Subscription;
@@ -36,7 +35,6 @@ export class PathRecorder {
       this.subscription.unsubscribe();
     }
     this.enablePathEditing();
-    store.commit('route/setRecordedPath', simplifyGeometry(this.path.lineString.getCoordinates(), 1));
   }
 
   enablePathEditing() {
@@ -50,6 +48,11 @@ export class PathRecorder {
     this.map.addInteraction(this.modify);
     this.map.addInteraction(this.snap);
     this.map.addInteraction(this.select);
+  }
+
+  saveRecordedPath() {
+    this.disablePathEditing();
+    store.commit('route/setRecordedPath', simplifyGeometry(this.path.lineString.getCoordinates(), 1));
   }
 
   disablePathEditing() {
