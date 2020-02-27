@@ -23,8 +23,7 @@ export class PositionMarker extends Feature {
     });
     this.point = new Point(PositionMarker.positionToCoords(position));
     this.style = new Style({
-      image: this.icon,
-      zIndex: 100000
+      image: this.icon
     });
     this.setGeometry(this.point);
     this.setStyle(this.style);
@@ -44,7 +43,8 @@ export class PositionMarker extends Feature {
     return new VectorLayer({
       source: new VectorSource({
         features: [this]
-      })
+      }),
+      zIndex: 1000000
     });
   }
 

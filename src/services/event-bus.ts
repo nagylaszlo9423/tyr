@@ -9,12 +9,22 @@ export interface IEventBus {
   $emit(event: string, ...args: any[]): this;
 
   $offOn(event: string | string[], callback: Function): this;
+
+  $onOff(event: string | string[], callback: Function): this;
 }
 
 export class EventBus extends Vue implements IEventBus {
   $offOn(event: string | string[], callback: Function): this {
     this.$off(event);
     this.$on(event, callback);
+    return this;
+  }
+
+  $onOff(event: string | string[], callback: Function): this {
+    this.$on(event, (...params: []) => {
+      callback(params);
+      this.$off(event);
+    });
     return this;
   }
 

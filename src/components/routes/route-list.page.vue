@@ -1,5 +1,5 @@
 <template>
-  <div class="routes-page">
+  <page class="routes-list-page">
     <div class="row">
       <div class="col-12">
 
@@ -12,7 +12,7 @@
         <span>{{ route.description }}</span>
       </div>
     </div>
-  </div>
+  </page>
 </template>
 
 <script lang="ts">
@@ -20,8 +20,10 @@
   import {ComponentOptions} from 'vue';
   import {RouteResponse} from 'tyr-api/types/axios';
   import {routeService} from '@/services/generated-services';
-
-  @Component
+  import Page from '@/components/common/page.vue';
+  @Component({
+    components: {Page}
+  })
   export default class RouteListPage extends Vue implements ComponentOptions<RouteListPage> {
     routes: RouteResponse[];
 

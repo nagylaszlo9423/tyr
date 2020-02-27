@@ -1,9 +1,9 @@
-import {Module} from 'vuex';
+import {ActionContext, Module} from 'vuex';
 import {RootState} from '@/store/root-state';
-import LineString from 'ol/geom/LineString';
+import {Coordinate} from 'ol/coordinate';
 
 class State {
-  recordedPath: LineString
+  recordedPath: Coordinate[]
 }
 
 export const routeStoreModule: Module<State, RootState> = {
@@ -13,12 +13,13 @@ export const routeStoreModule: Module<State, RootState> = {
     recordedPath: (state: State) => state.recordedPath
   },
   mutations: {
-    setRecordedPath(state: State, path: LineString) {
+    setRecordedPath(state: State, path: Coordinate[]) {
       state.recordedPath = path;
     }
   },
   actions: {
-    async saveRecordedPath() {
+    deleteRecordedPath(store: ActionContext<State, RootState>) {
+      store.state.recordedPath = [];
     }
   }
 };

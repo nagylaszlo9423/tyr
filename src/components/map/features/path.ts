@@ -13,14 +13,14 @@ import CircleStyle from 'ol/style/Circle';
 export class Path extends Feature {
   private readonly path: LineString;
 
-  constructor(options?: Geometry | { [key: string]: any }) {
+  constructor(lineString?: LineString, options?: Geometry | { [key: string]: any }) {
     super(options);
-    this.path = new LineString([]);
+    this.path = lineString ? lineString : new LineString([]);
     this.setGeometry(this.path);
     this.setStyle(new Style({
       stroke: new Stroke({
         color: '#FF0000',
-        width: 2
+        width: 2,
       })
     }));
   }
@@ -48,7 +48,8 @@ export class Path extends Feature {
             color: '#ffcc33'
           })
         })
-      })
+      }),
+      zIndex: 1
     });
   }
 

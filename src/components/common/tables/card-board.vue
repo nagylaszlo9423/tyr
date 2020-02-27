@@ -39,7 +39,6 @@
 
     @Watch('items')
     watchItems(items: any[]) {
-      items.forEach(item => console.log(JSON.stringify(item)));
       this.items_ = items;
     }
   }

@@ -1,6 +1,12 @@
+import {PathRecodingState} from '@/components/map/path-recoding-state';
+import {PathRecodingState} from '@/components/map/path-recoding-state';
+import {MapPageState} from '@/components/map/map.routes';
 <template>
   <div id="map-page">
     <div class="map-page-controls">
+      <floating-action-button class="btn btn-primary overlay-item mr-1" icon="trash-alt" :title="$t('map.DELETE')"
+                              v-if="recordingState === pathRecordingStates.EDITING" @click="deleteRecordedPath">
+      </floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item mr-1" icon="save" :title="$t('map.SAVE')"
                               v-if="recordingState === pathRecordingStates.EDITING" @click="saveRecordedPath">
       </floating-action-button>
@@ -22,11 +28,10 @@
   import {Vue} from '@/types';
   import {ComponentOptions} from 'vue';
   import {eventBus} from '@/services/event-bus';
-  import {Path} from '@/components/map/features/path';
   import FloatingActionButton from '@/components/common/controls/floating-action-button.vue';
-  import LineString from 'ol/geom/LineString';
   import {Events} from '@/components/events';
   import {PathRecodingState} from '@/components/map/path-recoding-state';
+  import {MapPageState} from '@/components/map/map.routes';
 
   @Component({
     components: {
@@ -34,20 +39,35 @@
     }
   })
   export default class MapPage extends Vue implements ComponentOptions<MapPage> {
-
+    private static mapIsReady = false;
     pathRecordingStates = PathRecodingState;
     recordingState: PathRecodingState = PathRecodingState.NOT_RECORDING;
 
     created(): void {
-      eventBus.$offOn(Events.map.mapPage.stopRecordingPath, (path: Path) => {
-        this.$store.commit('route/setRecordedRoute', path);
-        this.$router.push({
-          path: '/pages/route/edit',
-          query: {
-            path: (path.getGeometry() as LineString).getCoordinates()
-          }
+      this.onPageState(this.$route.params.state as MapPageState);
+      if (!MapPage.mapIsReady) {
+        eventBus.$offOn(Events.map.tyrMap.mapReady, async () => {
+          MapPage.mapIsReady = true;
+          this.onPageState(this.$route.params.state as MapPageState);
         });
-      });
+      }
+      eventBus.$offOn(Events.map.tyrMap.failedEditingPath, () => this.onFailedEditinPath);
+    }
+
+    onPageState(state: MapPageState) {
+      if (MapPage.mapIsReady) {
+        if (state === MapPageState.EDIT) {
+          this.recordingState = PathRecodingState.EDITING;
+          eventBus.$emit(Events.map.mapPage.editRecordedPath);
+        }
+      }
+    }
+
+    onFailedEditinPath() {
+      this.recordingState = PathRecodingState.NOT_RECORDING;
+      if (this.$route.path !== '/pages/map') {
+        this.$router.push('/pages/map');
+      }
     }
 
     startRecordingPath() {
@@ -69,6 +89,13 @@
         this.recordingState = PathRecodingState.NOT_RECORDING;
         eventBus.$emit(Events.map.mapPage.saveRecordedPath);
         this.$router.push('/pages/routes/edit');
+      }
+    }
+
+    deleteRecordedPath() {
+      if (this.recordingState === PathRecodingState.EDITING) {
+        this.recordingState = PathRecodingState.NOT_RECORDING;
+        eventBus.$emit(Events.map.mapPage.deleteRecordedPath);
       }
     }
 

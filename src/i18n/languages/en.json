@@ -39,6 +39,10 @@
       "PUBLIC": "Public"
     }
   },
+  "routes": {
+    "EDIT_PATH": "Edit path",
+    "MODIFY_PATH": "Modify path"
+  },
   "errors": {
     "UNKNOWN_ERROR": "Unknown error occurred",
     "LOGIN_DENIED": "Login denied",
@@ -47,7 +51,7 @@
     "INVALID_PASSWORD": "Invalid password",
     "EMAIL_ALREADY_REGISTERED": "Email already registered",
     "PERMISSION_DENIED": "Permission denied",
-    "POSITION_UNAVAILABLE": "Position unavailable",
+    "LOCATION_UNAVAILABLE": "Location unavailable",
     "TIME_OUT": "Time out"
   },
   "validation": {

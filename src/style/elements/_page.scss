@@ -10,8 +10,12 @@
   padding: 6rem;
 
   .t-page-title {
+    svg {
+      font-size: 1.6rem;
+    }
     span {
-      font-size: .6rem;
+      display: inline-block;
+      font-size: 1.6rem;
     }
   }
 
