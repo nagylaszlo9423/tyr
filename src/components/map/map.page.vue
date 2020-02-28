@@ -1,5 +1,6 @@
 import {PathRecodingState} from '@/components/map/path-recoding-state';
 import {PathRecodingState} from '@/components/map/path-recoding-state';
+import {PathRecodingState} from '@/components/map/path-recoding-state';
 import {MapPageState} from '@/components/map/map.routes';
 <template>
   <div id="map-page">
@@ -11,10 +12,12 @@ import {MapPageState} from '@/components/map/map.routes';
                               v-if="recordingState === pathRecordingStates.EDITING" @click="saveRecordedPath">
       </floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item mr-1" icon="circle" :title="$t('map.RECORD')"
-                              v-if="recordingState === pathRecordingStates.NOT_RECORDING" @click="startRecordingPath">Record
+                              v-if="recordingState === pathRecordingStates.NOT_RECORDING" @click="startRecordingPath">
+        Record
       </floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item mr-1" icon="stop" :title="$t('map.RECENTER')"
-                              v-if="recordingState === pathRecordingStates.RECORDING" @click="stopRecordingPath">Stop recording
+                              v-if="recordingState === pathRecordingStates.RECORDING" @click="stopRecordingPath">Stop
+        recording
       </floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item" icon="street-view" :title="$t('map.STOP_RECORDING')"
                               @click="recenter">Recenter
@@ -32,6 +35,10 @@ import {MapPageState} from '@/components/map/map.routes';
   import {Events} from '@/components/events';
   import {PathRecodingState} from '@/components/map/path-recoding-state';
   import {MapPageState} from '@/components/map/map.routes';
+  import {Map} from 'ol';
+  import {PathRecorder} from '@/components/map/plugins/path-recorder';
+  import {Coordinate} from 'ol/coordinate';
+  import LineString from 'ol/geom/LineString';
 
   @Component({
     components: {
@@ -39,68 +46,82 @@ import {MapPageState} from '@/components/map/map.routes';
     }
   })
   export default class MapPage extends Vue implements ComponentOptions<MapPage> {
-    private static mapIsReady = false;
+    private map: Map;
+    private pathRecorder: PathRecorder;
     pathRecordingStates = PathRecodingState;
     recordingState: PathRecodingState = PathRecodingState.NOT_RECORDING;
 
     created(): void {
-      this.onPageState(this.$route.params.state as MapPageState);
-      if (!MapPage.mapIsReady) {
-        eventBus.$offOn(Events.map.tyrMap.mapReady, async () => {
-          MapPage.mapIsReady = true;
-          this.onPageState(this.$route.params.state as MapPageState);
-        });
-      }
-      eventBus.$offOn(Events.map.tyrMap.failedEditingPath, () => this.onFailedEditinPath);
+      this.initWhenMapCreated();
+    }
+
+    initWhenMapCreated(): void {
+      eventBus.$offOn(Events.map.tyrMap.mapIsCreated, async (map: Map) => {
+        this.map = map;
+        this.pathRecorder = new PathRecorder(map);
+        this.onPageState(this.$route.params.state as MapPageState);
+      });
+      eventBus.$emit(Events.map.mapPage.checkMap);
     }
 
     onPageState(state: MapPageState) {
-      if (MapPage.mapIsReady) {
-        if (state === MapPageState.EDIT) {
-          this.recordingState = PathRecodingState.EDITING;
-          eventBus.$emit(Events.map.mapPage.editRecordedPath);
-        }
+      if (state === MapPageState.EDIT) {
+        this.recordingState = PathRecodingState.EDITING;
+        this.editRecordedPath();
+      } else {
+        this.goToBaseMapPage();
       }
     }
 
-    onFailedEditinPath() {
-      this.recordingState = PathRecodingState.NOT_RECORDING;
-      if (this.$route.path !== '/pages/map') {
-        this.$router.push('/pages/map');
+    async editRecordedPath() {
+      const coordinates: Coordinate[] = await this.$store.getters['route/recordedPath'];
+      const lineString: LineString = new LineString(coordinates);
+      this.pathRecorder.setPath(lineString);
+      if (!this.pathRecorder.isValidPath()) {
+        this.deleteRecordedPath();
       }
+      this.pathRecorder.enablePathEditing();
+    }
+
+    deleteRecordedPath() {
+      this.pathRecorder.deleteRecordedPath();
+      this.recordingState = PathRecodingState.NOT_RECORDING;
+      this.goToBaseMapPage();
     }
 
     startRecordingPath() {
       if (this.recordingState === PathRecodingState.NOT_RECORDING) {
         this.recordingState = PathRecodingState.RECORDING;
-        eventBus.$emit(Events.map.mapPage.recordPath);
+        this.pathRecorder.startRecordingPath();
       }
     }
 
     stopRecordingPath() {
       if (this.recordingState === PathRecodingState.RECORDING) {
         this.recordingState = PathRecodingState.EDITING;
-        eventBus.$emit(Events.map.mapPage.stopRecordingPath);
+        this.pathRecorder.stopRecordingPath();
+        if (!this.pathRecorder.isValidPath()) {
+          this.deleteRecordedPath();
+        }
       }
     }
 
     saveRecordedPath() {
       if (this.recordingState === PathRecodingState.EDITING) {
         this.recordingState = PathRecodingState.NOT_RECORDING;
-        eventBus.$emit(Events.map.mapPage.saveRecordedPath);
+        this.pathRecorder.saveRecordedPath();
         this.$router.push('/pages/routes/edit');
-      }
-    }
-
-    deleteRecordedPath() {
-      if (this.recordingState === PathRecodingState.EDITING) {
-        this.recordingState = PathRecodingState.NOT_RECORDING;
-        eventBus.$emit(Events.map.mapPage.deleteRecordedPath);
       }
     }
 
     recenter() {
       eventBus.$emit(Events.map.mapPage.recenter);
+    }
+
+    goToBaseMapPage() {
+      if (this.$route.path !== '/pages/map') {
+        this.$router.push('/pages/map');
+      }
     }
   }
 </script>

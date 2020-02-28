@@ -21,7 +21,7 @@
   import {Component} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
   import {ValidationObserver} from 'vee-validate';
-  import {RouteResponse} from 'tyr-api/types/axios';
+  import {CreateRouteRequest, RouteResponse} from 'tyr-api/types/axios';
   import {routeService} from '@/services/generated-services';
   import Page from '@/components/common/page.vue';
   import InputField from '@/components/common/controls/input-field.vue';
@@ -40,7 +40,7 @@
   })
   export default class RouteEditPage extends Vue implements ComponentOptions<RouteEditPage> {
     private readonly routeBackToEditing = `/pages/map/${MapPageState.EDIT}`;
-    route: RouteResponse;
+    route: CreateRouteRequest;
 
     async created(): Promise<void> {
       if (this.$route.params.id) {

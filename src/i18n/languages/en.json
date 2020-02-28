@@ -16,12 +16,15 @@
   "REGISTER": "Register",
   "LOGIN": "Login",
   "LOGOUT": "Logout",
+  "TITLE": "Title",
+  "DESCRIPTION": "Description",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",
     "ENTER_PASSWORD_AGAIN": "Enter password again"
   },
   "map": {
+    "DELETE": "Delete path",
     "RECENTER": "Recenter",
     "RECORD": "Record",
     "STOP_RECORDING": "Stop recording",

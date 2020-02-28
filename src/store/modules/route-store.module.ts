@@ -3,7 +3,7 @@ import {RootState} from '@/store/root-state';
 import {Coordinate} from 'ol/coordinate';
 
 class State {
-  recordedPath: Coordinate[]
+  recordedPath: Coordinate[] = []
 }
 
 export const routeStoreModule: Module<State, RootState> = {
@@ -19,7 +19,7 @@ export const routeStoreModule: Module<State, RootState> = {
   },
   actions: {
     deleteRecordedPath(store: ActionContext<State, RootState>) {
-      store.state.recordedPath = [];
+      store.commit('setRecordedPath', []);
     }
   }
 };

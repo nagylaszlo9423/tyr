@@ -13,15 +13,10 @@ const events = {
     map: {
         mapPage: addPrefix('map-page', {
             recenter: 'recenter',
-            recordPath: 'record-path',
-            stopRecordingPath: 'stop-recording-path',
-            saveRecordedPath: 'save-recorded-path',
-            editRecordedPath: 'edit-recorded-path',
-            deleteRecordedPath: 'delete-recorded-path'
+            checkMap: 'check-map'
         }),
         tyrMap: addPrefix('tyr-map', {
-            mapReady: 'map-ready',
-            failedEditingPath: 'failed-editing-path'
+            mapIsCreated: 'map-is-created',
         })
     }
 };

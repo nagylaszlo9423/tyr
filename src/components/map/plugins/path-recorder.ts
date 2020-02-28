@@ -1,9 +1,8 @@
-import {Observable, Subscription} from 'rxjs';
+import {Subscription} from 'rxjs';
 import {Map} from 'ol';
 import {locationService} from '@/components/map/location-service';
 import {Path} from '@/components/map/features/path';
 import {store} from '@/store';
-import {simplifyGeometry} from '@/utils/simplify-geometry';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Snap from 'ol/interaction/Snap';
@@ -11,8 +10,6 @@ import Select from 'ol/interaction/Select';
 import Modify from 'ol/interaction/Modify';
 import {doubleClick} from 'ol/events/condition';
 import LineString from 'ol/geom/LineString';
-import {eventBus} from '@/services/event-bus';
-import {Events} from '@/components/events';
 
 export class PathRecorder {
   private subscription: Subscription;
@@ -33,7 +30,7 @@ export class PathRecorder {
     this.map.addLayer(this.pathLayer);
   }
 
-  recordPath() {
+  startRecordingPath() {
     this.path = new Path();
     this.pathLayer = this.path.createVectorLayer();
     this.subscription = locationService.watchPosition().subscribe(pos => this.path.setNextPosition(pos));
@@ -43,9 +40,6 @@ export class PathRecorder {
   stopRecordingPath() {
     if (this.subscription) {
       this.subscription.unsubscribe();
-    }
-    if (!this.isValidPath()) {
-      eventBus.$emit(Events.map.tyrMap.failedEditingPath);
     }
     this.enablePathEditing();
   }
@@ -70,7 +64,7 @@ export class PathRecorder {
   saveRecordedPath() {
     this.disablePathEditing();
     this.map.removeLayer(this.pathLayer);
-    store.commit('route/setRecordedPath', simplifyGeometry(this.path.lineString.getCoordinates(), 1));
+    store.commit('route/setRecordedPath', this.path.lineString.getCoordinates());
   }
 
   disablePathEditing() {
@@ -80,6 +74,6 @@ export class PathRecorder {
   }
 
   isValidPath() {
-    return simplifyGeometry(this.path.lineString.getCoordinates(), 1).length > 1;
+    return this.path && this.path.lineString && this.path.lineString.getCoordinates() && this.path.lineString.getCoordinates().length > 1;
   }
 }
