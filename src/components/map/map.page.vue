@@ -75,8 +75,7 @@ import {MapPageState} from '@/components/map/map.routes';
 
     async editRecordedPath() {
       const coordinates: Coordinate[] = await this.$store.getters['route/recordedPath'];
-      const lineString: LineString = new LineString(coordinates);
-      this.pathRecorder.setPath(lineString);
+      this.pathRecorder.setPath(coordinates);
       if (!this.pathRecorder.isValidPath()) {
         this.deleteRecordedPath();
       }

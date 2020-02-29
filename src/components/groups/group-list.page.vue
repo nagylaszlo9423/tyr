@@ -1,14 +1,7 @@
 <template>
   <page>
     <b-button @click="toCreateGroupPage">Create group</b-button>
-    <card-board :items="items" :item-navigation-path="detailsPagePath">
-      <template v-slot="{item}">
-        <image-view class="card-image" fit="frame" src="https://via.placeholder.com/150"></image-view>
-        <div class="card-content">
-          <span class="card-title">{{ item.name }}</span>
-        </div>
-      </template>
-    </card-board>
+    <card-board :items="items" :item-navigation-path="detailsPagePath"></card-board>
   </page>
 </template>
 
@@ -17,9 +10,10 @@
   import {ComponentOptions} from 'vue';
   import {GroupResponse} from 'tyr-api/types/axios';
   import {groupService} from '@/services/generated-services';
-  import CardBoard from '@/components/common/tables/card-board.vue';
+  import CardBoard from '@/components/common/card-board/card-board.vue';
   import Page from '@/components/common/page.vue';
   import ImageView from '@/components/common/image-view.vue';
+  import {CardItem} from '@/components/common/card-board/card-item';
 
   @Component({
     components: {
@@ -31,7 +25,7 @@
   export default class GroupListPage extends Vue implements ComponentOptions<GroupListPage> {
     currentPage: number;
     detailsPagePath = '/pages/groups';
-    items: GroupResponse[];
+    items: CardItem[];
 
     constructor() {
       super();
@@ -54,7 +48,12 @@
 
     private async load() {
       const response = await groupService.getGroupsPaged(this.currentPage, 10);
-      this.items = response.data.items;
+      this.items = response.data.items.map(group => ({
+        id: group.id,
+        title: group.name,
+        imgSrc: 'https://via.placeholder.com/150',
+        icon: ''
+      } as CardItem));
       this.currentPage++;
     }
   }

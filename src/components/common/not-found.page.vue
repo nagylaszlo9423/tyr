@@ -20,11 +20,7 @@
     }
 
     goBack() {
-      if (!this.fromRoute) {
-        this.$router.push('/');
-      } else {
-        this.$router.back();
-      }
+      this.$router.back();
     }
 
     goHome() {

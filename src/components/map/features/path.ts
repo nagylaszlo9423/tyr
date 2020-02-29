@@ -8,14 +8,15 @@ import Stroke from 'ol/style/Stroke';
 import {MapHelper} from '@/components/map/map-helper';
 import Fill from 'ol/style/Fill';
 import CircleStyle from 'ol/style/Circle';
+import {Coordinate} from 'ol/coordinate';
 
 
 export class Path extends Feature {
   private readonly path: LineString;
 
-  constructor(lineString?: LineString, options?: Geometry | { [key: string]: any }) {
+  constructor(path?: Coordinate[], options?: Geometry | { [key: string]: any }) {
     super(options);
-    this.path = lineString ? lineString : new LineString([]);
+    this.path = new LineString(path ? path : []);
     this.setGeometry(this.path);
     this.setStyle(new Style({
       stroke: new Stroke({
@@ -60,4 +61,7 @@ export class Path extends Feature {
     ]);
   }
 
+  isValid() {
+    return this.path && this.path.getCoordinates() && this.path.getCoordinates().length > 1;
+  }
 }

@@ -1,34 +1,34 @@
 <template>
   <page class="routes-list-page">
-    <div class="row">
-      <div class="col-12">
-
-      </div>
-    </div>
-    <div class="row">
-      <div v-for="route in routes" class="col-sm-12 col-md-6 col-lg-3 col-xl-2">
-        <img src="https://via.placeholder.com/150" alt="Image of the tourist route" />
-        <h3>{{ route.title }}</h3>
-        <span>{{ route.description }}</span>
-      </div>
-    </div>
+    <card-board :items="routes" :item-navigation-path="editPageRoute"></card-board>
   </page>
 </template>
 
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
-  import {RouteResponse} from 'tyr-api/types/axios';
   import {routeService} from '@/services/generated-services';
   import Page from '@/components/common/page.vue';
+  import CardBoard from '@/components/common/card-board/card-board.vue';
+  import ImageView from '@/components/common/image-view.vue';
+  import {CardItem} from '@/components/common/card-board/card-item';
+
   @Component({
-    components: {Page}
+    components: {ImageView, CardBoard, Page}
   })
   export default class RouteListPage extends Vue implements ComponentOptions<RouteListPage> {
-    routes: RouteResponse[];
+    readonly editPageRoute = '/pages/routes/edit';
+    routes: CardItem[] = [];
 
-    created(): void {
-      routeService.getMostPopularRoutes().then(response => this.routes = response.data);
+    async created(): Promise<void> {
+      const res = await routeService.getMostPopularRoutes('most-popular');
+      this.routes = res.data.map(route => ({
+        id: route.id,
+        title: route.title,
+        icon: '',
+        imgSrc: 'https://via.placeholder.com/150',
+        controls: [{route: '/pages/routes/edit', icon: 'pen'}]
+      } as CardItem));
     }
   }
 </script>

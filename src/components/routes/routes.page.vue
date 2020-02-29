@@ -9,12 +9,8 @@
   import {routeService} from '@/services/generated-services';
 
   @Component
-  export default class RoutesPage extends Vue implements ComponentOptions<RoutesPage> {
+  export default class RoutesPage extends Vue {
     routes: RouteResponse[] = [];
-
-    created(): void {
-      routeService.getMostPopularRoutes().then(response => this.routes = response.data);
-    }
   }
 </script>
 

@@ -10,6 +10,7 @@ import Select from 'ol/interaction/Select';
 import Modify from 'ol/interaction/Modify';
 import {doubleClick} from 'ol/events/condition';
 import LineString from 'ol/geom/LineString';
+import {Coordinate} from 'ol/coordinate';
 
 export class PathRecorder {
   private subscription: Subscription;
@@ -24,7 +25,7 @@ export class PathRecorder {
     this.path = new Path();
   }
 
-  setPath(path: LineString) {
+  setPath(path: Coordinate[]) {
     this.path = new Path(path);
     this.pathLayer = this.path.createVectorLayer();
     this.map.addLayer(this.pathLayer);
@@ -73,7 +74,7 @@ export class PathRecorder {
     this.map.removeInteraction(this.select);
   }
 
-  isValidPath() {
-    return this.path && this.path.lineString && this.path.lineString.getCoordinates() && this.path.lineString.getCoordinates().length > 1;
+  isValidPath(): boolean {
+    return this.path.isValid();
   }
 }

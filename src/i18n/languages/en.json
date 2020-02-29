@@ -18,6 +18,9 @@
   "LOGOUT": "Logout",
   "TITLE": "Title",
   "DESCRIPTION": "Description",
+  "UPDATED_SUCCESSFULLY": "Updated successfully",
+  "CREATED_SUCCESSFULLY": "Created successfully",
+  "FAILED_TO_SAVE": "Failed to save ",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",

@@ -10,3 +10,7 @@ export function randomImageFileName(): string {
 export enum PageType {
   EDIT, CREATE
 }
+
+export enum FeatureType {
+  LINE_STRING = 'LineString'
+}

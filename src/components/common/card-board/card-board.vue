@@ -1,20 +1,14 @@
 <template>
-  <div class="tyr-card-board">
-    <div v-if="items.length">
-      <div v-for="(item, index) in items_"
-           :key="index"
-           class="tyr-card"
-           @click="cardClick(item.id)">
-        <slot v-bind:item="item"></slot>
-      </div>
-    </div>
+  <div v-if="items.length" class="tyr-card-board">
+    <card v-for="(item, index) in items_" :key="index" @click="cardClick($event, item.id)" :item="item"></card>
   </div>
 </template>
 
 <script lang="ts">
   import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
   import ImageView from '@/components/common/image-view.vue';
-  import Card from '@/components/common/tables/card.vue';
+  import Card from '@/components/common/card-board/card.vue';
+  import {CardItem} from '@/components/common/card-board/card-item';
 
   const path = require('path');
 
@@ -26,15 +20,16 @@
     }
   })
   export default class CardBoard extends Vue {
-    @Prop() items: any[];
+    @Prop() items: CardItem[];
     @Prop() itemNavigationPath: string;
 
     items_: any[] = [];
 
-    cardClick(id: string) {
+    cardClick(event: Event, id: string) {
       if (id) {
         this.$router.push(path.join(this.itemNavigationPath, id));
       }
+      event.preventDefault();
     }
 
     @Watch('items')
@@ -51,17 +46,6 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
-
-    .tyr-card {
-      overflow: hidden;
-      position: relative;
-      margin: 1rem;
-      border-radius: 5px;
-      box-shadow: 0 1px 15px grey;
-      padding: .5rem;
-      cursor: pointer;
-    }
   }
 
 </style>
