@@ -10,7 +10,8 @@
                 :value="value_"
                 @input="updateValue"
                 @focus="isFocused = true"
-                @blur="isFocused=false">
+                @blur="isFocused=false"
+                :disabled="readonly">
           <option v-for="(option, idx) in options" :key="idx" :value="option">{{$t(option)}}</option>
         </select>
         <label v-if="!errors || !errors[0]"
@@ -54,6 +55,7 @@
     @Prop() label: string;
     @Prop() info: string;
     @Prop({default: 'text'}) type: string;
+    @Prop({default: false}) readonly: boolean;
     label_ = '';
     value_ = '';
     info_ = '';

@@ -1,6 +1,6 @@
 <template>
   <div v-if="items.length" class="tyr-card-board">
-    <card v-for="(item, index) in items_" :key="index" @click="cardClick($event, item.id)" :item="item"></card>
+    <card v-for="(item, index) in items_" :key="index" @click.native="cardClick(item.id)" :item="item"></card>
   </div>
 </template>
 
@@ -25,11 +25,12 @@
 
     items_: any[] = [];
 
-    cardClick(event: Event, id: string) {
-      if (id) {
+    cardClick(id: string) {
+      if (this.itemNavigationPath && id) {
         this.$router.push(path.join(this.itemNavigationPath, id));
+      } else {
+        this.$toasted.error(this.$tc('paths.UNABLE_OPEN_PATH_DETAILS'));
       }
-      event.preventDefault();
     }
 
     @Watch('items')

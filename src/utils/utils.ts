@@ -8,7 +8,7 @@ export function randomImageFileName(): string {
 }
 
 export enum PageType {
-  EDIT, CREATE
+  EDIT, CREATE, VIEW
 }
 
 export enum FeatureType {

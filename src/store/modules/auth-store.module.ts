@@ -4,37 +4,37 @@ import {TokenResponse} from 'tyr-api/types/axios';
 import {RootState} from '@/store/root-state';
 import {authService} from '@/services/auth.service';
 
-class State {
+export class AuthStoreState {
   code = '';
   tokens: TokenResponse | null = <any>{};
 }
 
-export const authStoreModule: Module<State, RootState> = {
+export const authStoreModule: Module<AuthStoreState, RootState> = {
   namespaced: true,
-  state: new State(),
+  state: new AuthStoreState(),
   getters: {
-    tokens: (state: State) => state.tokens,
-    code: (state: State) => state.code
+    tokens: (state: AuthStoreState) => state.tokens,
+    code: (state: AuthStoreState) => state.code
   },
   mutations: {
-    setTokens(state: State, tokens: TokenResponse) {
+    setTokens(state: AuthStoreState, tokens: TokenResponse) {
       state.tokens = tokens;
     },
-    setCode(state: State, code: string) {
+    setCode(state: AuthStoreState, code: string) {
       state.code = code;
     },
-    clear(state: State) {
-      state = new State();
+    clear(state: AuthStoreState) {
+      state = new AuthStoreState();
     }
   },
   actions: {
-    async login(store: ActionContext<State, RootState>, request: {email: string, password: string}) {
+    async login(store: ActionContext<AuthStoreState, RootState>, request: {email: string, password: string}) {
       const loginResponse = await authService.login(request);
       store.commit('setCode', loginResponse.code);
       const tokenResponse = await authService.exchangeCode(loginResponse.code, loginResponse.redirectUri, environment.client_id);
       store.commit('setTokens', tokenResponse);
     },
-    async refreshToken(store: ActionContext<State, RootState>) {
+    async refreshToken(store: ActionContext<AuthStoreState, RootState>) {
       if (!store.state.tokens) {
         throw new Error('errors.UNAUTHORIZED');
       }

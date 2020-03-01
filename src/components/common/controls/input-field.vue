@@ -9,6 +9,7 @@
                ref="inputField"
                :type="type"
                :value="value_"
+               :readonly="readonly"
                @input="updateValue"
                @focus="isFocused=true"
                @blur="isFocused=false"/>
@@ -54,6 +55,7 @@
     @Prop() value: string;
     @Prop() label: string;
     @Prop() info: string;
+    @Prop({default: false}) readonly: boolean;
     @Prop({default: 'text'}) type: string;
     label_ = '';
     value_ = '';

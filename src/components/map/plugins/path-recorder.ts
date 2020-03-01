@@ -58,14 +58,14 @@ export class PathRecorder {
 
   deleteRecordedPath() {
     this.disablePathEditing();
-    store.dispatch('route/deleteRecordedPath');
+    store.dispatch('path/deleteRecordedPath');
     this.map.removeLayer(this.pathLayer);
   }
 
   saveRecordedPath() {
     this.disablePathEditing();
     this.map.removeLayer(this.pathLayer);
-    store.commit('route/setRecordedPath', this.path.lineString.getCoordinates());
+    store.commit('path/setRecordedPath', this.path.lineString.getCoordinates());
   }
 
   disablePathEditing() {

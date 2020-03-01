@@ -12,12 +12,12 @@ import {Coordinate} from 'ol/coordinate';
 
 
 export class Path extends Feature {
-  private readonly path: LineString;
+  private readonly _lineString: LineString;
 
   constructor(path?: Coordinate[], options?: Geometry | { [key: string]: any }) {
     super(options);
-    this.path = new LineString(path ? path : []);
-    this.setGeometry(this.path);
+    this._lineString = new LineString(path ? path : []);
+    this.setGeometry(this._lineString);
     this.setStyle(new Style({
       stroke: new Stroke({
         color: '#FF0000',
@@ -27,7 +27,7 @@ export class Path extends Feature {
   }
 
   get lineString(): LineString {
-    return this.path;
+    return this._lineString;
   }
 
   createVectorLayer(): VectorLayer {
@@ -55,13 +55,13 @@ export class Path extends Feature {
   }
 
   setNextPosition(pos: Position) {
-    this.path.setCoordinates([
-      ...this.path.getCoordinates(),
+    this._lineString.setCoordinates([
+      ...this._lineString.getCoordinates(),
       MapHelper.fromLonLat(pos)
     ]);
   }
 
   isValid() {
-    return this.path && this.path.getCoordinates() && this.path.getCoordinates().length > 1;
+    return this._lineString && this._lineString.getCoordinates() && this._lineString.getCoordinates().length > 1;
   }
 }

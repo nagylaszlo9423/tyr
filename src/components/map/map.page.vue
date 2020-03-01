@@ -1,7 +1,3 @@
-import {PathRecodingState} from '@/components/map/path-recoding-state';
-import {PathRecodingState} from '@/components/map/path-recoding-state';
-import {PathRecodingState} from '@/components/map/path-recoding-state';
-import {MapPageState} from '@/components/map/map.routes';
 <template>
   <div id="map-page">
     <div class="map-page-controls">
@@ -32,13 +28,13 @@ import {MapPageState} from '@/components/map/map.routes';
   import {ComponentOptions} from 'vue';
   import {eventBus} from '@/services/event-bus';
   import FloatingActionButton from '@/components/common/controls/floating-action-button.vue';
-  import {Events} from '@/components/events';
+  import {events} from '@/services/events';
   import {PathRecodingState} from '@/components/map/path-recoding-state';
   import {MapPageState} from '@/components/map/map.routes';
   import {Map} from 'ol';
   import {PathRecorder} from '@/components/map/plugins/path-recorder';
   import {Coordinate} from 'ol/coordinate';
-  import LineString from 'ol/geom/LineString';
+  import {PathNs} from '@/store/namespaces';
 
   @Component({
     components: {
@@ -46,6 +42,8 @@ import {MapPageState} from '@/components/map/map.routes';
     }
   })
   export default class MapPage extends Vue implements ComponentOptions<MapPage> {
+    @PathNs.Getter('recordedCoordinates') recordedCoordinates: Coordinate[];
+
     private map: Map;
     private pathRecorder: PathRecorder;
     pathRecordingStates = PathRecodingState;
@@ -56,12 +54,12 @@ import {MapPageState} from '@/components/map/map.routes';
     }
 
     initWhenMapCreated(): void {
-      eventBus.$offOn(Events.map.tyrMap.mapIsCreated, async (map: Map) => {
+      eventBus.$offOn(events.map.tyrMap.mapIsCreated, async (map: Map) => {
         this.map = map;
         this.pathRecorder = new PathRecorder(map);
         this.onPageState(this.$route.params.state as MapPageState);
       });
-      eventBus.$emit(Events.map.mapPage.checkMap);
+      eventBus.$emit(events.map.mapPage.checkMap);
     }
 
     onPageState(state: MapPageState) {
@@ -74,7 +72,7 @@ import {MapPageState} from '@/components/map/map.routes';
     }
 
     async editRecordedPath() {
-      const coordinates: Coordinate[] = await this.$store.getters['route/recordedPath'];
+      const coordinates: Coordinate[] = this.recordedCoordinates;
       this.pathRecorder.setPath(coordinates);
       if (!this.pathRecorder.isValidPath()) {
         this.deleteRecordedPath();
@@ -109,12 +107,12 @@ import {MapPageState} from '@/components/map/map.routes';
       if (this.recordingState === PathRecodingState.EDITING) {
         this.recordingState = PathRecodingState.NOT_RECORDING;
         this.pathRecorder.saveRecordedPath();
-        this.$router.push('/pages/routes/edit');
+        this.$router.push('/pages/paths/edit');
       }
     }
 
     recenter() {
-      eventBus.$emit(Events.map.mapPage.recenter);
+      eventBus.$emit(events.map.mapPage.recenter);
     }
 
     goToBaseMapPage() {

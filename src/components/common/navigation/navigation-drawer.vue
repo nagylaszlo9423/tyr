@@ -38,7 +38,7 @@
 <script lang="ts">
   import {Component} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
-  import {Events} from '@/components/events';
+  import {events} from '@/services/events';
   import {NavBarItem} from '@/components/common/navigation/nav-bar-item';
   import {BaseComponent} from '@/components/common/base.component';
   import {NavNarItems} from '@/components/common/navigation/nav-nar-items';
@@ -52,8 +52,8 @@
     activeItem = 'map';
 
     created() {
-      eventBus.$off(Events.common.titleBar.toggle);
-      eventBus.$on(Events.common.titleBar.toggle, this.toggleHandler);
+      eventBus.$off(events.common.titleBar.toggle);
+      eventBus.$on(events.common.titleBar.toggle, this.toggleHandler);
       for (let item of this.items) {
         if (this.$route.path.indexOf(item.to) > -1) {
           this.activeItem = item.name;

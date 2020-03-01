@@ -2,7 +2,6 @@ import {Vue as _Vue} from 'vue-property-decorator';
 import {ProviderInstance} from 'vee-validate/dist/types/types';
 import {ValidationObserver} from 'vee-validate';
 
-
 export interface SimplertOptions {
   title?: string;
   message?: string;

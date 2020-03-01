@@ -1,8 +1,9 @@
 <template>
   <div id="title-bar" class="d-flex p-1">
-    <div id="title-bar-left-controls" class="d-flex flex-row mr-auto">
+    <div id="title-bar-left-controls" class="d-flex flex-row align-items-center mr-auto">
       <b-button variant="link" @click="toggleNavDrawer"><font-awesome-icon class="fa-1x" icon="bars"></font-awesome-icon></b-button>
-      <h3>Logo</h3>
+      <compass-loader id="title-bar-loader" enable-background="true" size="2"></compass-loader>
+      <h3 class="ml-2">TYR</h3>
     </div>
     <div id="title-bar-right-controls" class="d-flex flex-row justify-content-end align-items-center pl-2">
       <b-input id="search-field" name="search-field" :class="{'open': isSearchFieldOpen}" />
@@ -13,15 +14,17 @@
 
 <script lang="ts">
   import {Vue, Component} from 'vue-property-decorator';
-  import {Events} from '@/components/events';
+  import {events} from '@/services/events';
   import {eventBus} from '@/services/event-bus';
-
-  @Component
+  import CompassLoader from '@/components/common/spinners/compass-loader.vue';
+  @Component({
+    components: {CompassLoader}
+  })
   export default class TitleBar extends Vue {
     isSearchFieldOpen = false;
 
     toggleNavDrawer() {
-      eventBus.$emit(Events.common.titleBar.toggle);
+      eventBus.$emit(events.common.titleBar.toggle);
     }
   }
 </script>
@@ -33,7 +36,7 @@
     background-color: $primary;
     color: $text-light;
     svg {
-      color: $accent;
+      color: white;
     }
 
     #title-bar-right-controls {

@@ -12,7 +12,7 @@
   import {ComponentOptions} from 'vue';
   import {locationService} from '@/components/map/location-service';
   import {eventBus} from '@/services/event-bus';
-  import {Events} from '@/components/events';
+  import {events} from '@/services/events';
   import {PositionMarker} from '@/components/map/features/position-marker';
   @Component
   export default class TyrMap extends Vue implements ComponentOptions<TyrMap> {
@@ -30,7 +30,6 @@
     });
 
     created(): void {
-
     }
 
     async mounted() {
@@ -46,9 +45,9 @@
 
       this.goToPositionAndSetMarker();
       this.watchPosition();
-      eventBus.$emit(Events.map.tyrMap.mapIsCreated, this.map);
-      eventBus.$offOn(Events.map.mapPage.checkMap, () => eventBus.$emit(Events.map.tyrMap.mapIsCreated, this.map));
-      eventBus.$offOn(Events.map.mapPage.recenter, () => locationService.getPosition().subscribe(this.goToPosition, this.handleError.bind(this)));
+      eventBus.$emit(events.map.tyrMap.mapIsCreated, this.map);
+      eventBus.$offOn(events.map.mapPage.checkMap, () => eventBus.$emit(events.map.tyrMap.mapIsCreated, this.map));
+      eventBus.$offOn(events.map.mapPage.recenter, () => locationService.getPosition().subscribe(this.goToPosition, this.handleError.bind(this)));
     }
 
     goToPositionAndSetMarker() {

@@ -3,6 +3,9 @@
     <h1>Not found</h1>
     <b-button @click="goBack">{{$t('GO_BACK')}}</b-button>
     <b-button @click="goHome">{{$t('GO_HOME')}}</b-button>
+    <b-button @click="spin = !spin">Spin on/off</b-button>
+
+    <compass-loader :enable-background="true" :loading="spin" :size="5"></compass-loader>
   </div>
 </template>
 
@@ -10,10 +13,14 @@
   import {Component, Vue} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
   import {Route} from 'vue-router';
+  import CompassLoader from '@/components/common/spinners/compass-loader.vue';
 
-  @Component
+  @Component({
+    components: {CompassLoader}
+  })
   export default class NotFoundPage extends Vue implements ComponentOptions<NotFoundPage> {
     fromRoute: Route;
+    spin = false;
 
     beforeRouteEnter(to: Route, from: Route, next: (to: ((vm: NotFoundPage) => any)) => void) {
       next((vm: NotFoundPage) => vm.fromRoute = from);

@@ -54,6 +54,7 @@
     @Prop() label: string;
     @Prop() info: string;
     @Prop({default: 'text'}) type: string;
+    @Prop({default: false}) readonly: boolean;
     label_ = '';
     value_ = '';
     info_ = '';

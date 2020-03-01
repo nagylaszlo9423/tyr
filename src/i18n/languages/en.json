@@ -9,7 +9,7 @@
   "CREATE": "Create",
   "UPDATE": "Update",
   "SETTINGS": "Settings",
-  "ROUTES": "Routes",
+  "PATHS": "Paths",
   "GROUPS": "Groups",
   "MAP": "Map",
   "REGISTRATION": "Registration",
@@ -21,6 +21,9 @@
   "UPDATED_SUCCESSFULLY": "Updated successfully",
   "CREATED_SUCCESSFULLY": "Created successfully",
   "FAILED_TO_SAVE": "Failed to save ",
+  "GO_HOME": "Go home",
+  "GO_BACK": "Back",
+  "SAVE": "Save",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",
@@ -45,9 +48,10 @@
       "PUBLIC": "Public"
     }
   },
-  "routes": {
+  "paths": {
     "EDIT_PATH": "Edit path",
-    "MODIFY_PATH": "Modify path"
+    "MODIFY_PATH": "Modify path",
+    "UNABLE_OPEN_PATH_DETAILS": "Unable open path details"
   },
   "errors": {
     "UNKNOWN_ERROR": "Unknown error occurred",

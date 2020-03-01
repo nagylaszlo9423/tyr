@@ -1,12 +1,15 @@
 <template>
   <div class="tyr-card d-flex flex-column"
-       @click="click"
        @mouseenter="isDescriptionClosed = false"
        @mouseleave="isDescriptionClosed=true">
     <image-view class="tyr-card-image" :src="item.imgSrc" fit="frame"></image-view>
     <div class="tyr-card-content d-flex flex-row">
       <span>{{item.title}}</span>
-      <font-awesome-icon v-for="(control, idx) in item.controls" :key="idx" :icon="control.icon" fixed-width @click="controlClick(control.route)"></font-awesome-icon>
+      <div class="px-2">
+        <div v-for="(control, idx) in item.controls" :key="idx" @click="controlClick($event, control.route)">
+          <font-awesome-icon :icon="control.icon" fixed-width></font-awesome-icon>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -23,16 +26,12 @@
   })
   export default class Card extends Vue {
     @Prop() item: CardItem;
-    @Prop() itemDetailsRoute: string;
 
     isDescriptionClosed = true;
 
-    click() {
-      this.$router.push(`${this.itemDetailsRoute}/${this.item.id}`);
-    }
-
-    controlClick(route: string) {
+    controlClick(event: Event, route: string) {
       this.$router.push(`${route}/${this.item.id}`);
+      event.stopPropagation();
     }
   }
 </script>

@@ -17,10 +17,10 @@ export const NavNarItems: NavBarItem[] = [
     hidden: false
   },
   {
-    name: 'routes',
-    title: 'ROUTES',
+    name: 'paths',
+    title: 'PATHS',
     icon: 'route',
-    to: '/pages/routes',
+    to: '/pages/paths',
     hidden: true
   },
   {

@@ -3,7 +3,7 @@ import createPersistedState from 'vuex-persistedstate';
 import Vue from 'vue';
 import {RootState} from '@/store/root-state';
 import {authStoreModule} from '@/store/modules/auth-store.module';
-import {routeStoreModule} from '@/store/modules/route-store.module';
+import {pathStoreModule} from '@/store/modules/path-store.module';
 
 Vue.use(Vuex);
 
@@ -13,14 +13,14 @@ const storeOptions: StoreOptions<RootState> = {
   },
   modules: {
     auth: authStoreModule,
-    route: routeStoreModule
+    path: pathStoreModule
   },
   plugins: [
     createPersistedState({
       key: 'TyrStore',
       paths: [
         'auth',
-        'route'
+        'path'
       ]
     })
   ]
