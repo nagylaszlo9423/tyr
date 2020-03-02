@@ -16,7 +16,7 @@
   import {Vue, Component} from 'vue-property-decorator';
   import {events} from '@/services/events';
   import {eventBus} from '@/services/event-bus';
-  import CompassLoader from '@/components/common/spinners/compass-loader.vue';
+  import CompassLoader from '@/components/common/loaders/compass-loader.vue';
   @Component({
     components: {CompassLoader}
   })

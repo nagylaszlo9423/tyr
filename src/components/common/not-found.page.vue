@@ -13,7 +13,7 @@
   import {Component, Vue} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
   import {Route} from 'vue-router';
-  import CompassLoader from '@/components/common/spinners/compass-loader.vue';
+  import CompassLoader from '@/components/common/loaders/compass-loader.vue';
 
   @Component({
     components: {CompassLoader}

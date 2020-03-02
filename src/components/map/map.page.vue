@@ -4,7 +4,7 @@ import {MapPageState} from '@/components/map/map.routes';
   <div id="map-page">
     <div class="map-page-controls">
       <floating-action-button class="btn btn-primary overlay-item mr-1" icon="trash-alt" :title="$t('map.DELETE')"
-                              v-if="recordingState === pathRecordingStates.EDITING" @click="deleteRecordedPath">
+                              v-if="recordingState === pathRecordingStates.EDITING" @click="confirmationModal.show()">
       </floating-action-button>
       <floating-action-button class="btn btn-primary overlay-item mr-1" icon="save" :title="$t('map.SAVE')"
                               v-if="recordingState === pathRecordingStates.EDITING" @click="saveRecordedPath">
@@ -21,6 +21,7 @@ import {MapPageState} from '@/components/map/map.routes';
                               @click="recenter">Recenter
       </floating-action-button>
     </div>
+    <confirmation-modal ref="confirmationModal" @on-confirmed="deleteRecordedPath"></confirmation-modal>
   </div>
 </template>
 
@@ -37,9 +38,11 @@ import {MapPageState} from '@/components/map/map.routes';
   import {PathRecorder} from '@/components/map/plugins/path-recorder';
   import {Coordinate} from 'ol/coordinate';
   import {PathNs} from '@/store/namespaces';
+  import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
 
   @Component({
     components: {
+      ConfirmationModal,
       FloatingActionButton
     }
   })
@@ -47,6 +50,7 @@ import {MapPageState} from '@/components/map/map.routes';
     @PathNs.Getter('recordedCoordinates') recordedCoordinates: Coordinate[];
     @PathNs.Getter('modelId') modelId: string;
 
+    private confirmationModal: ConfirmationModal;
     private map: Map;
     private pathRecorder: PathRecorder;
     pathRecordingStates = PathRecodingState;
@@ -55,6 +59,10 @@ import {MapPageState} from '@/components/map/map.routes';
 
     created(): void {
       this.initWhenMapCreated();
+    }
+
+    mounted(): void {
+      this.confirmationModal = this.$refs.confirmationModal as ConfirmationModal;
     }
 
     initWhenMapCreated(): void {

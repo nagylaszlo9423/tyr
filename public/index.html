@@ -12,114 +12,13 @@
       <strong>We're sorry but tyr doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app">
-      <style>
-        .compass-loader {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          top: 0;
-          left: 0;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          font-family: Verdana, SansSerif, serif;
-          color: #413c69;
-        }
-
-        .compass-loader-background {
-          position: absolute;
-          top: 0;
-          left: 0;
-          width: 80%;
-          margin: 0 10% 0 10%;
-          opacity: .2;
-        }
-
-        h1 {
-          font-size: 3.2rem;
-          margin: 0;
-        }
-
-        .compass-loader-wrapper {
-          position: relative;
-          overflow: hidden;
-          border-radius: 5rem;
-          width: 5rem;
-          height: 5rem;
-          margin: 1rem 0 1rem 0;
-          background: radial-gradient(#f1f3f4 30%, #413c69);
-        }
-
-        .compass-loader-body, .compass-loader-needle {
-          position: absolute;
-          top: 0;
-          left: 0;
-          margin: 5%;
-          width: 90%;
-          height: 90%;
-        }
-
-        .compass-loader-needle {
-          animation: spin 2.5s infinite linear;
-        }
-
-        @keyframes spin {
-          0% {
-            transform: rotate(0deg);
-          }
-
-          5% {
-            transform: rotate(5deg);
-          }
-
-          10% {
-            transform: rotate(15deg);
-          }
-
-          15% {
-            transform: rotate(30deg);
-          }
-
-          20% {
-            transform: rotate(60deg);
-          }
-
-          25% {
-            transform: rotate(120deg);
-          }
-
-          75% {
-            transform: rotate(1455deg);
-          }
-
-          80% {
-            transform: rotate(1430deg);
-          }
-
-          85% {
-            transform: rotate(1450deg);
-          }
-
-          90% {
-            transform: rotate(1435deg);
-          }
-
-          95% {
-            transform: rotate(1445deg);
-          }
-
-          100% {
-            transform: rotate(1440deg);
-          }
-        }
-      </style>
+      <link rel="stylesheet" type="text/css" href="compass-loader.css">
       <img class="compass-loader-background" src="./assets/world-map.png">
       <div class="compass-loader">
         <h1>TYR</h1>
         <div class="compass-loader-wrapper">
-          <img class="compass-loader-body" src="./assets/compass-body.png"/>
-          <img class="compass-loader-needle" src="./assets/compass-needle.png"/>
+          <div class="compass-loader-body"></div>
+          <div class="compass-loader-needle"></div>
         </div>
         <span>Please wait, application is loading</span>
         <span></span>

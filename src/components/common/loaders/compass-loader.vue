@@ -1,8 +1,8 @@
 <template>
   <div class="compass-loader">
     <div ref="wrapper" class="compass-loader-wrapper" @click="stop" :class="{'compass-loader-background': enableBackground}" :style="style_">
-      <img class="compass-loader-body" :src="compassBody"/>
-      <img class="compass-loader-needle" :class="{loading: loading}" :src="compassNeedle"/>
+      <div class="compass-loader-body"></div>
+      <div class="compass-loader-needle" :class="{loading: loading}"></div>
     </div>
   </div>
 </template>
@@ -78,6 +78,16 @@
         margin: 5%;
         width: 90%;
         height: 90%;
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+
+      .compass-loader-body {
+        background-image: url("../../../assets/images/compass-body.png");
+      }
+
+      .compass-loader-needle {
+        background-image: url("../../../assets/images/compass-needle.png");
       }
 
       .loading {

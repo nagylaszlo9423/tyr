@@ -18,7 +18,7 @@
 
 <script lang="ts">
   import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
-  import CubeLoader from '@/components/common/spinners/cube-loader.vue';
+  import CubeLoader from '@/components/common/loaders/cube-loader.vue';
 
   @Component({
     components: {
