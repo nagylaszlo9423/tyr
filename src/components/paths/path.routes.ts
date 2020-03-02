@@ -21,7 +21,7 @@ export const pathRoutes: RouteConfig = {
       }
     },
     {
-      path: 'edit',
+      path: 'new',
       component: PathEditPage,
       meta: {
         isAuthenticated: true,

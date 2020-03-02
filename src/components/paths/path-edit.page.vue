@@ -1,8 +1,5 @@
 <template>
-  <page :title="$t('paths.EDIT_PATH')"
-        :back-button-title="$t('paths.MODIFY_PATH')"
-        back-button-icon="pen"
-        :back-button-route="routeBackToEditing">
+  <page :title="$t('paths.EDIT_PATH')">
     <ValidationObserver ref="validator" tag="form"
                         class="layout-container layout-vertical" novalidate @submit.prevent="onSubmit">
       <div class="row">
@@ -22,9 +19,15 @@
         </div>
       </div>
       <div v-if="!readonly" class="row">
-        <div class="col-lg-6 col-xl-10 p-4"></div>
-        <div class="col-md-12 col-lg-6 col-xl-2 py-4 px-5">
-          <b-button variant="primary" block type="submit">{{$t('SAVE')}}</b-button>
+        <div class="col-md-12 col-lg-3 col-xl-2 pt-4 px-3 order-md-2 order-lg-0">
+          <b-button variant="danger" block @click="deletePath">{{$t('DELETE')}}</b-button>
+        </div>
+        <div class="col-lg-3 col-xl-6"></div>
+        <div class="col-md-12 col-lg-3 col-xl-2 pt-4 px-3 order-md-1 order-lg-1">
+          <b-button variant="primary" block @click="modifyPath">{{$t('paths.MODIFY_PATH')}}</b-button>
+        </div>
+        <div class="col-md-12 col-lg-3 col-xl-2 pt-4 px-3 order-md-0 order-lg-2">
+          <b-button variant="success" block type="submit">{{$t('SAVE')}}</b-button>
         </div>
       </div>
     </ValidationObserver>
@@ -45,6 +48,9 @@
   import {PathMapper} from '@/components/paths/path-mapper';
   import {PageType} from '@/utils/utils';
   import {PathNs} from '@/store/namespaces';
+  import {MappedAction} from '@/store/mapped-action';
+  import {eventBus} from '@/services/event-bus';
+  import {events} from '@/services/events';
 
   @Component({
     components: {
@@ -55,24 +61,29 @@
     }
   })
   export default class PathEditPage extends Vue implements ComponentOptions<PathEditPage> {
-    private readonly routeBackToEditing = `/pages/map/${MapPageState.EDIT}`;
-
-    @PathNs.Getter('model', {}) pathModel: PathModel;
-    @PathNs.Action('clearModel') clearModel: Function;
-    @PathNs.Action('getPathById') getPathById: Function;
+    @PathNs.Getter('model') pathModel: PathModel;
+    @PathNs.Action('clearModelWithoutPath') clearModelWithoutPath: MappedAction;
+    @PathNs.Action('getPathById') getPathById: MappedAction;
 
     pageType = PageType.VIEW;
     readonly = true;
 
     async created(): Promise<void> {
+      eventBus.$emit(events.loader.start);
       this.pageType = this.$route.meta.pageType !== undefined ? this.$route.meta.pageType : PageType.VIEW;
       this.readonly = this.pageType === PageType.VIEW;
       await this.load(this.pageType, this.$route.params.id);
     }
 
-    load(pageType: PageType, id?: string) {
-      if (id) {
-        this.getPathById(id);
+    mounted(): void {
+      eventBus.$emit(events.loader.stop);
+    }
+
+    async load(pageType: PageType, id?: string) {
+      if (id && id !== 'undefined') {
+        await this.getPathById(id);
+      } else {
+        this.clearModelWithoutPath();
       }
     }
 
@@ -82,6 +93,14 @@
       if (isValid && this.pathModel.coordinates.length > 1) {
         await this.save();
       }
+    }
+
+    modifyPath() {
+      this.$router.push(`/pages/map/${MapPageState.EDIT}`);
+    }
+
+    deletePath() {
+
     }
 
     async save() {
@@ -95,7 +114,7 @@
           await pathService.createPath(requestBody);
           this.$toasted.success(this.$tc('CREATED_SUCCESSFULLY'));
         }
-        this.$router.push('/pages/map');
+        this.$router.push('/pages/paths');
       } catch (e) {
         this.$toasted.error(this.$tc('FAILED_TO_SAVE'));
       }

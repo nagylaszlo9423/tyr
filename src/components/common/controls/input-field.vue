@@ -69,6 +69,7 @@
     created(): void {
       this.label_ = this.label;
       this.info_ = this.info;
+      this.value_ = this.value;
     }
 
     @Watch('label')

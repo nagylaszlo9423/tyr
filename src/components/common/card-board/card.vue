@@ -3,12 +3,16 @@
        @mouseenter="isDescriptionClosed = false"
        @mouseleave="isDescriptionClosed=true">
     <image-view class="tyr-card-image" :src="item.imgSrc" fit="frame"></image-view>
-    <div class="tyr-card-content d-flex flex-row">
+    <div class="tyr-card-content d-flex flex-row justify-content-between">
       <span>{{item.title}}</span>
       <div class="px-2">
-        <div v-for="(control, idx) in item.controls" :key="idx" @click="controlClick($event, control.route)">
+        <b-button v-for="(control, idx) in item.controls"
+                  :key="idx"
+                  variant="primary"
+                  class="p-0"
+                  @click="controlClick($event, control.route)">
           <font-awesome-icon :icon="control.icon" fixed-width></font-awesome-icon>
-        </div>
+        </b-button>
       </div>
     </div>
   </div>
@@ -47,6 +51,7 @@
     height: 15rem;
     border-radius: 5px;
     box-shadow: 0 0 5px grey;
+    cursor: pointer;
 
     @include media-lg {
       & {
@@ -79,6 +84,11 @@
         &.closed {
           height: 0;
         }
+      }
+
+      button {
+        width: 1.6rem;
+        height: 1.6rem;
       }
     }
   }

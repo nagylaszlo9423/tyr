@@ -65,8 +65,9 @@
     };
 
     created(): void {
-      this.label_ = this.$t(this.label) as string;
-      this.info_ = this.$t(this.info) as string;
+      this.label_ = this.label;
+      this.info_ = this.info;
+      this.value_ = this.value;
     }
 
     @Watch('label')

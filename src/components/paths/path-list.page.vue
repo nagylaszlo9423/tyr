@@ -25,7 +25,6 @@
     async created(): Promise<void> {
       eventBus.$emit(events.loader.start);
       const res = await pathService.getByFilter('own');
-      eventBus.$emit(events.loader.stop);
       this.routes = res.data.map(path => ({
         id: path.id,
         title: path.title,
@@ -33,6 +32,10 @@
         imgSrc: 'https://via.placeholder.com/150',
         controls: [{route: '/pages/paths/edit', icon: 'pen'}]
       } as CardItem));
+    }
+
+    mounted(): void {
+      eventBus.$emit(events.loader.stop);
     }
   }
 </script>

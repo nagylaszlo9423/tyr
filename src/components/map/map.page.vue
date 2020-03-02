@@ -1,3 +1,5 @@
+import {MapPageState} from '@/components/map/map.routes';
+import {MapPageState} from '@/components/map/map.routes';
 <template>
   <div id="map-page">
     <div class="map-page-controls">
@@ -43,11 +45,13 @@
   })
   export default class MapPage extends Vue implements ComponentOptions<MapPage> {
     @PathNs.Getter('recordedCoordinates') recordedCoordinates: Coordinate[];
+    @PathNs.Getter('modelId') modelId: string;
 
     private map: Map;
     private pathRecorder: PathRecorder;
     pathRecordingStates = PathRecodingState;
     recordingState: PathRecodingState = PathRecodingState.NOT_RECORDING;
+    mapPageState: MapPageState;
 
     created(): void {
       this.initWhenMapCreated();
@@ -57,7 +61,8 @@
       eventBus.$offOn(events.map.tyrMap.mapIsCreated, async (map: Map) => {
         this.map = map;
         this.pathRecorder = new PathRecorder(map);
-        this.onPageState(this.$route.params.state as MapPageState);
+        this.mapPageState = this.$route.params.state as MapPageState;
+        this.onPageState(this.mapPageState);
       });
       eventBus.$emit(events.map.mapPage.checkMap);
     }
@@ -107,7 +112,11 @@
       if (this.recordingState === PathRecodingState.EDITING) {
         this.recordingState = PathRecodingState.NOT_RECORDING;
         this.pathRecorder.saveRecordedPath();
-        this.$router.push('/pages/paths/edit');
+        if (this.mapPageState === MapPageState.EDIT && this.modelId) {
+          this.$router.push(`/pages/paths/edit/${this.modelId}`);
+        } else {
+          this.$router.push('/pages/paths/new');
+        }
       }
     }
 
@@ -116,7 +125,7 @@
     }
 
     goToBaseMapPage() {
-      if (this.$route.path !== '/pages/map') {
+      if (this.$route.path.indexOf('/pages/map') === -1) {
         this.$router.push('/pages/map');
       }
     }

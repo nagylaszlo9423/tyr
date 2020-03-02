@@ -29,9 +29,6 @@
       preload: Infinity
     });
 
-    created(): void {
-    }
-
     async mounted() {
       this.map = new Map({
         target: 'tyr-map',

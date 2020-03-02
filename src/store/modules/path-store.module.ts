@@ -13,6 +13,7 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
   namespaced: true,
   state: new PathStoreState(),
   getters: {
+    modelId: (state: PathStoreState) => state.model.id,
     model: (state: PathStoreState) => state.model,
     recordedCoordinates: (state: PathStoreState) => state.model.coordinates
   },
@@ -35,8 +36,9 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
     deleteRecordedPath(store: ActionContext<PathStoreState, RootState>) {
       store.commit('setRecordedPath', []);
     },
-    clearModel(store: ActionContext<PathStoreState, RootState>) {
-      store.commit('setModel', new PathModel());
+    clearModelWithoutPath(store: ActionContext<PathStoreState, RootState>) {
+      const coordinates = store.state.model.coordinates;
+      store.commit('setModel', new PathModel({coordinates: coordinates}));
     }
   }
 };

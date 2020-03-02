@@ -3,7 +3,7 @@
     <div class="t-page-title d-flex align-content-center px-2">
       <font-awesome-icon v-if="icon" class="fa-1x" fixed-width :icon="icon"></font-awesome-icon>
       <span v-if="title">{{title}}</span>
-      <b-button variant="outline-primary" v-if="backButtonTitle" @click="goBack" class="ml-auto" :title="backButtonTitle">
+      <b-button variant="outline-primary" v-if="backButtonTitle && backButtonEnabled" @click="goBack" class="ml-auto" :title="backButtonTitle">
         <font-awesome-icon v-if="backButtonIcon" class="fa-1x mr-2" fixed-width :icon="backButtonIcon"></font-awesome-icon>
         <span>{{backButtonTitle}}</span>
       </b-button>
@@ -26,6 +26,7 @@
     @Prop() backButtonRoute: string;
     @Prop() backButtonTitle: string;
     @Prop() backButtonIcon: string;
+    @Prop({default: true}) backButtonEnabled: boolean;
 
     goBack() {
       if (this.backButtonRoute) {
