@@ -24,7 +24,7 @@
       </b-col>
       <b-col sm="1" md="2" lg="3" xl="4"></b-col>
     </b-row>
-    <page v-if="multiSelectItems.ownPaths.selected" :title="$t('PATHS')">
+    <page :title="$t('PATHS') + searchExpInTitle">
       <b-row>
         <b-col>
           <card-board :items="mappedItems"
@@ -50,25 +50,32 @@
   import InputField from '@/components/common/controls/input-field.vue';
   import SelectField from '@/components/common/controls/select-field.vue';
   import {ValidationObserver} from 'vee-validate';
+  import {FindAllAvailablePathsParams} from '@/store/modules/path-store.module';
 
   @Component({
     components: {SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
   })
   export default class PathListPage extends Vue implements ComponentOptions<PathListPage> {
-    @PathNs.Action('findAllAvailable') findAllAvailable: MappedAction;
+    @PathNs.Action('findAllAvailable') findAllAvailable: MappedAction<FindAllAvailablePathsParams>;
     @PathNs.Action('findNextPage') findNextPage: MappedAction;
     @PathNs.Getter('pages') pages: PathPageResponse;
 
     readonly detailsPageRoute = '/pages/paths/details';
-    multiSelectItems: MultiSelectItems = {};
-    searchExp_ = '';
+    multiSelectItems_: MultiSelectItems = {};
+    searchExp = '';
+    searchExpInTitle = '';
+    filters_ = ['own'];
 
-    set searchExp(val: string) {
-      this.searchExp_ = val;
+    set multiSelectItems(items: MultiSelectItems) {
+      this.setSearchExpInTitle();
+      console.log(items);
+      this.filters_ = Object.keys(items).filter(_ => items[_].selected);
+      this.multiSelectItems_ = items;
+      this.onSearch();
     }
 
-    get searchExp() {
-      return this.searchExp_;
+    get multiSelectItems() {
+      return this.multiSelectItems_;
     }
 
     get mappedItems() {
@@ -76,22 +83,26 @@
     }
 
     async created(): Promise<void> {
-      this.findAllAvailable({filters: ['own', 'groups'], searchExp: ''});
-      this.multiSelectItems = {
-        ownPaths: {name: this.$tc('OWN'), selected: true},
-        groupPaths: {name: this.$tc('GROUPS'), selected: false},
-        publicPaths: {name: this.$tc('PUBLIC'), selected: false}
+      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp});
+      this.multiSelectItems_ = {
+        own: {name: this.$tc('OWN'), selected: true},
+        groups: {name: this.$tc('GROUPS'), selected: false},
+        public: {name: this.$tc('PUBLIC'), selected: false}
       };
+      this.loadNextOnScroll();
+    }
 
+    onSearch() {
+      this.setSearchExpInTitle();
+      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp});
+    }
+
+    private loadNextOnScroll() {
       window.onscroll = () => {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && this.pages.total === this.pages.items.length) {
           this.findNextPage();
         }
       };
-    }
-
-    onSearch() {
-
     }
 
     private pathToCardItem(path: PathResponse): CardItem {
@@ -105,6 +116,10 @@
         imgSrc: 'https://via.placeholder.com/150',
         controls: controls
       };
+    }
+
+    private setSearchExpInTitle() {
+      this.searchExpInTitle = this.searchExp ? ` - ${this.searchExp}` : '';
     }
   }
 </script>

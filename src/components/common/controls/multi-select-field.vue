@@ -47,15 +47,14 @@
       });
       return items;
     }
-
-    @Emit('input')
-    onSelect(key: string): MultiSelectItems {
+    
+    onSelect(key: string) {
       const item = this.items_[key];
       if (this.selectedCount > 1 || !item.selected) {
         item.selected = !item.selected;
         this.selectedCount += item.selected ? 1 : -1;
       }
-      return this.value;
+      this.$emit('input', this.items_);
     }
   }
 </script>

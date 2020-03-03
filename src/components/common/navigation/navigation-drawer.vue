@@ -137,7 +137,7 @@
     .swipe-zone {
       width: 3rem;
       overflow-x: hidden;
-      background: #FFFFFFCC;
+      background: #FFFFFFAA;
       transition: width $transition-time ease-in-out;
       position: relative;
       display: flex;

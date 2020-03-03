@@ -7,6 +7,11 @@ import {PathMapper} from '@/components/paths/path-mapper';
 import {PathPageResponse} from 'tyr-api/types/axios';
 import {environment} from '@/environment/environment';
 
+export class FindAllAvailablePathsParams {
+  filters: string[];
+  searchExp: string;
+}
+
 export class PathStoreState {
   model: PathModel = new PathModel();
   pages: PathPageResponse = {page: 0, size: 0, total: 0, items: []};
@@ -54,7 +59,7 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
     }
   },
   actions: {
-    async findAllAvailable(store: ActionContext<PathStoreState, RootState>, params: {filters: string[], searchExp: string}) {
+    async findAllAvailable(store: ActionContext<PathStoreState, RootState>, params: FindAllAvailablePathsParams) {
       const res = await pathService.findAllAvailableByFilters(
         0, environment.pageSize,
         params.searchExp || undefined,
