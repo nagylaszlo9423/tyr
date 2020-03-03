@@ -56,8 +56,9 @@
     @Prop() label: string;
     @Prop() info: string;
     @Prop({default: 'text'}) type: string;
-    @Prop({default: false}) readonly: boolean;
+    @Prop({default: false, type: Boolean}) readonly: boolean;
     @Prop() block: boolean;
+    @Prop({default: false, type: Boolean}) firstSelected: boolean;
     label_ = '';
     value_ = '';
     info_ = '';
@@ -70,7 +71,11 @@
     created(): void {
       this.label_ = this.label;
       this.info_ = this.info;
-      this.value_ = this.value;
+      if (this.value) {
+        this.value_ = this.value;
+      } else if (this.firstSelected && this.options[0]) {
+        this.value_ = this.options[0];
+      }
     }
 
     @Watch('label')

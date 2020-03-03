@@ -8,7 +8,7 @@
         <span>Sort by</span>
       </b-col>
       <b-col cols="6" md="3" lg="2" xl="2" order="1" order-md="2">
-        <select-field id="select" :options="[]" :block="true"></select-field>
+        <select-field id="select" :options="sortOptions" :block="true" first-selected></select-field>
       </b-col>
     </b-row>
     <b-row class="mb-2">
@@ -65,6 +65,8 @@
     searchExp = '';
     searchExpInTitle = '';
     filters_ = ['own'];
+    sortBy = 'newest';
+    sortOptions: string[] = [];
 
     set multiSelectItems(items: MultiSelectItems) {
       this.setSearchExpInTitle();
@@ -83,18 +85,19 @@
     }
 
     async created(): Promise<void> {
-      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp});
+      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy});
       this.multiSelectItems_ = {
         own: {name: this.$tc('OWN'), selected: true},
         groups: {name: this.$tc('GROUPS'), selected: false},
         public: {name: this.$tc('PUBLIC'), selected: false}
       };
+      this.sortOptions = ['newest', 'last_modified', 'name_asc', 'name_desc', 'visibility'];
       this.loadNextOnScroll();
     }
 
     onSearch() {
       this.setSearchExpInTitle();
-      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp});
+      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy});
     }
 
     private loadNextOnScroll() {
@@ -119,7 +122,7 @@
     }
 
     private setSearchExpInTitle() {
-      this.searchExpInTitle = this.searchExp ? ` - ${this.searchExp}` : '';
+      this.searchExpInTitle = this.searchExp ? ` - ${this.$tc('SEARCH')}: ${this.searchExp}` : '';
     }
   }
 </script>

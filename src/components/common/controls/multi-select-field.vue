@@ -47,7 +47,7 @@
       });
       return items;
     }
-    
+
     onSelect(key: string) {
       const item = this.items_[key];
       if (this.selectedCount > 1 || !item.selected) {

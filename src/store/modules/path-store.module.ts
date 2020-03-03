@@ -6,10 +6,13 @@ import {PathModel} from '@/models/path-model';
 import {PathMapper} from '@/components/paths/path-mapper';
 import {PathPageResponse} from 'tyr-api/types/axios';
 import {environment} from '@/environment/environment';
+import {eventBus} from '@/services/event-bus';
+import {events} from '@/services/events';
 
 export class FindAllAvailablePathsParams {
   filters: string[];
   searchExp: string;
+  sortBy: string;
 }
 
 export class PathStoreState {
@@ -18,7 +21,8 @@ export class PathStoreState {
   parameters = {
     nextPage: 0,
     filters: new Array<string>(),
-    searchExp: ''
+    searchExp: '',
+    sortBy: ''
   }
 }
 
@@ -47,6 +51,9 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
     setSearchExp(state: PathStoreState, searchExp: string) {
       state.parameters.searchExp = searchExp;
     },
+    setSortBy(state: PathStoreState, sortBy: string) {
+      state.parameters.sortBy = sortBy;
+    },
     setPage(state: PathStoreState, page: PathPageResponse) {
       state.parameters.nextPage = 1;
       state.pages = page;
@@ -60,23 +67,30 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
   },
   actions: {
     async findAllAvailable(store: ActionContext<PathStoreState, RootState>, params: FindAllAvailablePathsParams) {
+      eventBus.$emit(events.loader.start);
       const res = await pathService.findAllAvailableByFilters(
         0, environment.pageSize,
         params.searchExp || undefined,
-        params.filters
+        params.filters,
+        params.sortBy
       );
       store.commit('setPage', res.data);
       store.commit('setFilters', params.filters);
       store.commit('setSearchExp', params.searchExp);
+      store.commit('setSortBy', params.sortBy);
+      eventBus.$emit(events.loader.stop);
     },
     async findNextPage(store: ActionContext<PathStoreState, RootState>) {
+      eventBus.$emit(events.loader.start);
       const res = await pathService.findAllAvailableByFilters(
         store.state.parameters.nextPage,
         environment.pageSize,
         store.state.parameters.searchExp,
-        store.state.parameters.filters
+        store.state.parameters.filters,
+        store.state.parameters.sortBy
       );
       store.commit('setNextPage', res.data);
+      eventBus.$emit(events.loader.stop);
     },
     async getPathById(store: ActionContext<PathStoreState, RootState>, id: string) {
       const res = await pathService.getPathById(id);
