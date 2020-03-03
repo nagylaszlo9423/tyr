@@ -21,7 +21,6 @@
     }
 
     show() {
-      console.log('itt');
       this.modal.show();
     }
 

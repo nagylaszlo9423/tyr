@@ -1,6 +1,6 @@
 <template>
   <div class="t-page">
-    <div class="t-page-title d-flex align-content-center px-2">
+    <div v-if="icon || title || (backButtonTitle && backButtonEnabled)" class="t-page-title">
       <font-awesome-icon v-if="icon" class="fa-1x" fixed-width :icon="icon"></font-awesome-icon>
       <span v-if="title">{{title}}</span>
       <b-button variant="outline-primary" v-if="backButtonTitle && backButtonEnabled" @click="goBack" class="ml-auto" :title="backButtonTitle">

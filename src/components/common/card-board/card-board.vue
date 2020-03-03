@@ -47,6 +47,14 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
+
+    @include media-sm {
+      justify-content: start;
+    }
+
+    @include media-xs {
+      justify-content: center;
+    }
   }
 
 </style>

@@ -2,7 +2,7 @@
   <ValidationProvider :name="id"
                       :rules="rules"
                       v-slot="{ errors }">
-    <div class="tyr-textarea-field form-group">
+    <div class="tyr-field tyr-textarea-field form-group" :class="{labeled: label_}">
       <div class="input-group">
         <textarea :id="id"
                   :name="id"
@@ -12,7 +12,7 @@
                   @input="updateValue"
                   @focus="isFocused = true"
                   @blur="isFocused=false"></textarea>
-        <label v-if="!errors || !errors[0]"
+        <label v-if="label_ && (!errors || !errors[0])"
                class="tyr-textarea-field-label"
                :class="{focus: isFocused || value_}"
                :for="id">
@@ -75,9 +75,9 @@
       this.label_ = val;
     }
 
-    @Watch('label')
-    infoChange(val: string) {
-      this.info_ = val;
+    @Watch('info')
+    infoChange(value: string) {
+      this.info_ = value;
     }
 
     @Watch('value')

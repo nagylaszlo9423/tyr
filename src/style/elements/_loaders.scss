@@ -1,0 +1,5 @@
+@import url("/compass-loader.css");
+
+.compass-loader-needle.loading {
+  animation: spin 2.5s infinite linear;
+}

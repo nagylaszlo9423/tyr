@@ -1,6 +1,37 @@
 <template>
   <page class="paths-list-page">
-    <card-board :items="routes" :item-navigation-path="editPageRoute"></card-board>
+    <b-row>
+      <b-col cols="12" md="7" lg="8" xl="9" order="2" order-md="0">
+        <multi-select-field v-model="multiSelectItems" block></multi-select-field>
+      </b-col>
+      <b-col cols="6" md="2" lg="2" xl="1" align="end" order="0" order-md="1" class="p-1">
+        <span>Sort by</span>
+      </b-col>
+      <b-col cols="6" md="3" lg="2" xl="2" order="1" order-md="2">
+        <select-field id="select" :options="[]" :block="true"></select-field>
+      </b-col>
+    </b-row>
+    <b-row class="mb-2">
+      <b-col sm="1" md="2" lg="3" xl="4"></b-col>
+      <b-col cols="12" sm="10" md="8" lg="6" xl="4">
+        <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="onSearch">
+          <input-field id="searchPath"
+                       :label="$t('SEARCH')"
+                       v-model="searchExp"
+                       action-button-icon="search"
+                       @on-action="onSearch"></input-field>
+        </ValidationObserver>
+      </b-col>
+      <b-col sm="1" md="2" lg="3" xl="4"></b-col>
+    </b-row>
+    <page v-if="multiSelectItems.ownPaths.selected" :title="$t('PATHS')">
+      <b-row>
+        <b-col>
+          <card-board :items="mappedItems"
+                      :item-navigation-path="detailsPageRoute"></card-board>
+        </b-col>
+      </b-row>
+    </page>
   </page>
 </template>
 
@@ -10,36 +41,81 @@
   import Page from '@/components/common/page.vue';
   import CardBoard from '@/components/common/card-board/card-board.vue';
   import ImageView from '@/components/common/image-view.vue';
+  import MultiSelectField from '@/components/common/controls/multi-select-field.vue';
+  import {PathNs} from '@/store/namespaces';
+  import {MappedAction} from '@/store/mapped-action';
+  import {PathPageResponse, PathResponse} from 'tyr-api/types/axios';
   import {CardItem} from '@/components/common/card-board/card-item';
-  import {pathService} from '@/services/generated-services';
-  import {eventBus} from '@/services/event-bus';
-  import {events} from '@/services/events';
+  import {MultiSelectItems} from '@/components/common/controls/multi-select-items';
+  import InputField from '@/components/common/controls/input-field.vue';
+  import SelectField from '@/components/common/controls/select-field.vue';
+  import {ValidationObserver} from 'vee-validate';
 
   @Component({
-    components: {ImageView, CardBoard, Page}
+    components: {SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
   })
   export default class PathListPage extends Vue implements ComponentOptions<PathListPage> {
-    readonly editPageRoute = '/pages/paths/details';
-    routes: CardItem[] = [];
+    @PathNs.Action('findAllAvailable') findAllAvailable: MappedAction;
+    @PathNs.Action('findNextPage') findNextPage: MappedAction;
+    @PathNs.Getter('pages') pages: PathPageResponse;
 
-    async created(): Promise<void> {
-      eventBus.$emit(events.loader.start);
-      const res = await pathService.getByFilter('own');
-      this.routes = res.data.map(path => ({
-        id: path.id,
-        title: path.title,
-        icon: '',
-        imgSrc: 'https://via.placeholder.com/150',
-        controls: [{route: '/pages/paths/edit', icon: 'pen'}]
-      } as CardItem));
+    readonly detailsPageRoute = '/pages/paths/details';
+    multiSelectItems: MultiSelectItems = {};
+    searchExp_ = '';
+
+    set searchExp(val: string) {
+      this.searchExp_ = val;
     }
 
-    mounted(): void {
-      eventBus.$emit(events.loader.stop);
+    get searchExp() {
+      return this.searchExp_;
+    }
+
+    get mappedItems() {
+      return this.pages.items.map(this.pathToCardItem);
+    }
+
+    async created(): Promise<void> {
+      this.findAllAvailable({filters: ['own', 'groups'], searchExp: ''});
+      this.multiSelectItems = {
+        ownPaths: {name: this.$tc('OWN'), selected: true},
+        groupPaths: {name: this.$tc('GROUPS'), selected: false},
+        publicPaths: {name: this.$tc('PUBLIC'), selected: false}
+      };
+
+      window.onscroll = () => {
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && this.pages.total === this.pages.items.length) {
+          this.findNextPage();
+        }
+      };
+    }
+
+    onSearch() {
+
+    }
+
+    private pathToCardItem(path: PathResponse): CardItem {
+      const controls = [];
+      if (path.isEditable) {
+        controls.push({route: '/pages/paths/edit', icon: 'pen'});
+      }
+      return {
+        id: path.id,
+        title: path.title,
+        imgSrc: 'https://via.placeholder.com/150',
+        controls: controls
+      };
     }
   }
 </script>
 
 <style lang="scss" scoped>
+  @import "../../style/theme";
+  @import "../../style/media";
 
+  .filter-title {
+    color: $primary;
+    padding: 0 1rem .2rem 1rem;
+    border-bottom: solid $primary 1px;
+  }
 </style>

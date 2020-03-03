@@ -1,15 +1,23 @@
 @import "../media";
+@import "../theme";
 
 .t-page {
   position: relative;
   border: solid #CCCCCC 1px;
   border-radius: 5px;
-  box-shadow: 0 0 3px #AAAAAA;
+  box-shadow: 0 0 5px #AAAAAA;
   background: white;
-  margin: 4rem;
-  padding: 6rem;
+  margin: 1.5rem;
+  padding: 1.5rem;
 
   .t-page-title {
+    display: flex;
+    align-content: center;
+    margin: .5rem 1rem 1rem 1rem;
+    padding: 0 1rem .3rem 1rem;
+    border-bottom: solid $primary 1px;
+    color: $primary;
+
     svg {
       font-size: 1.6rem;
     }
@@ -20,19 +28,26 @@
   }
 
   @include media-lg() {
-    margin: 2rem;
-    padding: 4rem;
+    margin: 1rem;
+    padding: 1rem;
   }
 
   @include media-md() {
-    margin: 1rem;
-    padding: 2rem;
+    margin: .5rem;
+    padding: .6rem;
   }
 
   @include media-sm() {
     margin: 0;
     box-shadow: none;
     border-radius: 0;
-    padding: .5rem;
+    padding: .6rem .3rem .6rem .3rem;
+  }
+
+  @include media-xs() {
+    margin: 0;
+    box-shadow: none;
+    border-radius: 0;
+    padding: .6rem .1rem .6rem .1rem;
   }
 }

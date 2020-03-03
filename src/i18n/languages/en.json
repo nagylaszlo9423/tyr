@@ -25,6 +25,10 @@
   "GO_BACK": "Back",
   "SAVE": "Save",
   "DELETE": "Delete",
+  "SORT_BY": "Sort by",
+  "OWN": "Own",
+  "PUBLIC": "Public",
+  "SEARCH": "Search",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",

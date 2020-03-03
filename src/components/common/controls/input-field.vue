@@ -2,7 +2,7 @@
   <ValidationProvider :name="id"
                       :rules="rules"
                       v-slot="{ errors }">
-    <div class="tyr-input-field form-group">
+    <div class="tyr-field tyr-input-field form-group" :class="{labeled: label_}">
       <div class="input-group">
         <input :id="id"
                :name="id"
@@ -13,14 +13,19 @@
                @input="updateValue"
                @focus="isFocused=true"
                @blur="isFocused=false"/>
-        <label v-if="!errors || !errors[0]"
+        <label v-if="label_ && (!errors || !errors[0])"
                class="tyr-input-field-label"
                :class="{focus: isFocused || value_}"
                :for="id">
           {{ label_ }}
         </label>
+        <button class="btn btn-light tyr-input-field-action">
+          <font-awesome-icon v-if="actionButtonIcon && (!errors || !errors[0])"
+                             :icon="actionButtonIcon"
+                             @click="onAction"></font-awesome-icon>
+        </button>
         <font-awesome-icon v-if="errors && errors[0]"
-                           class="error-icon"
+                           class="tyr-field-error-icon"
                            icon="exclamation-circle"></font-awesome-icon>
         <transition name="fade">
           <span v-if="info_ && isFocused"
@@ -38,7 +43,7 @@
 </template>
 
 <script lang="ts">
-  import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
+  import {Component, Emit, Prop, Vue, Watch} from 'vue-property-decorator';
   import {ValidationProvider} from 'vee-validate';
   import {ComponentOptions} from 'vue';
   import {TranslateResult} from 'vue-i18n';
@@ -57,6 +62,10 @@
     @Prop() info: string;
     @Prop({default: false}) readonly: boolean;
     @Prop({default: 'text'}) type: string;
+    @Prop() actionButtonIcon: string;
+
+    @Emit() onAction() {}
+
     label_ = '';
     value_ = '';
     info_ = '';
@@ -73,18 +82,18 @@
     }
 
     @Watch('label')
-    labelChange(val: string) {
-      this.label_ = val;
+    labelChange(value: string) {
+      this.label_ = value;
     }
 
-    @Watch('label')
-    infoChange(val: string) {
-      this.info_ = val;
+    @Watch('info')
+    infoChange(value: string) {
+      this.info_ = value;
     }
 
     @Watch('value')
-    valueChange(val: string) {
-      this.value_ = val;
+    valueChange(value: string) {
+      this.value_ = value;
     }
 
     updateValue() {

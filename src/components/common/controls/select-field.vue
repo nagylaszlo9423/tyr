@@ -1,12 +1,13 @@
 <template>
-  <ValidationProvider :name="id"
-                      :rules="rules"
-                      v-slot="{ errors }">
-    <div class="tyr-select-field form-group">
-      <div class="select-group">
+  <div class="tyr-field tyr-select-field form-group" :class="{labeled: label_}">
+    <ValidationProvider :name="id"
+                        :rules="rules"
+                        v-slot="{ errors }">
+      <div class="tyr-select-field-group">
         <select :id="id"
                 :name="id"
                 ref="selectField"
+                :class="{block: block}"
                 :value="value_"
                 @input="updateValue"
                 @focus="isFocused = true"
@@ -14,7 +15,7 @@
                 :disabled="readonly">
           <option v-for="(option, idx) in options" :key="idx" :value="option">{{$t(option)}}</option>
         </select>
-        <label v-if="!errors || !errors[0]"
+        <label v-if="label_ && (!errors || !errors[0])"
                class="tyr-select-field-label"
                :class="{focus: isFocused || value_}"
                :for="id">
@@ -34,8 +35,8 @@
           <span class="arrow-down"></span>
         </div>
       </transition>
-    </div>
-  </ValidationProvider>
+    </ValidationProvider>
+  </div>
 </template>
 
 <script lang="ts">
@@ -56,6 +57,7 @@
     @Prop() info: string;
     @Prop({default: 'text'}) type: string;
     @Prop({default: false}) readonly: boolean;
+    @Prop() block: boolean;
     label_ = '';
     value_ = '';
     info_ = '';
@@ -72,11 +74,11 @@
     }
 
     @Watch('label')
-    labelChange(val: string) {
-      this.label_ = val;
+    labelChange(value: string) {
+      this.label_ = value;
     }
 
-    @Watch('label')
+    @Watch('info')
     infoChange(val: string) {
       this.info_ = val;
     }

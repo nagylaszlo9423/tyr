@@ -1,26 +1,3 @@
-.compass-loader {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  font-family: Verdana, SansSerif, serif;
-  color: #413c69;
-}
-
-.compass-loader-background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 80%;
-  margin: 0 10% 0 10%;
-  opacity: .2;
-}
-
 h1 {
   font-size: 3.2rem;
   margin: 0;
@@ -52,7 +29,6 @@ h1 {
 }
 
 .compass-loader-needle {
-  animation: spin 2.5s infinite linear;
   background-image: url("./assets/compass-needle.png");
 }
 

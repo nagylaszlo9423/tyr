@@ -8,6 +8,7 @@ export const environment =  {
   background_images: ['background1.jpg', 'background2.jpg'],
   cache_name: 'tyr-cache',
   cache_version: 1,
+  pageSize: 10,
   pre_cached_assets: [
     './assets',
     './index.html',
