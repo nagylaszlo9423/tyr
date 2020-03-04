@@ -1,5 +1,3 @@
-import {PageType} from '@/utils/utils';
-import {PageType} from '@/utils/utils';
 <template>
   <ValidationObserver ref="validator" tag="form"
                       class="layout-container layout-vertical" novalidate @submit.prevent="onSubmit">

@@ -2,8 +2,8 @@ import Vuex, {Store, StoreOptions} from 'vuex';
 import createPersistedState from 'vuex-persistedstate';
 import Vue from 'vue';
 import {RootState} from '@/store/root-state';
-import {authStoreModule} from '@/store/modules/auth-store.module';
-import {pathStoreModule} from '@/store/modules/path-store.module';
+import {authStoreModule} from '@/store/modules/auth/auth-store.module';
+import {pathStoreModule} from '@/store/modules/path/path-store.module';
 
 Vue.use(Vuex);
 

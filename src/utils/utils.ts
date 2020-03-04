@@ -7,6 +7,12 @@ export function randomImageFileName(): string {
   return environment.background_images[idx];
 }
 
+export function trimChar(text: string, char: string) {
+  if (char === ']') char = '\\]';
+  if (char === '\\') char = '\\\\';
+  return text.replace(new RegExp('^[' + char + ']+|[' + char + ']+$'), '');
+}
+
 export enum PageType {
   EDIT, CREATE, VIEW
 }

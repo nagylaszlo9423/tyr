@@ -8,12 +8,9 @@ import {PathPageResponse} from 'tyr-api/types/axios';
 import {environment} from '@/environment/environment';
 import {eventBus} from '@/services/event-bus';
 import {events} from '@/services/events';
+import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
 
-export class FindAllAvailablePathsParams {
-  filters: string[];
-  searchExp: string;
-  sortBy: string;
-}
+
 
 export class PathStoreState {
   model: PathModel = new PathModel();
@@ -23,7 +20,7 @@ export class PathStoreState {
     filters: new Array<string>(),
     searchExp: '',
     sortBy: ''
-  }
+  };
 }
 
 export const pathStoreModule: Module<PathStoreState, RootState> = {
@@ -102,6 +99,14 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
     clearModelWithoutPath(store: ActionContext<PathStoreState, RootState>) {
       const coordinates = store.state.model.coordinates;
       store.commit('setModel', new PathModel({coordinates: coordinates}));
+    },
+    async deletePath(store: ActionContext<PathStoreState, RootState>, id: string) {
+      eventBus.$emit(events.loader.start);
+      if (store.state.model.id === id) {
+        store.commit('setModel', new PathModel());
+      }
+      await pathService.deletePathById(id);
+      eventBus.$emit(events.loader.stop);
     }
   }
 };

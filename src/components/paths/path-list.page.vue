@@ -8,18 +8,19 @@
         <span>Sort by</span>
       </b-col>
       <b-col cols="6" md="3" lg="2" xl="2" order="1" order-md="2">
-        <select-field id="select" :options="sortOptions" :block="true" first-selected></select-field>
+        <select-field id="select" v-model="sortBy" :options="sortOptions" :block="true" first-selected
+                      translation-namespace="paths.sortOptions"></select-field>
       </b-col>
     </b-row>
     <b-row class="mb-2">
       <b-col sm="1" md="2" lg="3" xl="4"></b-col>
       <b-col cols="12" sm="10" md="8" lg="6" xl="4">
-        <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="onSearch">
+        <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
           <input-field id="searchPath"
                        :label="$t('SEARCH')"
                        v-model="searchExp"
                        action-button-icon="search"
-                       @on-action="onSearch"></input-field>
+                       @on-action="load"></input-field>
         </ValidationObserver>
       </b-col>
       <b-col sm="1" md="2" lg="3" xl="4"></b-col>
@@ -45,12 +46,12 @@
   import {PathNs} from '@/store/namespaces';
   import {MappedAction} from '@/store/mapped-action';
   import {PathPageResponse, PathResponse} from 'tyr-api/types/axios';
-  import {CardItem} from '@/components/common/card-board/card-item';
+  import {CardItem, CardItemControl} from '@/components/common/card-board/card-item';
   import {MultiSelectItems} from '@/components/common/controls/multi-select-items';
   import InputField from '@/components/common/controls/input-field.vue';
   import SelectField from '@/components/common/controls/select-field.vue';
   import {ValidationObserver} from 'vee-validate';
-  import {FindAllAvailablePathsParams} from '@/store/modules/path-store.module';
+  import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
 
   @Component({
     components: {SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
@@ -58,6 +59,7 @@
   export default class PathListPage extends Vue implements ComponentOptions<PathListPage> {
     @PathNs.Action('findAllAvailable') findAllAvailable: MappedAction<FindAllAvailablePathsParams>;
     @PathNs.Action('findNextPage') findNextPage: MappedAction;
+    @PathNs.Action('deletePath') deletePath: MappedAction<string>;
     @PathNs.Getter('pages') pages: PathPageResponse;
 
     readonly detailsPageRoute = '/pages/paths/details';
@@ -65,15 +67,23 @@
     searchExp = '';
     searchExpInTitle = '';
     filters_ = ['own'];
-    sortBy = 'newest';
+    sortBy_ = '';
     sortOptions: string[] = [];
+
+    set sortBy(sortBy: string) {
+      this.sortBy_ = sortBy;
+      this.load();
+    }
+
+    get sortBy() {
+      return this.sortBy_;
+    }
 
     set multiSelectItems(items: MultiSelectItems) {
       this.setSearchExpInTitle();
-      console.log(items);
       this.filters_ = Object.keys(items).filter(_ => items[_].selected);
       this.multiSelectItems_ = items;
-      this.onSearch();
+      this.load();
     }
 
     get multiSelectItems() {
@@ -85,19 +95,19 @@
     }
 
     async created(): Promise<void> {
-      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy});
       this.multiSelectItems_ = {
         own: {name: this.$tc('OWN'), selected: true},
         groups: {name: this.$tc('GROUPS'), selected: false},
         public: {name: this.$tc('PUBLIC'), selected: false}
       };
-      this.sortOptions = ['newest', 'last_modified', 'name_asc', 'name_desc', 'visibility'];
+      this.sortOptions = ['last_created', 'oldest_created', 'last_modified', 'oldest_modified', 'name_asc', 'name_desc', 'visibility'];
+      this.load();
       this.loadNextOnScroll();
     }
 
-    onSearch() {
+    load() {
       this.setSearchExpInTitle();
-      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy});
+      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy_});
     }
 
     private loadNextOnScroll() {
@@ -109,9 +119,10 @@
     }
 
     private pathToCardItem(path: PathResponse): CardItem {
-      const controls = [];
+      const controls: CardItemControl[] = [];
       if (path.isEditable) {
-        controls.push({route: '/pages/paths/edit', icon: 'pen'});
+        controls.push({action: this.editItem.bind(this), icon: 'pen'});
+        controls.push({action: this.confirmDeletion.bind(this), icon: 'trash', variant: 'danger'});
       }
       return {
         id: path.id,
@@ -119,6 +130,14 @@
         imgSrc: 'https://via.placeholder.com/150',
         controls: controls
       };
+    }
+
+    private editItem(id: string) {
+      this.$router.push(`/pages/paths/edit/${id}`);
+    }
+
+    private confirmDeletion(id: string) {
+      this.deletePath(id);
     }
 
     private setSearchExpInTitle() {

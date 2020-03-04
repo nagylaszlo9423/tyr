@@ -13,7 +13,7 @@
                 @focus="isFocused = true"
                 @blur="isFocused=false"
                 :disabled="readonly">
-          <option v-for="(option, idx) in options" :key="idx" :value="option">{{$t(option)}}</option>
+          <option v-for="(option, idx) in options" :key="idx" :value="option">{{ getTranslation(option) }}</option>
         </select>
         <label v-if="label_ && (!errors || !errors[0])"
                class="tyr-select-field-label"
@@ -42,6 +42,7 @@
 <script lang="ts">
   import {Component, Prop, Vue, Watch} from 'vue-property-decorator';
   import {ValidationProvider} from 'vee-validate';
+  import {trimChar} from '@/utils/utils';
 
   @Component({
     name: 'select-field',
@@ -50,7 +51,7 @@
   export default class SelectField extends Vue {
     @Prop({required: true}) id: string;
     @Prop({required: true}) options: string[];
-    @Prop({default: ''}) translationPrefix: string;
+    @Prop({default: ''}) translationNamespace: string;
     @Prop() rules: string;
     @Prop() value: string;
     @Prop() label: string;
@@ -67,6 +68,10 @@
     $refs: {
       selectField: HTMLSelectElement
     };
+
+    getTranslation(option: string) {
+      return this.$tc(`${trimChar(this.translationNamespace, '.')}.${option}`);
+    }
 
     created(): void {
       this.label_ = this.label;

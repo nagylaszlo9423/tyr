@@ -1,7 +1,8 @@
 
 export interface CardItemControl {
   icon: string;
-  route: string;
+  action: (id: string) => void;
+  variant?: 'danger' | 'success' | 'primary' | 'warning';
 }
 
 export interface CardItem {

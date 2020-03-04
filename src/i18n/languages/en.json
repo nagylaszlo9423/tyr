@@ -56,7 +56,16 @@
   "paths": {
     "EDIT_PATH": "Edit path",
     "MODIFY_PATH": "Modify path",
-    "UNABLE_OPEN_PATH_DETAILS": "Unable open path details"
+    "UNABLE_OPEN_PATH_DETAILS": "Unable open path details",
+    "sortOptions": {
+      "last_created": "LastCreated",
+      "oldest_created": "Oldest created",
+      "last_modified": "Last modified",
+      "oldest_modified": "Oldest modified",
+      "name_asc": "Name, ascending",
+      "name_desc": "Name, descending",
+      "visibility": "Visibility"
+    }
   },
   "errors": {
     "UNKNOWN_ERROR": "Unknown error occurred",

@@ -3,16 +3,16 @@
        @mouseenter="isDescriptionClosed = false"
        @mouseleave="isDescriptionClosed=true">
     <image-view class="tyr-card-image" :src="item.imgSrc" fit="frame"></image-view>
-    <div class="tyr-card-content d-flex flex-row justify-content-between">
+    <div class="tyr-card-content d-flex flex-column justify-content-between">
       <span>{{item.title}}</span>
-      <div class="px-2">
-        <b-button v-for="(control, idx) in item.controls"
+      <div class="align-self-end px-2 mt-1">
+        <button v-for="(control, idx) in item.controls"
                   :key="idx"
-                  variant="primary"
-                  class="p-0"
-                  @click="controlClick($event, control.route)">
+                  :class="'btn btn-' + (control.variant || 'primary')"
+                  class="p-0 mx-1"
+                  @click="controlClick(idx)">
           <font-awesome-icon :icon="control.icon" fixed-width></font-awesome-icon>
-        </b-button>
+        </button>
       </div>
     </div>
   </div>
@@ -33,9 +33,10 @@
 
     isDescriptionClosed = true;
 
-    controlClick(event: Event, route: string) {
-      this.$router.push(`${route}/${this.item.id}`);
-      event.stopPropagation();
+    controlClick(idx: number) {
+      if (this.item.controls) {
+        this.item.controls[idx].action(this.item.id);
+      }
     }
   }
 </script>
@@ -48,7 +49,7 @@
     overflow: hidden;
     margin: 1rem;
     width: 18rem;
-    height: 15rem;
+    min-height: 15rem;
     border-radius: 5px;
     box-shadow: 0 0 5px grey;
     cursor: pointer;
