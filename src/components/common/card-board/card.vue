@@ -10,7 +10,7 @@
                   :key="idx"
                   :class="'btn btn-' + (control.variant || 'primary')"
                   class="p-0 mx-1"
-                  @click="controlClick(idx)">
+                  @click="controlClick($event, idx)">
           <font-awesome-icon :icon="control.icon" fixed-width></font-awesome-icon>
         </button>
       </div>
@@ -33,10 +33,11 @@
 
     isDescriptionClosed = true;
 
-    controlClick(idx: number) {
+    controlClick(event: Event, idx: number) {
       if (this.item.controls) {
         this.item.controls[idx].action(this.item.id);
       }
+      event.stopPropagation();
     }
   }
 </script>

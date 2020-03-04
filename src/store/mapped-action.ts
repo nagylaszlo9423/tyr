@@ -1,2 +1,2 @@
 
-export type MappedAction<T = any> = (params?: T) => void;
+export type MappedAction<T = any> = (param?: T) => void;

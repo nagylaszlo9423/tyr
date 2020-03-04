@@ -33,6 +33,7 @@
         </b-col>
       </b-row>
     </page>
+    <confirmation-modal ref="deletionModal" @confirmed="deletePath"></confirmation-modal>
   </page>
 </template>
 
@@ -52,9 +53,12 @@
   import SelectField from '@/components/common/controls/select-field.vue';
   import {ValidationObserver} from 'vee-validate';
   import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
+  import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
 
   @Component({
-    components: {SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
+    components: {
+      ConfirmationModal,
+      SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
   })
   export default class PathListPage extends Vue implements ComponentOptions<PathListPage> {
     @PathNs.Action('findAllAvailable') findAllAvailable: MappedAction<FindAllAvailablePathsParams>;
@@ -69,6 +73,7 @@
     filters_ = ['own'];
     sortBy_ = '';
     sortOptions: string[] = [];
+    deletionModal: ConfirmationModal;
 
     set sortBy(sortBy: string) {
       this.sortBy_ = sortBy;
@@ -105,6 +110,10 @@
       this.loadNextOnScroll();
     }
 
+    mounted(): void {
+
+    }
+
     load() {
       this.setSearchExpInTitle();
       this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy_});
@@ -122,7 +131,7 @@
       const controls: CardItemControl[] = [];
       if (path.isEditable) {
         controls.push({action: this.editItem.bind(this), icon: 'pen'});
-        controls.push({action: this.confirmDeletion.bind(this), icon: 'trash', variant: 'danger'});
+        controls.push({action: this.askForDeletionApproval.bind(this), icon: 'trash', variant: 'danger'});
       }
       return {
         id: path.id,
@@ -132,12 +141,11 @@
       };
     }
 
-    private editItem(id: string) {
-      this.$router.push(`/pages/paths/edit/${id}`);
+    private askForDeletionApproval(id: string) {
     }
 
-    private confirmDeletion(id: string) {
-      this.deletePath(id);
+    private editItem(id: string) {
+      this.$router.push(`/pages/paths/edit/${id}`);
     }
 
     private setSearchExpInTitle() {
