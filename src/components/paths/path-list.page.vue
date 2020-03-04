@@ -54,6 +54,7 @@
   import {ValidationObserver} from 'vee-validate';
   import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
+  import {AbstractConfirmationModal} from '@/components/common/modals/abstract-confirmation-modal';
 
   @Component({
     components: {
@@ -73,7 +74,7 @@
     filters_ = ['own'];
     sortBy_ = '';
     sortOptions: string[] = [];
-    deletionModal: ConfirmationModal;
+    deletionModal: AbstractConfirmationModal;
 
     set sortBy(sortBy: string) {
       this.sortBy_ = sortBy;
@@ -111,7 +112,7 @@
     }
 
     mounted(): void {
-
+      this.deletionModal = this.$refs.deletionModal as AbstractConfirmationModal;
     }
 
     load() {
@@ -142,6 +143,11 @@
     }
 
     private askForDeletionApproval(id: string) {
+      this.deletionModal.show().then(isConfirmed => {
+        if (isConfirmed) {
+          this.deletePath(id);
+        }
+      });
     }
 
     private editItem(id: string) {

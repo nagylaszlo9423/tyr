@@ -60,6 +60,9 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
       state.pages.size += page.items.length;
       state.pages.total = page.total;
       state.parameters.nextPage++;
+    },
+    deleteFromPage(state: PathStoreState, id: string) {
+      state.pages.items = state.pages.items.filter(_ => _.id !== id);
     }
   },
   actions: {
@@ -106,6 +109,7 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
         store.commit('setModel', new PathModel());
       }
       await pathService.deletePathById(id);
+      store.commit('deleteFromPage', id);
       eventBus.$emit(events.loader.stop);
     }
   }
