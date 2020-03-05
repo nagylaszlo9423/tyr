@@ -13,7 +13,7 @@ import {events} from '@/services/events';
 export class GroupStoreState extends PagedModuleState<GroupPageResponse> {
   model: GroupModel = new GroupModel();
   parameters: FindAllAvailableGroupsParams = {
-    filters: new Array<string>(),
+    filters: new Array<number>(),
     searchExp: '',
     sortBy: ''
   };
@@ -24,34 +24,43 @@ export const groupStoreModule: Module<GroupStoreState, RootState> = new PageStor
   state: new GroupStoreState(),
   getters: {},
   mutations: {
+    setParameters(state: GroupStoreState, parameters: FindAllAvailableGroupsParams) {
+      state.parameters = parameters;
+    },
     deleteFromPage(state: GroupStoreState, id: string) {
       state.pagination.page.items = state.pagination.page.items.filter(_ => _.id !== id);
     }
   },
   actions: {
     async getAllAvailable(store: ActionContext<GroupStoreState, RootState>, params: FindAllAvailableGroupsParams) {
-      eventBus.$emit(events.loader.start);
-      const res = await groupService.getGroupsPaged(
-        0, environment.pageSize,
-        params.searchExp || undefined,
-        params.filters || undefined,
-        params.sortBy || undefined
-      );
-      store.commit('setPage', res.data);
-      store.commit('setParameters', params);
-      eventBus.$emit(events.loader.stop);
+      try {
+        eventBus.$emit(events.loader.start);
+        const res = await groupService.getGroupsPaged(
+          0, environment.pageSize,
+          params.searchExp || undefined,
+          params.filters && params.filters.length ? params.filters : undefined,
+          params.sortBy || undefined
+        );
+        store.commit('setPage', res.data);
+        store.commit('setParameters', params);
+      } finally {
+        eventBus.$emit(events.loader.stop);
+      }
     },
     async getNextPage(store: ActionContext<GroupStoreState, RootState>) {
+      try {
       eventBus.$emit(events.loader.start);
       const res = await groupService.getGroupsPaged(
         store.state.pagination.nextPage,
         environment.pageSize,
         store.state.parameters.searchExp || undefined,
-        store.state.parameters.filters || undefined,
+        store.state.parameters.filters && store.state.parameters.filters.length ? store.state.parameters.filters : undefined,
         store.state.parameters.sortBy || undefined
       );
       store.commit('setNextPage', res.data);
-      eventBus.$emit(events.loader.stop);
+      } finally {
+        eventBus.$emit(events.loader.stop);
+      }
     },
   }
 });

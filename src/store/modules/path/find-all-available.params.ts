@@ -1,6 +1,6 @@
 
 export interface FindAllAvailablePathsParams {
-  filters: string[];
+  filters: number[];
   searchExp: string;
   sortBy: string;
 }

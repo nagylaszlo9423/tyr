@@ -1,6 +1,6 @@
 
 export interface FindAllAvailableGroupsParams {
-  filters: string[];
+  filters: number[];
   searchExp: string;
   sortBy: string;
 }

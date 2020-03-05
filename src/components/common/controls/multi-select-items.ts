@@ -1,4 +1,4 @@
 
-export interface MultiSelectItems {
-  [key: string]: { name: string, selected?: boolean }
+export interface MultiSelectItems<T = any> {
+  [key: string]: { name: string, selected?: boolean, value: T }
 }

@@ -1,5 +1,6 @@
 
-export enum GroupJoinPolicy {
+export enum GroupFilter {
+  MEMBER,
   INVITE_ONLY,
   REQUEST,
   OPEN

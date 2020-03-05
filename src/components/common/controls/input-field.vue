@@ -19,9 +19,9 @@
                :for="id">
           {{ label_ }}
         </label>
-        <button class="btn btn-light tyr-input-field-action">
-          <font-awesome-icon v-if="actionButtonIcon && (!errors || !errors[0])"
-                             :icon="actionButtonIcon"
+        <button v-if="actionButtonIcon && (!errors || !errors[0])"
+                class="btn btn-light tyr-input-field-action">
+          <font-awesome-icon :icon="actionButtonIcon"
                              @click="onAction"></font-awesome-icon>
         </button>
         <font-awesome-icon v-if="errors && errors[0]"

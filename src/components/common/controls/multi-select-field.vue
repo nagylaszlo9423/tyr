@@ -18,8 +18,9 @@
 
   @Component
   export default class MultiSelectField extends Vue implements ComponentOptions<MultiSelectField> {
-    @Prop({default: false}) block: boolean;
+    @Prop({type: Boolean, default: false}) block: boolean;
     @Prop() value: MultiSelectItems;
+    @Prop({default: 0}) minSelected: number;
 
     items_: MultiSelectItems = {};
     keys_: string[] = [];
@@ -43,14 +44,15 @@
       this.keys_ = Object.keys(values);
       this.keys_.forEach(key => items[key] = {
         name: values[key].name,
-        selected: values[key].selected || false
+        selected: values[key].selected || false,
+        value: values[key].value
       });
       return items;
     }
 
     onSelect(key: string) {
       const item = this.items_[key];
-      if (this.selectedCount > 1 || !item.selected) {
+      if (this.selectedCount > this.minSelected || !item.selected) {
         item.selected = !item.selected;
         this.selectedCount += item.selected ? 1 : -1;
       }

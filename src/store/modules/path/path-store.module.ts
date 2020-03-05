@@ -7,17 +7,16 @@ import {PathPageResponse} from 'tyr-api/types/axios';
 import {environment} from '@/environment/environment';
 import {eventBus} from '@/services/event-bus';
 import {events} from '@/services/events';
-import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
 import {PagedModuleState} from '@/store/paged-module-state';
 import {PathModel} from '@/models/path.model';
 import {PageStoreModule} from '@/store/page-store.module';
-
+import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
 
 
 export class PathStoreState extends PagedModuleState<PathPageResponse> {
   model: PathModel = new PathModel();
   parameters: FindAllAvailablePathsParams = {
-    filters: new Array<string>(),
+    filters: new Array<number>(),
     searchExp: '',
     sortBy: ''
   };
@@ -50,28 +49,34 @@ export const pathStoreModule: Module<PathStoreState, RootState> = new PageStoreM
   },
   actions: {
     async getAllAvailable(store: ActionContext<PathStoreState, RootState>, params: FindAllAvailablePathsParams) {
-      eventBus.$emit(events.loader.start);
-      const res = await pathService.findAllAvailableByFilters(
-        0, environment.pageSize,
-        params.searchExp || undefined,
-        params.filters || undefined,
-        params.sortBy || undefined
-      );
-      store.commit('setPage', res.data);
-      store.commit('setParameters', params);
-      eventBus.$emit(events.loader.stop);
+      try {
+        eventBus.$emit(events.loader.start);
+        const res = await pathService.findAllAvailableByFilters(
+          0, environment.pageSize,
+          params.searchExp || undefined,
+          params.filters && store.state.parameters.filters.length ? params.filters : undefined,
+          params.sortBy || undefined
+        );
+        store.commit('setPage', res.data);
+        store.commit('setParameters', params);
+      } finally {
+        eventBus.$emit(events.loader.stop);
+      }
     },
     async getNextPage(store: ActionContext<PathStoreState, RootState>) {
-      eventBus.$emit(events.loader.start);
-      const res = await pathService.findAllAvailableByFilters(
-        store.state.pagination.nextPage,
-        environment.pageSize,
-        store.state.parameters.searchExp || undefined,
-        store.state.parameters.filters || undefined,
-        store.state.parameters.sortBy || undefined
-      );
-      store.commit('setNextPage', res.data);
-      eventBus.$emit(events.loader.stop);
+      try {
+        eventBus.$emit(events.loader.start);
+        const res = await pathService.findAllAvailableByFilters(
+          store.state.pagination.nextPage,
+          environment.pageSize,
+          store.state.parameters.searchExp || undefined,
+          store.state.parameters.filters && store.state.parameters.filters.length ? store.state.parameters.filters : undefined,
+          store.state.parameters.sortBy || undefined
+        );
+        store.commit('setNextPage', res.data);
+      } finally {
+        eventBus.$emit(events.loader.stop);
+      }
     },
     async getPathById(store: ActionContext<PathStoreState, RootState>, id: string) {
       const res = await pathService.getPathById(id);

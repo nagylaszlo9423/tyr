@@ -56,6 +56,7 @@
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
   import {AbstractConfirmationModal} from '@/components/common/modals/abstract-confirmation-modal';
   import {onPageBottomReached} from '@/utils/utils';
+  import {PathFilter} from '@/components/paths/path-filters';
 
   @Component({
     components: {
@@ -66,13 +67,13 @@
     @PathNs.Action('getAllAvailable') getAllAvailable: MappedAction<FindAllAvailablePathsParams>;
     @PathNs.Action('getNextPage') getNextPage: MappedAction;
     @PathNs.Action('deletePath') deletePath: MappedAction<string>;
-    @PathNs.Getter('page') pages: PathPageResponse;
+    @PathNs.Getter('page') page: PathPageResponse;
 
     readonly detailsPageRoute = '/pages/paths/details';
-    multiSelectItems_: MultiSelectItems = {};
+    multiSelectItems_: MultiSelectItems<number> = {};
     searchExp = '';
     searchExpInTitle = '';
-    filters_ = ['own'];
+    filters_ = [PathFilter.OWN];
     sortBy_ = '';
     sortOptions: string[] = [];
     deletionModal: AbstractConfirmationModal;
@@ -86,9 +87,9 @@
       return this.sortBy_;
     }
 
-    set multiSelectItems(items: MultiSelectItems) {
+    set multiSelectItems(items: MultiSelectItems<number>) {
       this.setSearchExpInTitle();
-      this.filters_ = Object.keys(items).filter(_ => items[_].selected);
+      this.filters_ = Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value);
       this.multiSelectItems_ = items;
       this.load();
     }
@@ -98,14 +99,14 @@
     }
 
     get mappedItems() {
-      return this.pages.items.map(this.pathToCardItem);
+      return this.page.items.map(this.pathToCardItem);
     }
 
     async created(): Promise<void> {
       this.multiSelectItems_ = {
-        own: {name: this.$tc('OWN'), selected: true},
-        groups: {name: this.$tc('GROUPS'), selected: false},
-        public: {name: this.$tc('PUBLIC'), selected: false}
+        own: {name: this.$tc('OWN'), selected: true, value: PathFilter.OWN},
+        groups: {name: this.$tc('GROUPS'), value: PathFilter.GROUP},
+        public: {name: this.$tc('PUBLIC'), value: PathFilter.PUBLIC}
       };
       this.sortOptions = ['last_created', 'oldest_created', 'last_modified', 'oldest_modified', 'name_asc', 'name_desc', 'visibility'];
       this.load();

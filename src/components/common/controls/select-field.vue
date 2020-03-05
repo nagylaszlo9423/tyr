@@ -58,7 +58,7 @@
     @Prop() info: string;
     @Prop({default: 'text'}) type: string;
     @Prop({default: false, type: Boolean}) readonly: boolean;
-    @Prop() block: boolean;
+    @Prop({type: Boolean, default: false}) block: boolean;
     @Prop({default: false, type: Boolean}) firstSelected: boolean;
     label_ = '';
     value_ = '';
