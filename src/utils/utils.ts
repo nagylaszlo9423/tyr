@@ -7,6 +7,16 @@ export function randomImageFileName(): string {
   return environment.background_images[idx];
 }
 
+export function onPageBottomReached(): Promise<void> {
+  return new Promise<void>(resolve => {
+    window.onscroll = () => {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        resolve();
+      }
+    };
+  });
+}
+
 export function trimChar(text: string, char: string) {
   if (char === ']') char = '\\]';
   if (char === '\\') char = '\\\\';

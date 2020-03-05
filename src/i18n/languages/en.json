@@ -29,6 +29,8 @@
   "OWN": "Own",
   "PUBLIC": "Public",
   "SEARCH": "Search",
+  "NO_ITEMS_FOUND": "No {name} found!",
+  "NO_AVAILABLE_DATA": "No available data",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",
@@ -46,11 +48,13 @@
     "NAME": "Group name",
     "DESCRIPTION": "Description",
     "ACCESS": "Access level",
+    "CREATE_GROUP": "Create group",
     "EDIT_GROUP": "Edit group {name}",
     "joinPolicies": {
+      "MEMBER": "Member",
       "INVITE_ONLY": "Invite only",
       "REQUEST": "Request",
-      "PUBLIC": "Public"
+      "OPEN": "Open"
     }
   },
   "paths": {

@@ -2,35 +2,34 @@ import {ActionContext, Module} from 'vuex';
 import {RootState} from '@/store/root-state';
 import {Coordinate} from 'ol/coordinate';
 import {pathService} from '@/services/generated-services';
-import {PathModel} from '@/models/path-model';
 import {PathMapper} from '@/components/paths/path-mapper';
 import {PathPageResponse} from 'tyr-api/types/axios';
 import {environment} from '@/environment/environment';
 import {eventBus} from '@/services/event-bus';
 import {events} from '@/services/events';
 import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
+import {PagedModuleState} from '@/store/paged-module-state';
+import {PathModel} from '@/models/path.model';
+import {PageStoreModule} from '@/store/page-store.module';
 
 
 
-export class PathStoreState {
+export class PathStoreState extends PagedModuleState<PathPageResponse> {
   model: PathModel = new PathModel();
-  pages: PathPageResponse = {page: 0, size: 0, total: 0, items: []};
-  parameters = {
-    nextPage: 0,
+  parameters: FindAllAvailablePathsParams = {
     filters: new Array<string>(),
     searchExp: '',
     sortBy: ''
   };
 }
 
-export const pathStoreModule: Module<PathStoreState, RootState> = {
+export const pathStoreModule: Module<PathStoreState, RootState> = new PageStoreModule({
   namespaced: true,
   state: new PathStoreState(),
   getters: {
     modelId: state => state.model.id,
     model: state => state.model,
-    recordedCoordinates: state => state.model.coordinates,
-    pages: state => state.pages
+    recordedCoordinates: state => state.model.coordinates
   },
   mutations: {
     setModel(state: PathStoreState, model: PathModel) {
@@ -42,52 +41,34 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
       }
       state.model.coordinates = path;
     },
-    setFilters(state: PathStoreState, filters: string[]) {
-      state.parameters.filters = filters;
-    },
-    setSearchExp(state: PathStoreState, searchExp: string) {
-      state.parameters.searchExp = searchExp;
-    },
-    setSortBy(state: PathStoreState, sortBy: string) {
-      state.parameters.sortBy = sortBy;
-    },
-    setPage(state: PathStoreState, page: PathPageResponse) {
-      state.parameters.nextPage = 1;
-      state.pages = page;
-    },
-    setNextPage(state: PathStoreState, page: PathPageResponse) {
-      state.pages.items.push(...page.items);
-      state.pages.size += page.items.length;
-      state.pages.total = page.total;
-      state.parameters.nextPage++;
+    setParameters(state: PathStoreState, parameters: FindAllAvailablePathsParams) {
+      state.parameters = parameters;
     },
     deleteFromPage(state: PathStoreState, id: string) {
-      state.pages.items = state.pages.items.filter(_ => _.id !== id);
+      state.pagination.page.items = state.pagination.page.items.filter(_ => _.id !== id);
     }
   },
   actions: {
-    async findAllAvailable(store: ActionContext<PathStoreState, RootState>, params: FindAllAvailablePathsParams) {
+    async getAllAvailable(store: ActionContext<PathStoreState, RootState>, params: FindAllAvailablePathsParams) {
       eventBus.$emit(events.loader.start);
       const res = await pathService.findAllAvailableByFilters(
         0, environment.pageSize,
         params.searchExp || undefined,
-        params.filters,
-        params.sortBy
+        params.filters || undefined,
+        params.sortBy || undefined
       );
       store.commit('setPage', res.data);
-      store.commit('setFilters', params.filters);
-      store.commit('setSearchExp', params.searchExp);
-      store.commit('setSortBy', params.sortBy);
+      store.commit('setParameters', params);
       eventBus.$emit(events.loader.stop);
     },
-    async findNextPage(store: ActionContext<PathStoreState, RootState>) {
+    async getNextPage(store: ActionContext<PathStoreState, RootState>) {
       eventBus.$emit(events.loader.start);
       const res = await pathService.findAllAvailableByFilters(
-        store.state.parameters.nextPage,
+        store.state.pagination.nextPage,
         environment.pageSize,
-        store.state.parameters.searchExp,
-        store.state.parameters.filters,
-        store.state.parameters.sortBy
+        store.state.parameters.searchExp || undefined,
+        store.state.parameters.filters || undefined,
+        store.state.parameters.sortBy || undefined
       );
       store.commit('setNextPage', res.data);
       eventBus.$emit(events.loader.stop);
@@ -113,4 +94,4 @@ export const pathStoreModule: Module<PathStoreState, RootState> = {
       eventBus.$emit(events.loader.stop);
     }
   }
-};
+});

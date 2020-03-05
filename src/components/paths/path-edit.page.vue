@@ -44,13 +44,13 @@
   import {MapPageState} from '@/components/map/map.routes';
   import {Vue} from '@/types';
   import TextareaField from '@/components/common/controls/textarea-field.vue';
-  import {PathModel} from '@/models/path-model';
   import {PathMapper} from '@/components/paths/path-mapper';
   import {PageType} from '@/utils/utils';
   import {PathNs} from '@/store/namespaces';
   import {MappedAction} from '@/store/mapped-action';
   import {eventBus} from '@/services/event-bus';
   import {events} from '@/services/events';
+  import {PathModel} from '@/models/path.model';
 
   @Component({
     components: {

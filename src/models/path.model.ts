@@ -4,7 +4,7 @@ import {Coordinate} from 'ol/coordinate';
 
 export class PathModel extends ObjectInitializer<PathModel> {
   id?: string;
-  title: string;
+  name: string;
   description: string;
   coordinates: Coordinate[];
 }

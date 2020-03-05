@@ -12,7 +12,7 @@
                       translation-namespace="paths.sortOptions"></select-field>
       </b-col>
     </b-row>
-    <b-row class="mb-2">
+    <b-row>
       <b-col sm="1" md="2" lg="3" xl="4"></b-col>
       <b-col cols="12" sm="10" md="8" lg="6" xl="4">
         <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
@@ -25,7 +25,7 @@
       </b-col>
       <b-col sm="1" md="2" lg="3" xl="4"></b-col>
     </b-row>
-    <page :title="$t('PATHS') + searchExpInTitle">
+    <page :title="$t('PATHS') + searchExpInTitle" class="mt-2">
       <b-row>
         <b-col>
           <card-board :items="mappedItems"
@@ -55,6 +55,7 @@
   import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
   import {AbstractConfirmationModal} from '@/components/common/modals/abstract-confirmation-modal';
+  import {onPageBottomReached} from '@/utils/utils';
 
   @Component({
     components: {
@@ -62,10 +63,10 @@
       SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
   })
   export default class PathListPage extends Vue implements ComponentOptions<PathListPage> {
-    @PathNs.Action('findAllAvailable') findAllAvailable: MappedAction<FindAllAvailablePathsParams>;
-    @PathNs.Action('findNextPage') findNextPage: MappedAction;
+    @PathNs.Action('getAllAvailable') getAllAvailable: MappedAction<FindAllAvailablePathsParams>;
+    @PathNs.Action('getNextPage') getNextPage: MappedAction;
     @PathNs.Action('deletePath') deletePath: MappedAction<string>;
-    @PathNs.Getter('pages') pages: PathPageResponse;
+    @PathNs.Getter('page') pages: PathPageResponse;
 
     readonly detailsPageRoute = '/pages/paths/details';
     multiSelectItems_: MultiSelectItems = {};
@@ -108,7 +109,7 @@
       };
       this.sortOptions = ['last_created', 'oldest_created', 'last_modified', 'oldest_modified', 'name_asc', 'name_desc', 'visibility'];
       this.load();
-      this.loadNextOnScroll();
+      onPageBottomReached().then(() => this.getNextPage());
     }
 
     mounted(): void {
@@ -117,15 +118,7 @@
 
     load() {
       this.setSearchExpInTitle();
-      this.findAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy_});
-    }
-
-    private loadNextOnScroll() {
-      window.onscroll = () => {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && this.pages.total === this.pages.items.length) {
-          this.findNextPage();
-        }
-      };
+      this.getAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy_});
     }
 
     private pathToCardItem(path: PathResponse): CardItem {
@@ -136,7 +129,7 @@
       }
       return {
         id: path.id,
-        title: path.title,
+        title: path.name,
         imgSrc: 'https://via.placeholder.com/150',
         controls: controls
       };
