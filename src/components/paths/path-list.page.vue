@@ -45,7 +45,7 @@
   import ImageView from '@/components/common/image-view.vue';
   import MultiSelectField from '@/components/common/controls/multi-select-field.vue';
   import {PathNs} from '@/store/namespaces';
-  import {MappedAction} from '@/store/mapped-action';
+  import {MappedAction, MappedActionWithParam} from '@/store/mapped-action';
   import {PathPageResponse, PathResponse} from 'tyr-api/types/axios';
   import {CardItem, CardItemControl} from '@/components/common/card-board/card-item';
   import {MultiSelectItems} from '@/components/common/controls/multi-select-items';
@@ -64,9 +64,9 @@
       SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
   })
   export default class PathListPage extends Vue implements ComponentOptions<PathListPage> {
-    @PathNs.Action('getAllAvailable') getAllAvailable: MappedAction<FindAllAvailablePathsParams>;
+    @PathNs.Action('getAllAvailable') getAllAvailable: MappedActionWithParam<FindAllAvailablePathsParams>;
     @PathNs.Action('getNextPage') getNextPage: MappedAction;
-    @PathNs.Action('deletePath') deletePath: MappedAction<string>;
+    @PathNs.Action('deletePath') deletePath: MappedActionWithParam<string>;
     @PathNs.Getter('page') page: PathPageResponse;
 
     readonly detailsPageRoute = '/pages/paths/details';

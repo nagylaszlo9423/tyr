@@ -27,7 +27,7 @@ export const NavNarItems: NavBarItem[] = [
     name: 'groups',
     title: 'GROUPS',
     icon: 'users',
-    to: '/pages/groups',
+    to: '/pages/groups/list',
     hidden: true
   },
   {

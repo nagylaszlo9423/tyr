@@ -3,13 +3,14 @@ import {environment} from '@/environment/environment';
 import {TokenResponse} from 'tyr-api/types/axios';
 import {RootState} from '@/store/root-state';
 import {authService} from '@/services/auth.service';
+import {BaseStoreModule} from '@/store/base-store.module';
 
 export class AuthStoreState {
   code = '';
   tokens: TokenResponse | null = <any>{};
 }
 
-export const authStoreModule: Module<AuthStoreState, RootState> = {
+export const authStoreModule: Module<AuthStoreState, RootState> = new BaseStoreModule({
   namespaced: true,
   state: new AuthStoreState(),
   getters: {
@@ -42,4 +43,4 @@ export const authStoreModule: Module<AuthStoreState, RootState> = {
       store.commit('setTokens', tokens);
     }
   }
-};
+});

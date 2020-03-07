@@ -4,6 +4,10 @@ import {PathModel} from '@/models/path.model';
 
 export class PathMapper {
 
+  static responseListToModels(items: PathResponse[]): PathModel[] {
+    return items.map(PathMapper.responseToModel);
+  }
+
   static responseToModel(res: PathResponse): PathModel {
     return new PathModel({
       id: res.id,

@@ -3,7 +3,7 @@
     <button
       v-for="key in keys_"
       :key="key"
-      class="btn tyr-multi-select-field-element"
+      class="btn tyr-multi-select-field-element mb-1"
       :class="{'btn-primary': computedItems[key].selected, 'btn-outline-primary': !computedItems[key].selected}"
       @click="onSelect(key)">
       <span>{{items_[key].name}}</span>

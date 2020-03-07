@@ -9,6 +9,7 @@
                   ref="textareaField"
                   :type="type"
                   :value="value_"
+                  :readonly="readonly"
                   @input="updateValue"
                   @focus="isFocused = true"
                   @blur="isFocused=false"></textarea>

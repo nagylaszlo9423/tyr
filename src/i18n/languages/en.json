@@ -50,6 +50,7 @@
     "ACCESS": "Access level",
     "CREATE_GROUP": "Create group",
     "EDIT_GROUP": "Edit group {name}",
+    "JOIN_POLICY": "Join policy",
     "joinPolicies": {
       "MEMBER": "Member",
       "INVITE_ONLY": "Invite only",

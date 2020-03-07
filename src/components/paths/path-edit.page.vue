@@ -44,13 +44,13 @@
   import {MapPageState} from '@/components/map/map.routes';
   import {Vue} from '@/types';
   import TextareaField from '@/components/common/controls/textarea-field.vue';
-  import {PathMapper} from '@/components/paths/path-mapper';
   import {PageType} from '@/utils/utils';
   import {PathNs} from '@/store/namespaces';
-  import {MappedAction} from '@/store/mapped-action';
+  import {MappedAction, MappedActionWithParam} from '@/store/mapped-action';
   import {eventBus} from '@/services/event-bus';
   import {events} from '@/services/events';
   import {PathModel} from '@/models/path.model';
+  import {PathMapper} from '@/models/mappers/path.mapper';
 
   @Component({
     components: {
@@ -63,7 +63,7 @@
   export default class PathEditPage extends Vue implements ComponentOptions<PathEditPage> {
     @PathNs.Getter('model') pathModel: PathModel;
     @PathNs.Action('clearModelWithoutPath') clearModelWithoutPath: MappedAction;
-    @PathNs.Action('getPathById') getPathById: MappedAction;
+    @PathNs.Action('getPathById') getPathById: MappedActionWithParam<string>;
 
     pageType = PageType.VIEW;
     readonly = true;

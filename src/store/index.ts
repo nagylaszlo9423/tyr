@@ -5,6 +5,7 @@ import {RootState} from '@/store/root-state';
 import {authStoreModule} from '@/store/modules/auth/auth-store.module';
 import {pathStoreModule} from '@/store/modules/path/path-store.module';
 import {groupStoreModule} from '@/store/modules/group/group-store.module';
+import {groupMembersStoreModule} from '@/store/modules/group-members/group-members-store.module';
 
 Vue.use(Vuex);
 
@@ -15,7 +16,8 @@ const storeOptions: StoreOptions<RootState> = {
   modules: {
     auth: authStoreModule,
     path: pathStoreModule,
-    group: groupStoreModule
+    group: groupStoreModule,
+    groupMembers: groupMembersStoreModule
   },
   plugins: [
     createPersistedState({

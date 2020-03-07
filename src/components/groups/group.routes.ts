@@ -1,8 +1,8 @@
 import {RouteConfig} from 'vue-router';
 import GroupsPage from '@/components/groups/groups.page.vue';
 import GroupListPage from '@/components/groups/group-list.page.vue';
-import GroupEditPage from '@/components/groups/group-edit.page.vue';
-import GroupDetailsPage from '@/components/groups/group-details.page.vue';
+import GroupPage from '@/components/groups/group.page.vue';
+import {PageType} from '@/utils/utils';
 
 
 export const groupRoutes: RouteConfig = {
@@ -13,23 +13,40 @@ export const groupRoutes: RouteConfig = {
   },
   children: [
     {
-      path: '',
-      name: 'groups',
+      path: 'list',
+      name: 'groups-list',
       component: GroupListPage,
       meta: {
         isAuthenticated: true
       }
     },
     {
-      path: 'edit/:id',
-      component: GroupEditPage,
+      path: 'create',
+      component: GroupPage,
       meta: {
-        isAuthenticated: true
+        isAuthenticated: true,
+        pageType: PageType.CREATE
       }
     },
     {
       path: ':id',
-      component: GroupDetailsPage,
+      component: GroupPage,
+      meta: {
+        isAuthenticated: true,
+        pageType: PageType.EDIT
+      }
+    },
+    {
+      path: ':id/view',
+      component: GroupPage,
+      meta: {
+        isAuthenticated: true,
+        pageType: PageType.VIEW
+      }
+    },
+    {
+      path: ':id/members',
+      component: GroupPage,
       meta: {
         isAuthenticated: true
       }

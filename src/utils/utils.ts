@@ -17,6 +17,14 @@ export function onPageBottomReached(): Promise<void> {
   });
 }
 
+export function enumKeys(enumObj: any): string[] {
+  return Object.keys(enumObj).filter(x => !(parseInt(x) >= 0));
+}
+
+export function enumValue(enumName: string, enumObj: any): any {
+  return enumKeys(enumObj).indexOf(enumName);
+}
+
 export function trimChar(text: string, char: string) {
   if (char === ']') char = '\\]';
   if (char === '\\') char = '\\\\';
