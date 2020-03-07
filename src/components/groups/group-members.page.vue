@@ -1,10 +1,15 @@
 <template>
   <page>
-    <b-card-group>
-      <b-card v-for="member in page.items" :key="member.id">
-        <b-card-text>{{member.email}}</b-card-text>
-      </b-card>
-    </b-card-group>
+    <b-row>
+      <b-col>
+        <b-card-group v-if="page.items.length">
+          <b-card v-for="member in page.items" :key="member.id">
+            <b-card-text>{{member.email}}</b-card-text>
+          </b-card>
+        </b-card-group>
+        <empty-row v-if="!page.items.length"></empty-row>
+      </b-col>
+    </b-row>
   </page>
 </template>
 
@@ -16,9 +21,10 @@
   import {GroupMemberModel} from '@/models/group-member.model';
   import {PageModel} from '@/models/page.model';
   import {ComponentOptions} from 'vue';
+  import EmptyRow from '@/components/common/empty-row.vue';
 
   @Component({
-    components: {Page}
+    components: {EmptyRow, Page}
   })
   export default class GroupMembersPage extends Vue implements ComponentOptions<GroupMembersPage> {
     @GroupMembersNs.Action('getGroupMembers') getGroupMembers: MappedActionWithParam<string>;

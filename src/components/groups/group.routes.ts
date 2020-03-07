@@ -3,6 +3,7 @@ import GroupsPage from '@/components/groups/groups.page.vue';
 import GroupListPage from '@/components/groups/group-list.page.vue';
 import GroupPage from '@/components/groups/group.page.vue';
 import {PageType} from '@/utils/utils';
+import GroupMembersPage from '@/components/groups/group-members.page.vue';
 
 
 export const groupRoutes: RouteConfig = {
@@ -22,6 +23,7 @@ export const groupRoutes: RouteConfig = {
     },
     {
       path: 'create',
+      name: 'create-group',
       component: GroupPage,
       meta: {
         isAuthenticated: true,
@@ -30,6 +32,7 @@ export const groupRoutes: RouteConfig = {
     },
     {
       path: ':id',
+      name: 'edit-group',
       component: GroupPage,
       meta: {
         isAuthenticated: true,
@@ -38,6 +41,7 @@ export const groupRoutes: RouteConfig = {
     },
     {
       path: ':id/view',
+      name: 'view-group',
       component: GroupPage,
       meta: {
         isAuthenticated: true,
@@ -46,7 +50,8 @@ export const groupRoutes: RouteConfig = {
     },
     {
       path: ':id/members',
-      component: GroupPage,
+      name: 'view-group-members',
+      component: GroupMembersPage,
       meta: {
         isAuthenticated: true
       }

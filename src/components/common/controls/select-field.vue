@@ -80,7 +80,6 @@
     created(): void {
       this.label_ = this.label;
       this.info_ = this.info;
-      console.log(this.value);
       if (this.value) {
         this.value_ = this.value;
       } else if (this.firstSelected && this.options[0]) {

@@ -12,7 +12,8 @@ import {events} from '@/services/events';
 export class PageStoreModule<T, S extends PagedModuleState<T>> extends BaseStoreModule<T, S> {
   namespaced = true;
 
-  getters: GetterTree<S, RootState> & {page: Getter<S, RootState>};
+  state: S = {} as any;
+  getters: GetterTree<S, RootState> & { page: Getter<S, RootState> };
   mutations: MutationTree<S> & {
     setPage: Mutation<S>,
     setNextPage: Mutation<S>
@@ -20,6 +21,7 @@ export class PageStoreModule<T, S extends PagedModuleState<T>> extends BaseStore
 
   constructor(module: Module<S, RootState>) {
     super(module);
+    Object.assign(this.state, new PagedModuleState());
     this.getters = {
       ...module.getters,
       page: state => state.pagination.page

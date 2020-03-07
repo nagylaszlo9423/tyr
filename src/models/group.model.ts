@@ -17,7 +17,6 @@ export class GroupModel extends ObjectInitializer<GroupModel> {
   }
 
   set joinPolicyName(name: string) {
-    console.log(name, enumValue(name, GroupJoinPolicy));
     this.joinPolicy = enumValue(name, GroupJoinPolicy);
   }
 }

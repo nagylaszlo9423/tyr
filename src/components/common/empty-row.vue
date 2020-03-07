@@ -15,10 +15,11 @@
   @import "../../style/theme";
 
   .tyr-empty-row {
-    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
     padding: 1rem;
     margin: 1rem 3rem 1rem 3rem;
-    text-align: center;
     border-radius: 5px;
     color: darken($primary, 10%);
     box-shadow: 0 0 5px darken($primary, 10%);

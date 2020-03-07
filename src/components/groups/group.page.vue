@@ -39,11 +39,11 @@ import {PageType} from '@/utils/utils';
       </b-row>
       <b-row v-if="!readonly" class="my-3">
         <b-col lg="6"></b-col>
-        <b-col sm="12" md="6" lg="3">
-          <b-button v-if="pageType === pageTypes.EDIT" block variant="primary">{{$t('EDIT_MEMBERS')}}
+        <b-col sm="12" md="6" lg="3" class="my-1">
+          <b-button v-if="pageType === pageTypes.EDIT" block variant="primary" @click="goToMembersPage">{{$t('groups.EDIT_MEMBERS')}}
           </b-button>
         </b-col>
-        <b-col sm="12" md="6" lg="3">
+        <b-col sm="12" md="6" lg="3" class="my-1">
           <b-button block type="submit" variant="primary">{{$t(pageType === pageTypes.CREATE ? 'CREATE' : 'UPDATE')}}
           </b-button>
         </b-col>
@@ -97,7 +97,13 @@ import {PageType} from '@/utils/utils';
 
       if (valid) {
         this.saveModel(this.groupModel);
+        this.$toasted.success(this.$tc('SAVED_SUCCESSFULLY'));
+        this.$router.push({name: 'groups-list'});
       }
+    }
+
+    goToMembersPage() {
+      this.$router.push({name: 'view-group-members', params: {id: this.groupModel.id}});
     }
   }
 </script>

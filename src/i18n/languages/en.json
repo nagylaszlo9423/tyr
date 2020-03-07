@@ -31,6 +31,7 @@
   "SEARCH": "Search",
   "NO_ITEMS_FOUND": "No {name} found!",
   "NO_AVAILABLE_DATA": "No available data",
+  "SAVED_SUCCESSFULLY": "Saved successfully",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",
@@ -51,6 +52,7 @@
     "CREATE_GROUP": "Create group",
     "EDIT_GROUP": "Edit group {name}",
     "JOIN_POLICY": "Join policy",
+    "EDIT_MEMBERS": "Edit members",
     "joinPolicies": {
       "MEMBER": "Member",
       "INVITE_ONLY": "Invite only",

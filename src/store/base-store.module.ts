@@ -1,6 +1,5 @@
 import {ObjectInitializer} from '@/utils/object-initializer';
-import {PagedModuleState} from '@/store/paged-module-state';
-import {ActionTree, Getter, GetterTree, Module, Mutation, MutationTree} from 'vuex';
+import {ActionTree, GetterTree, Module, MutationTree} from 'vuex';
 import {RootState} from '@/store/root-state';
 
 export class BaseStoreModule<T, S> extends ObjectInitializer<Module<S, RootState>> implements Module<S, RootState> {

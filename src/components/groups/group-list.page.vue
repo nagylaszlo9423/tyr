@@ -18,7 +18,7 @@
         <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
           <input-field id="searchPath"
                        :label="$t('SEARCH')"
-                       v-model="searchExp"
+                       v-model="pageState_.searchExp"
                        action-button-icon="search"
                        @on-action="load"></input-field>
         </ValidationObserver>
@@ -50,6 +50,13 @@
   import {GroupFilter} from '@/components/groups/group-filter';
   import {GroupModel} from '@/models/group.model';
   import {PageModel} from '@/models/page.model';
+  import {VueUrlState} from '@/types';
+
+  class GroupListPageState {
+    filters = [GroupFilter.MEMBER];
+    sortBy = '';
+    searchExp = '';
+  }
 
   @Component({
     components: {
@@ -62,7 +69,7 @@
       ValidationObserver
     }
   })
-  export default class GroupListPage extends Vue implements ComponentOptions<GroupListPage> {
+  export default class GroupListPage extends VueUrlState<GroupListPageState> implements ComponentOptions<GroupListPage> {
     @GroupNs.Action('getAllAvailable') getAllAvailable: MappedActionWithParam<FindAllAvailableGroupsParams>;
     @GroupNs.Action('getNextPage') getNextPage: MappedAction;
     @GroupNs.Action('deletePath') deletePath: MappedActionWithParam<string>;
@@ -70,27 +77,24 @@
     @GroupNs.Mutation('setModel') setModel: MappedActionWithParam<GroupModel | undefined>;
     @GroupNs.Mutation('newModel') newModel: MappedAction;
 
-    currentPage: number;
-    items: CardItem[];
     multiSelectItems_: MultiSelectItems<number> = {};
-    searchExp = '';
     searchExpInTitle = '';
-    filters_ = [GroupFilter.MEMBER];
-    sortBy_ = '';
     sortOptions: string[] = [];
 
     set sortBy(sortBy: string) {
-      this.sortBy_ = sortBy;
+      this.setPageState({sortBy: sortBy});
       this.load();
     }
 
     get sortBy() {
-      return this.sortBy_;
+      return this.pageState.sortBy;
     }
 
     set multiSelectItems(items: MultiSelectItems<number>) {
       this.setSearchExpInTitle();
-      this.filters_ = Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value);
+      this.setPageState({
+        filters: Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value)
+      });
       this.multiSelectItems_ = items;
       this.load();
     }
@@ -104,18 +108,17 @@
     }
 
     constructor() {
-      super();
-      this.items = [];
-      this.currentPage = 0;
+      super(GroupListPageState);
     }
 
     created(): void {
-      this.multiSelectItems_ = {
+      super.created();
+      this.multiSelectItems_ = MultiSelectItems.of({
         member: {name: this.$tc('groups.joinPolicies.MEMBER'), selected: true, value: GroupFilter.MEMBER},
         invite_only: {name: this.$tc('groups.joinPolicies.INVITE_ONLY'), value: GroupFilter.INVITE_ONLY},
         request: {name: this.$tc('groups.joinPolicies.REQUEST'), value: GroupFilter.REQUEST},
         open: {name: this.$tc('groups.joinPolicies.OPEN'), value: GroupFilter.OPEN}
-      };
+      }, this.pageState.filters);
       this.sortOptions = ['last_created', 'oldest_created', 'last_modified', 'oldest_modified', 'name_asc', 'name_desc', 'visibility'];
       this.load();
       onPageBottomReached().then(() => this.getNextPage());
@@ -123,30 +126,41 @@
 
     toCreateGroupPage() {
       this.newModel();
-      this.$router.push('/pages/groups/create');
+      this.$router.push({name: 'create-group'});
     }
 
     onItemClick(id: string) {
       this.setModel(this.page.items.find(_ => _.id === id));
-      this.$router.push(`/pages/groups/${id}/view`);
+      this.$router.push({name: 'view-group', params: {id: id}});
     }
 
     private async load() {
-      this.getAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy_});
+      this.setPageState();
+      this.getAllAvailable({
+        filters: this.pageState.filters,
+        searchExp: this.pageState.searchExp,
+        sortBy: this.pageState.sortBy});
     }
 
     private setSearchExpInTitle() {
-      this.searchExpInTitle = this.searchExp ? ` - ${this.$tc('SEARCH')}: ${this.searchExp}` : '';
+      this.searchExpInTitle = this.pageState.searchExp ? ` - ${this.$tc('SEARCH')}: ${this.pageState.searchExp}` : '';
     }
 
-    private groupToCardItem(path: GroupModel): CardItem {
+    private groupToCardItem(group: GroupModel): CardItem {
       const controls: CardItemControl[] = [];
+      if (group.isEditable) {
+        controls.push({icon: 'pen', variant: 'primary', action: this.goToEditPage.bind(this)});
+      }
       return {
-        id: path.id,
-        title: path.name,
+        id: group.id,
+        title: group.name,
         imgSrc: 'https://via.placeholder.com/150',
         controls: controls
       };
+    }
+
+    private goToEditPage(id: string) {
+      this.$router.push({name: 'edit-group', params: {id: id}});
     }
   }
 </script>
