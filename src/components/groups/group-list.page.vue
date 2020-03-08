@@ -28,11 +28,12 @@
     <page :title="$t('GROUPS') + searchExpInTitle" class="mt-2">
       <card-board :items="mappedItems" @on-item-click="onItemClick"></card-board>
     </page>
+    <confirmation-modal ref="confirmGroupLeave" :title="$t('ARE_YOU_SURE')" :message="$t('CONFIRM_GROUP_LEAVING')"></confirmation-modal>
   </page>
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
+  import {Component} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
   import CardBoard from '@/components/common/card-board/card-board.vue';
   import Page from '@/components/common/page.vue';
@@ -51,6 +52,8 @@
   import {GroupModel} from '@/models/group.model';
   import {PageModel} from '@/models/page.model';
   import {VueUrlState} from '@/types';
+  import {groupService} from '@/services/generated-services';
+  import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
 
   class GroupListPageState {
     filters = [GroupFilter.MEMBER];
@@ -60,6 +63,7 @@
 
   @Component({
     components: {
+      ConfirmationModal,
       InputField,
       SelectField,
       MultiSelectField,
@@ -73,6 +77,7 @@
     @GroupNs.Action('getAllAvailable') getAllAvailable: MappedActionWithParam<FindAllAvailableGroupsParams>;
     @GroupNs.Action('getNextPage') getNextPage: MappedAction;
     @GroupNs.Action('deletePath') deletePath: MappedActionWithParam<string>;
+    @GroupNs.Action('refreshPage') refreshPage: MappedAction;
     @GroupNs.Getter('page') page: PageModel<GroupModel>;
     @GroupNs.Mutation('setModel') setModel: MappedActionWithParam<GroupModel | undefined>;
     @GroupNs.Mutation('newModel') newModel: MappedAction;
@@ -148,6 +153,11 @@
 
     private groupToCardItem(group: GroupModel): CardItem {
       const controls: CardItemControl[] = [];
+      if (group.isMember && group.owner !== ) {
+        controls.push({icon: 'minus', variant: 'primary', action: this.leaveGroup.bind(this)});
+      } else {
+        controls.push({icon: 'plus', variant: 'primary', action: this.joinGroup.bind(this)});
+      }
       if (group.isEditable) {
         controls.push({icon: 'pen', variant: 'primary', action: this.goToEditPage.bind(this)});
       }
@@ -161,6 +171,16 @@
 
     private goToEditPage(id: string) {
       this.$router.push({name: 'edit-group', params: {id: id}});
+    }
+
+    private async joinGroup(id: string) {
+      await groupService.joinGroup(id);
+      this.refreshPage();
+    }
+
+    private async leaveGroup(id: string) {
+      await groupService.leaveGroup(id);
+      this.refreshPage();
     }
   }
 </script>

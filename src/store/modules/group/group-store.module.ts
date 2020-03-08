@@ -50,6 +50,16 @@ export const groupStoreModule: Module<GroupStoreState, RootState> = new PageStor
       store.commit('setPage', pageModel);
       store.commit('setParameters', params);
     },
+    async refreshPage(store: ActionContext<GroupStoreState, RootState>){
+      const res = await groupService.getGroupsPaged(
+          0, store.state.pagination.page.size,
+          store.state.parameters.searchExp || undefined,
+          store.state.parameters.filters && store.state.parameters.filters.length ? store.state.parameters.filters : undefined,
+          store.state.parameters.sortBy || undefined
+      );
+      const pageModel = PageModel.of(res.data, GroupMapper.responseListToModels);
+      store.commit('setPage', pageModel);
+    },
     async getNextPage(store: ActionContext<GroupStoreState, RootState>) {
       const res = await groupService.getGroupsPaged(
         store.state.pagination.nextPage,

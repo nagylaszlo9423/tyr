@@ -10,6 +10,7 @@ export class GroupModel extends ObjectInitializer<GroupModel> {
   joinPolicy: GroupJoinPolicy;
   owner: string;
   isEditable: boolean;
+  isMember: boolean;
   audit: AuditDto;
 
   get joinPolicyName() {

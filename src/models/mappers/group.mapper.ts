@@ -16,6 +16,7 @@ export class GroupMapper {
       joinPolicy: response.joinPolicy,
       description: response.description,
       isEditable: response.isEditable,
+      isMember: response.isMember,
       audit: response.audit
     });
   }

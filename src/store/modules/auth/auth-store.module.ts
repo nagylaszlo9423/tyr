@@ -4,10 +4,12 @@ import {TokenResponse} from 'tyr-api/types/axios';
 import {RootState} from '@/store/root-state';
 import {authService} from '@/services/auth.service';
 import {BaseStoreModule} from '@/store/base-store.module';
+import {UserModel} from "@/models/user.model";
 
 export class AuthStoreState {
   code = '';
   tokens: TokenResponse | null = <any>{};
+  user: UserModel = new UserModel();
 }
 
 export const authStoreModule: Module<AuthStoreState, RootState> = new BaseStoreModule({
@@ -15,7 +17,7 @@ export const authStoreModule: Module<AuthStoreState, RootState> = new BaseStoreM
   state: new AuthStoreState(),
   getters: {
     tokens: (state: AuthStoreState) => state.tokens,
-    code: (state: AuthStoreState) => state.code
+    code: (state: AuthStoreState) => state.code,
   },
   mutations: {
     setTokens(state: AuthStoreState, tokens: TokenResponse) {

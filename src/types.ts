@@ -36,7 +36,7 @@ export class VueUrlState<S extends { [key: string]: any }> extends Vue implement
 
   protected setPageState(pageState?: Partial<S> | Dictionary<any>) {
     this.setPageState_(pageState);
-    this.$router.push({query: this.pageState_});
+    this.updateQuery();
   }
 
   protected constructor(private stateCtor: new () => S) {
@@ -48,7 +48,7 @@ export class VueUrlState<S extends { [key: string]: any }> extends Vue implement
   }
 
   beforeDestroy() {
-    this.$router.push({query: this.pageState_});
+    this.updateQuery();
   }
 
   private setPageState_(pageState?: Partial<S> | Dictionary<any>) {
@@ -70,6 +70,13 @@ export class VueUrlState<S extends { [key: string]: any }> extends Vue implement
     }
 
     return obj;
+  }
+
+  private updateQuery() {
+    this.$router.push({
+      path: this.$route.path,
+      query: this.pageState_
+    }).catch(() => {});
   }
 }
 

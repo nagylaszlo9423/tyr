@@ -18,6 +18,7 @@
     position: relative;
     display: flex;
     justify-content: center;
+    flex: 1;
     padding: 1rem;
     margin: 1rem 3rem 1rem 3rem;
     border-radius: 5px;
