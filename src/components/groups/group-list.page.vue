@@ -153,7 +153,8 @@
 
     private groupToCardItem(group: GroupModel): CardItem {
       const controls: CardItemControl[] = [];
-      if (group.isMember && group.owner !== ) {
+
+      if (group.isMember) {
         controls.push({icon: 'minus', variant: 'primary', action: this.leaveGroup.bind(this)});
       } else {
         controls.push({icon: 'plus', variant: 'primary', action: this.joinGroup.bind(this)});

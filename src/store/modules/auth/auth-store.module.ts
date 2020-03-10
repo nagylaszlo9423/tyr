@@ -1,10 +1,11 @@
 import {ActionContext, Module} from 'vuex';
 import {environment} from '@/environment/environment';
-import {TokenResponse} from 'tyr-api/types/axios';
+import {ProfileInfoResponse, TokenResponse} from 'tyr-api/types/axios';
 import {RootState} from '@/store/root-state';
 import {authService} from '@/services/auth.service';
 import {BaseStoreModule} from '@/store/base-store.module';
-import {UserModel} from "@/models/user.model";
+import {UserModel} from '@/models/user.model';
+import {userService} from '@/services/generated-services';
 
 export class AuthStoreState {
   code = '';
@@ -26,6 +27,12 @@ export const authStoreModule: Module<AuthStoreState, RootState> = new BaseStoreM
     setCode(state: AuthStoreState, code: string) {
       state.code = code;
     },
+    setProfileInfo(state: AuthStoreState, profileInfo: ProfileInfoResponse) {
+      state.user = new UserModel({
+        id: profileInfo.id,
+        email: profileInfo.email
+      });
+    },
     clear(state: AuthStoreState) {
       state = new AuthStoreState();
     }
@@ -36,6 +43,8 @@ export const authStoreModule: Module<AuthStoreState, RootState> = new BaseStoreM
       store.commit('setCode', loginResponse.code);
       const tokenResponse = await authService.exchangeCode(loginResponse.code, loginResponse.redirectUri, environment.client_id);
       store.commit('setTokens', tokenResponse);
+      const profileInfo = await userService.getProfileInfo();
+      store.commit('setProfileInfo', profileInfo.data);
     },
     async refreshToken(store: ActionContext<AuthStoreState, RootState>) {
       if (!store.state.tokens) {
