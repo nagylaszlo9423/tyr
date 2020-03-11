@@ -16,7 +16,7 @@ import {PageModel} from '@/models/page.model';
 export class PathStoreState extends PagedModuleState<PathModel> {
   model: PathModel = new PathModel();
   parameters: FindAllAvailablePathsParams = {
-    filters: new Array<number>(),
+    filters: [],
     searchExp: '',
     sortBy: ''
   };
@@ -49,11 +49,10 @@ export const pathStoreModule: Module<PathStoreState, RootState> = new PageStoreM
   },
   actions: {
     async getAllAvailable(store: ActionContext<PathStoreState, RootState>, params: FindAllAvailablePathsParams) {
-
       const res = await pathService.findAllAvailableByFilters(
         0, environment.pageSize,
         params.searchExp || undefined,
-        params.filters && store.state.parameters.filters.length ? params.filters : undefined,
+        params.filters && params.filters.length ? params.filters : undefined,
         params.sortBy || undefined
       );
       const page = PageModel.of(res.data, PathMapper.responseListToModels);

@@ -7,7 +7,7 @@
          <input-field id="title"
                       rules="required"
                       :label="$t('TITLE')"
-                      v-model="pathModel.title"
+                      v-model="pathModel.name"
                       :readonly="readonly"></input-field>
         </div>
         <div class="col-md-12 col-lg-6">
