@@ -3,7 +3,7 @@
     <template v-if="title" v-slot:modal-title>
       Using <code>$bvModal</code> Methods
     </template>
-    <span>{{message}}</span>
+    <slot></slot>
     <template v-slot:modal-footer>
       <b-container>
         <b-row>
@@ -25,18 +25,23 @@
   import {AbstractModal} from '@/components/common/modals/abstract-modal';
 
   @Component
-  export default class ConfirmationModal extends AbstractModal implements ComponentOptions<ConfirmationModal> {
+  export default class FiltersModal extends AbstractModal implements ComponentOptions<FiltersModal> {
     @Prop() id: string;
     @Prop() title: string;
     @Prop() message: string;
+    @Prop() data: any;
+
+    mounted(): void {
+      super.mounted();
+    }
 
     confirmed() {
-      this.resolve(true);
+      this.resolve(this.data);
       this.hide();
     }
 
     canceled() {
-      this.resolve(false);
+      this.resolve(this.data);
       this.hide();
     }
   }

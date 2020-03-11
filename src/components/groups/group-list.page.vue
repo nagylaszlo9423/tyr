@@ -1,5 +1,6 @@
 <template>
   <page>
+    <b-button @click="showFiltersModal">Filters</b-button>
     <b-row>
       <b-col cols="12" md="12" lg="8" xl="8" order="2" order-md="0">
         <multi-select-field v-model="multiSelectItems" block></multi-select-field>
@@ -29,6 +30,20 @@
       <card-board :items="mappedItems" @on-item-click="onItemClick"></card-board>
     </page>
     <confirmation-modal ref="confirmGroupLeave" :title="$t('ARE_YOU_SURE')" :message="$t('CONFIRM_GROUP_LEAVING')"></confirmation-modal>
+    <filters-modal ref="filtersModal">
+      <b-row>
+        <b-col cols="12" md="7" lg="8" xl="9" order="2" order-md="0">
+          <multi-select-field v-model="multiSelectItems" block></multi-select-field>
+        </b-col>
+        <b-col cols="6" md="2" lg="2" xl="1" align="end" order="0" order-md="1" class="p-1">
+          <span>Sort by</span>
+        </b-col>
+        <b-col cols="6" md="3" lg="2" xl="2" order="1" order-md="2">
+          <select-field id="select" v-model="sortBy" :options="sortOptions" :block="true" first-selected
+                        translation-namespace="paths.sortOptions"></select-field>
+        </b-col>
+      </b-row>
+    </filters-modal>
   </page>
 </template>
 
@@ -54,6 +69,8 @@
   import {VueUrlState} from '@/types';
   import {groupService} from '@/services/generated-services';
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
+  import FiltersModal from '@/components/common/modals/filters-modal.vue';
+  import {AbstractModal} from '@/components/common/modals/abstract-modal';
 
   class GroupListPageState {
     filters = [GroupFilter.MEMBER];
@@ -64,6 +81,7 @@
   @Component({
     components: {
       ConfirmationModal,
+      FiltersModal,
       InputField,
       SelectField,
       MultiSelectField,
@@ -85,6 +103,7 @@
     multiSelectItems_: MultiSelectItems<number> = {};
     searchExpInTitle = '';
     sortOptions: string[] = [];
+    filtersModal: AbstractModal<GroupListPageState>;
 
     set sortBy(sortBy: string) {
       this.setPageState({sortBy: sortBy});
@@ -129,6 +148,10 @@
       onPageBottomReached().then(() => this.getNextPage());
     }
 
+    mounted(): void {
+      this.filtersModal = this.$refs.filtersModal;
+    }
+
     toCreateGroupPage() {
       this.newModel();
       this.$router.push({name: 'create-group'});
@@ -137,6 +160,10 @@
     onItemClick(id: string) {
       this.setModel(this.page.items.find(_ => _.id === id));
       this.$router.push({name: 'view-group', params: {id: id}});
+    }
+
+    showFiltersModal() {
+      this.filtersModal.show();
     }
 
     private async load() {

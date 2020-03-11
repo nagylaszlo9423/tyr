@@ -54,12 +54,14 @@
   import {ValidationObserver} from 'vee-validate';
   import {FindAllAvailablePathsParams} from '@/store/modules/path/find-all-available.params';
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
-  import {AbstractConfirmationModal} from '@/components/common/modals/abstract-confirmation-modal';
+  import {AbstractModal} from '@/components/common/modals/abstract-modal';
   import {onPageBottomReached} from '@/utils/utils';
   import {PathFilter} from '@/components/paths/path-filters';
+  import FiltersModal from '@/components/common/modals/filters-modal.vue';
 
   @Component({
     components: {
+      FiltersModal,
       ConfirmationModal,
       SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
   })
@@ -76,7 +78,7 @@
     filters_ = [PathFilter.OWN];
     sortBy_ = '';
     sortOptions: string[] = [];
-    deletionModal: AbstractConfirmationModal;
+    deletionModal: AbstractModal;
 
     set sortBy(sortBy: string) {
       this.sortBy_ = sortBy;
@@ -114,7 +116,7 @@
     }
 
     mounted(): void {
-      this.deletionModal = this.$refs.deletionModal as AbstractConfirmationModal;
+      this.deletionModal = this.$refs.deletionModal as AbstractModal;
     }
 
     load() {
