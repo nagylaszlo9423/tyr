@@ -52,8 +52,8 @@
     activeItem = 'map';
 
     created() {
-      eventBus.$off(events.common.titleBar.toggle);
-      eventBus.$on(events.common.titleBar.toggle, this.toggleHandler);
+      eventBus.$off(events.common.titleBar.toggleNavigationDrawer);
+      eventBus.$on(events.common.titleBar.toggleNavigationDrawer, this.toggleHandler);
       for (let item of this.items) {
         if (this.$route.path.indexOf(item.to) > -1) {
           this.activeItem = item.name;

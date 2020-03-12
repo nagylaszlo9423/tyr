@@ -30,10 +30,11 @@
 
     created(): void {
       this.setRouteMetaData(this.$route);
+    }
 
-      this.$router.beforeEach((to: Route) => {
-        this.setRouteMetaData(to);
-      });
+    @Watch('$route')
+    watchRoute(route: Route) {
+      this.setRouteMetaData(this.$route);
     }
 
     setRouteMetaData(route: Route) {
@@ -50,7 +51,7 @@
     }
 
     toggleNavDrawer() {
-      eventBus.$emit(events.common.titleBar.toggle);
+      eventBus.$emit(events.common.titleBar.toggleNavigationDrawer);
     }
   }
 </script>

@@ -52,7 +52,7 @@
 
     onSelect(key: string) {
       const item = this.items_[key];
-      if (this.selectedCount > this.minSelected || !item.selected) {
+      if (this.selectedCount >= this.minSelected || !item.selected) {
         item.selected = !item.selected;
         this.selectedCount += item.selected ? 1 : -1;
       }

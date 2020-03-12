@@ -1,22 +1,50 @@
 <template>
-  <page>
-    <page :title="$t('GROUPS') + searchExpInTitle" class="mt-2">
-      <card-board :items="mappedItems" @on-item-click="onItemClick"></card-board>
-    </page>
-    <confirmation-modal ref="confirmGroupLeave" :title="$t('ARE_YOU_SURE')" :message="$t('CONFIRM_GROUP_LEAVING')"></confirmation-modal>
-    <filters-modal ref="filtersModal" :title="$t('FILTERS')">
-      <b-row class="mb-2">
-        <b-col>
-          <select-field id="select" v-model="sortBy" :options="sortOptions" :block="true" first-selected
-                        translation-namespace="paths.sortOptions"></select-field>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <multi-select-field v-model="multiSelectItems" block></multi-select-field>
-        </b-col>
-      </b-row>
-    </filters-modal>
+  <page :title="$t('GROUPS') + searchExpInTitle" class="mt-2">
+    <template v-slot:title-bar-right>
+      <b-button variant="primary" size="sm" @click="toCreateGroupPage">{{$t('groups.CREATE_GROUP')}}</b-button>
+    </template>
+    <card-board :items="mappedItems" @on-item-click="onItemClick"></card-board>
+    <confirmation-modal ref="confirmGroupLeave" :title="$t('ARE_YOU_SURE')"
+                        :message="$t('CONFIRM_GROUP_LEAVING')"></confirmation-modal>
+    <b-modal ref="filtersModal" :title="$t('FILTERS')">
+      <b-container>
+        <b-row class="mb-2">
+          <b-col>
+            <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
+              <input-field id="searchPath"
+                           :label="$t('SEARCH')"
+                           v-model="filtersModalData.searchExp"
+                           action-button-icon="search"
+                           @on-action="load"></input-field>
+            </ValidationObserver>
+          </b-col>
+        </b-row>
+        <b-row class="mb-2">
+          <b-col>
+            <select-field id="select" v-model="filtersModalData.sortBy" :options="sortOptions" :block="true"
+                          first-selected
+                          translation-namespace="paths.sortOptions"></select-field>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <multi-select-field v-model="multiSelectItems" block></multi-select-field>
+          </b-col>
+        </b-row>
+      </b-container>
+      <template v-slot:modal-footer>
+        <b-container>
+          <b-row>
+            <b-col>
+              <b-button variant="secondary" block @click="filtersModal.hide()">{{ $t('CANCEL') }}</b-button>
+            </b-col>
+            <b-col>
+              <b-button variant="primary" block @click="setFilters">{{ $t('OK') }}</b-button>
+            </b-col>
+          </b-row>
+        </b-container>
+      </template>
+    </b-modal>
   </page>
 </template>
 
@@ -43,9 +71,9 @@
   import {groupService} from '@/services/generated-services';
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
   import FiltersModal from '@/components/common/modals/filters-modal.vue';
-  import {AbstractModal} from '@/components/common/modals/abstract-modal';
   import {eventBus} from '@/services/event-bus';
   import {events} from '@/services/events';
+  import {BModal} from 'bootstrap-vue';
 
   class GroupListPageState {
     filters = [GroupFilter.MEMBER];
@@ -78,24 +106,12 @@
     multiSelectItems_: MultiSelectItems<number> = {};
     searchExpInTitle = '';
     sortOptions: string[] = [];
-    filtersModal: AbstractModal<GroupListPageState>;
-
-    set sortBy(sortBy: string) {
-      this.setPageState({sortBy: sortBy});
-      this.load();
-    }
-
-    get sortBy() {
-      return this.pageState.sortBy;
-    }
+    filtersModal: BModal;
+    filtersModalData: GroupListPageState;
 
     set multiSelectItems(items: MultiSelectItems<number>) {
-      this.setSearchExpInTitle();
-      this.setPageState({
-        filters: Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value)
-      });
+      this.filtersModalData.filters = Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value);
       this.multiSelectItems_ = items;
-      this.load();
     }
 
     get multiSelectItems() {
@@ -112,9 +128,8 @@
 
     created(): void {
       super.created();
-      eventBus.$emit(events.common.titleBar.shouldToggleSearchField);
-      eventBus.$emit(events.common.titleBar.showSearchButton);
       eventBus.$offOn(events.common.titleBar.toggleSearch, () => this.filtersModal.show());
+      this.filtersModalData = new GroupListPageState();
       this.multiSelectItems_ = MultiSelectItems.of({
         member: {name: this.$tc('groups.joinPolicies.MEMBER'), selected: true, value: GroupFilter.MEMBER},
         invite_only: {name: this.$tc('groups.joinPolicies.INVITE_ONLY'), value: GroupFilter.INVITE_ONLY},
@@ -127,7 +142,13 @@
     }
 
     mounted(): void {
-      this.filtersModal = this.$refs.filtersModal;
+      this.filtersModal = this.$refs.filtersModal as BModal;
+    }
+
+    setFilters() {
+      this.setPageState(this.filtersModalData);
+      this.load();
+      this.filtersModal.hide();
     }
 
     toCreateGroupPage() {
@@ -140,16 +161,13 @@
       this.$router.push({name: 'view-group', params: {id: id}});
     }
 
-    showFiltersModal() {
-      this.filtersModal.show();
-    }
-
     private async load() {
       this.setPageState();
       this.getAllAvailable({
         filters: this.pageState.filters,
         searchExp: this.pageState.searchExp,
-        sortBy: this.pageState.sortBy});
+        sortBy: this.pageState.sortBy
+      });
     }
 
     private setSearchExpInTitle() {

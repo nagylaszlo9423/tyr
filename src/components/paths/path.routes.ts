@@ -17,7 +17,9 @@ export const pathRoutes: RouteConfig = {
       name: 'paths',
       component: PathListPage,
       meta: {
-        isAuthenticated: true
+        isAuthenticated: true,
+        showTitleBarSearchButton: true,
+        showTitleBarSearchField: false
       }
     },
     {

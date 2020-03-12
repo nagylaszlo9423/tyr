@@ -8,10 +8,8 @@ function addPrefix<T extends {[key: string]: string}>(prefix: string, obj: T): T
 export const events = {
     common: {
         titleBar: addPrefix('title-bar', {
-            toggle: 'toggle',
-            toggleSearch: 'toggle-search',
-            shouldToggleSearchField: 'should-toggle-search-field',
-            showSearchButton: 'show-search-button'
+            toggleNavigationDrawer: 'toggle-navigation-drawer',
+            toggleSearch: 'toggle-search'
         })
     },
     map: {

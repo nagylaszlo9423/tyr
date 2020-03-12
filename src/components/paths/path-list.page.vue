@@ -1,38 +1,50 @@
 <template>
-  <page class="paths-list-page">
+  <page :title="$t('PATHS') + searchExpInTitle" class="mt-2">
     <b-row>
-      <b-col cols="12" md="7" lg="8" xl="9" order="2" order-md="0">
-        <multi-select-field v-model="multiSelectItems" block></multi-select-field>
-      </b-col>
-      <b-col cols="6" md="2" lg="2" xl="1" align="end" order="0" order-md="1" class="p-1">
-        <span>Sort by</span>
-      </b-col>
-      <b-col cols="6" md="3" lg="2" xl="2" order="1" order-md="2">
-        <select-field id="select" v-model="sortBy" :options="sortOptions" :block="true" first-selected
-                      translation-namespace="paths.sortOptions"></select-field>
+      <b-col>
+        <card-board :items="mappedItems"
+                    :item-navigation-path="detailsPageRoute"></card-board>
       </b-col>
     </b-row>
-    <b-row>
-      <b-col sm="1" md="2" lg="3" xl="4"></b-col>
-      <b-col cols="12" sm="10" md="8" lg="6" xl="4">
-        <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
-          <input-field id="searchPath"
-                       :label="$t('SEARCH')"
-                       v-model="searchExp"
-                       action-button-icon="search"
-                       @on-action="load"></input-field>
-        </ValidationObserver>
-      </b-col>
-      <b-col sm="1" md="2" lg="3" xl="4"></b-col>
-    </b-row>
-    <page :title="$t('PATHS') + searchExpInTitle" class="mt-2">
-      <b-row>
-        <b-col>
-          <card-board :items="mappedItems"
-                      :item-navigation-path="detailsPageRoute"></card-board>
-        </b-col>
-      </b-row>
-    </page>
+    <b-modal ref="filtersModal" :title="$t('FILTERS')">
+      <b-container>
+        <b-row class="mb-2">
+          <b-col>
+            <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
+              <input-field id="searchPath"
+                           :label="$t('SEARCH')"
+                           v-model="filtersModalData.searchExp"
+                           action-button-icon="search"
+                           @on-action="load"></input-field>
+            </ValidationObserver>
+          </b-col>
+        </b-row>
+        <b-row class="mb-2">
+          <b-col>
+            <select-field id="select" v-model="filtersModalData.sortBy" :options="sortOptions" :block="true"
+                          first-selected
+                          translation-namespace="paths.sortOptions"></select-field>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <multi-select-field v-model="multiSelectItems" block></multi-select-field>
+          </b-col>
+        </b-row>
+      </b-container>
+      <template v-slot:modal-footer>
+        <b-container>
+          <b-row>
+            <b-col>
+              <b-button variant="secondary" block @click="filtersModal.hide()">{{ $t('CANCEL') }}</b-button>
+            </b-col>
+            <b-col>
+              <b-button variant="primary" block @click="setFilters">{{ $t('OK') }}</b-button>
+            </b-col>
+          </b-row>
+        </b-container>
+      </template>
+    </b-modal>
     <confirmation-modal ref="deletionModal" @confirmed="deletePath"></confirmation-modal>
   </page>
 </template>
@@ -58,14 +70,32 @@
   import {onPageBottomReached} from '@/utils/utils';
   import {PathFilter} from '@/components/paths/path-filters';
   import FiltersModal from '@/components/common/modals/filters-modal.vue';
+  import {BModal} from 'bootstrap-vue';
+  import {GroupFilter} from '@/components/groups/group-filter';
+  import {VueUrlState} from '@/types';
+  import {eventBus} from '@/services/event-bus';
+  import {events} from '@/services/events';
+
+  class PathListPageState {
+    filters = [GroupFilter.MEMBER];
+    sortBy = '';
+    searchExp = '';
+  }
 
   @Component({
     components: {
       FiltersModal,
       ConfirmationModal,
-      SelectField, InputField, MultiSelectField, ImageView, CardBoard, Page, ValidationObserver}
+      SelectField,
+      InputField,
+      MultiSelectField,
+      ImageView,
+      CardBoard,
+      Page,
+      ValidationObserver
+    }
   })
-  export default class PathListPage extends Vue implements ComponentOptions<PathListPage> {
+  export default class PathListPage extends VueUrlState<PathListPageState> implements ComponentOptions<PathListPage> {
     @PathNs.Action('getAllAvailable') getAllAvailable: MappedActionWithParam<FindAllAvailablePathsParams>;
     @PathNs.Action('getNextPage') getNextPage: MappedAction;
     @PathNs.Action('deletePath') deletePath: MappedActionWithParam<string>;
@@ -79,21 +109,12 @@
     sortBy_ = '';
     sortOptions: string[] = [];
     deletionModal: AbstractModal;
-
-    set sortBy(sortBy: string) {
-      this.sortBy_ = sortBy;
-      this.load();
-    }
-
-    get sortBy() {
-      return this.sortBy_;
-    }
+    filtersModal: BModal;
+    filtersModalData: PathListPageState;
 
     set multiSelectItems(items: MultiSelectItems<number>) {
-      this.setSearchExpInTitle();
-      this.filters_ = Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value);
+      this.filtersModalData.filters = Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value);
       this.multiSelectItems_ = items;
-      this.load();
     }
 
     get multiSelectItems() {
@@ -104,7 +125,14 @@
       return this.page.items.map(this.pathToCardItem);
     }
 
+    constructor() {
+      super(PathListPageState);
+    }
+
     async created(): Promise<void> {
+      super.created();
+      eventBus.$offOn(events.common.titleBar.toggleSearch, () => this.filtersModal.show());
+      this.filtersModalData = new PathListPageState();
       this.multiSelectItems_ = {
         own: {name: this.$tc('OWN'), selected: true, value: PathFilter.OWN},
         groups: {name: this.$tc('GROUPS'), value: PathFilter.GROUP},
@@ -117,6 +145,13 @@
 
     mounted(): void {
       this.deletionModal = this.$refs.deletionModal as AbstractModal;
+      this.filtersModal = this.$refs.filtersModal as BModal;
+    }
+
+    setFilters() {
+      this.setPageState(this.filtersModalData);
+      this.load();
+      this.filtersModal.hide();
     }
 
     load() {

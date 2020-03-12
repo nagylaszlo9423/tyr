@@ -1,5 +1,9 @@
 @import "../variables";
 
+.btn {
+  border-radius: 5rem;
+}
+
 .btn.btn-primary {
   background: $primary;
   border: 1px solid $primary;
