@@ -91,7 +91,7 @@
     width: $navigationDrawerWidth;
     float: left;
     position: relative;
-    z-index: 1000;
+    z-index: 10;
     top: 0;
     left: 0;
 

@@ -1,46 +1,19 @@
 <template>
   <page>
-    <b-button @click="showFiltersModal">Filters</b-button>
-    <b-row>
-      <b-col cols="12" md="12" lg="8" xl="8" order="2" order-md="0">
-        <multi-select-field v-model="multiSelectItems" block></multi-select-field>
-      </b-col>
-      <b-col cols="12" md="6" lg="2" xl="2" order="1" order-md="2">
-        <select-field id="select" v-model="sortBy" :options="sortOptions" block first-selected
-                      translation-namespace="paths.sortOptions"></select-field>
-      </b-col>
-      <b-col cols="12" md="6" lg="2" xl="2" order="2" order-md="0">
-        <b-button block variant="primary" @click="toCreateGroupPage">{{ $t('groups.CREATE_GROUP') }}</b-button>
-      </b-col>
-    </b-row>
-    <b-row>
-      <b-col sm="1" md="2" lg="3" xl="4"></b-col>
-      <b-col cols="12" sm="10" md="8" lg="6" xl="4">
-        <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
-          <input-field id="searchPath"
-                       :label="$t('SEARCH')"
-                       v-model="pageState_.searchExp"
-                       action-button-icon="search"
-                       @on-action="load"></input-field>
-        </ValidationObserver>
-      </b-col>
-      <b-col sm="1" md="2" lg="3" xl="4"></b-col>
-    </b-row>
     <page :title="$t('GROUPS') + searchExpInTitle" class="mt-2">
       <card-board :items="mappedItems" @on-item-click="onItemClick"></card-board>
     </page>
     <confirmation-modal ref="confirmGroupLeave" :title="$t('ARE_YOU_SURE')" :message="$t('CONFIRM_GROUP_LEAVING')"></confirmation-modal>
-    <filters-modal ref="filtersModal">
-      <b-row>
-        <b-col cols="12" md="7" lg="8" xl="9" order="2" order-md="0">
-          <multi-select-field v-model="multiSelectItems" block></multi-select-field>
-        </b-col>
-        <b-col cols="6" md="2" lg="2" xl="1" align="end" order="0" order-md="1" class="p-1">
-          <span>Sort by</span>
-        </b-col>
-        <b-col cols="6" md="3" lg="2" xl="2" order="1" order-md="2">
+    <filters-modal ref="filtersModal" :title="$t('FILTERS')">
+      <b-row class="mb-2">
+        <b-col>
           <select-field id="select" v-model="sortBy" :options="sortOptions" :block="true" first-selected
                         translation-namespace="paths.sortOptions"></select-field>
+        </b-col>
+      </b-row>
+      <b-row>
+        <b-col>
+          <multi-select-field v-model="multiSelectItems" block></multi-select-field>
         </b-col>
       </b-row>
     </filters-modal>
@@ -71,6 +44,8 @@
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
   import FiltersModal from '@/components/common/modals/filters-modal.vue';
   import {AbstractModal} from '@/components/common/modals/abstract-modal';
+  import {eventBus} from '@/services/event-bus';
+  import {events} from '@/services/events';
 
   class GroupListPageState {
     filters = [GroupFilter.MEMBER];
@@ -137,6 +112,9 @@
 
     created(): void {
       super.created();
+      eventBus.$emit(events.common.titleBar.shouldToggleSearchField);
+      eventBus.$emit(events.common.titleBar.showSearchButton);
+      eventBus.$offOn(events.common.titleBar.toggleSearch, () => this.filtersModal.show());
       this.multiSelectItems_ = MultiSelectItems.of({
         member: {name: this.$tc('groups.joinPolicies.MEMBER'), selected: true, value: GroupFilter.MEMBER},
         invite_only: {name: this.$tc('groups.joinPolicies.INVITE_ONLY'), value: GroupFilter.INVITE_ONLY},

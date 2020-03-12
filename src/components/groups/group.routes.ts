@@ -18,7 +18,9 @@ export const groupRoutes: RouteConfig = {
       name: 'groups-list',
       component: GroupListPage,
       meta: {
-        isAuthenticated: true
+        isAuthenticated: true,
+        showTitleBarSearchButton: true,
+        showTitleBarSearchField: false
       }
     },
     {

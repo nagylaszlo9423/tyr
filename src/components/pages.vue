@@ -64,13 +64,12 @@
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000;
     height: $titleBarHeight;
   }
 
   .pages-content {
     position: relative;
-    z-index: 11;
+    z-index: 9;
     background-color: $background;
     height: calc(100% - #{$titleBarHeight});
     overflow-x: hidden;

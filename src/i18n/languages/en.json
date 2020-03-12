@@ -32,6 +32,8 @@
   "NO_ITEMS_FOUND": "No {name} found!",
   "NO_AVAILABLE_DATA": "No available data",
   "SAVED_SUCCESSFULLY": "Saved successfully",
+  "OK": "Ok",
+  "CANCEL": "Cancel",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",

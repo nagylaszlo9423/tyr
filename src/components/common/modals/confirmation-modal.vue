@@ -1,5 +1,5 @@
 <template>
-  <b-modal ref="modal" v-model="value_" :id="id" @close="this.resolve(false)">
+  <b-modal ref="modal" :id="id" @close="this.resolve(false)">
     <template v-if="title" v-slot:modal-title>
       Using <code>$bvModal</code> Methods
     </template>

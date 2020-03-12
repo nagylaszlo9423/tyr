@@ -6,22 +6,48 @@
       <h3 class="ml-2">TYR</h3>
     </div>
     <div id="title-bar-right-controls" class="d-flex flex-row justify-content-end align-items-center pl-2">
-      <b-input id="search-field" name="search-field" :class="{'open': isSearchFieldOpen}" />
-      <b-button variant="link" type="button" class="btn btn-toolbar" @click="isSearchFieldOpen = !isSearchFieldOpen"><font-awesome-icon class="fa-1x" icon="search-location"></font-awesome-icon></b-button>
+      <b-input id="search-field" name="search-field" :class="{open: isSearchFieldOpen}" />
+      <b-button variant="link" type="button" class="btn btn-toolbar" :class="{'d-none': isSearchButtonHidden}" @click="toggleSearchField"><font-awesome-icon class="fa-1x" icon="search-location"></font-awesome-icon></b-button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-  import {Vue, Component} from 'vue-property-decorator';
+  import {Vue, Component, Watch} from 'vue-property-decorator';
   import {events} from '@/services/events';
   import {eventBus} from '@/services/event-bus';
   import CompassLoader from '@/components/common/loaders/compass-loader.vue';
+  import {ComponentOptions} from 'vue';
+  import {Route} from 'vue-router';
   @Component({
     components: {CompassLoader}
   })
-  export default class TitleBar extends Vue {
+  export default class TitleBar extends Vue implements ComponentOptions<TitleBar> {
     isSearchFieldOpen = false;
+    isToggled = false;
+    isSearchFieldTurnedOff = false;
+    isSearchButtonHidden = true;
+
+    created(): void {
+      this.setRouteMetaData(this.$route);
+
+      this.$router.beforeEach((to: Route) => {
+        this.setRouteMetaData(to);
+      });
+    }
+
+    setRouteMetaData(route: Route) {
+      this.isSearchButtonHidden = !route.meta.showTitleBarSearchButton;
+      this.isSearchFieldTurnedOff = !route.meta.showTitleBarSearchField;
+    }
+
+    toggleSearchField() {
+      this.isToggled = !this.isToggled;
+      if (!this.isSearchFieldTurnedOff) {
+        this.isSearchFieldOpen = this.isToggled;
+      }
+      eventBus.$emit(events.common.titleBar.toggleSearch);
+    }
 
     toggleNavDrawer() {
       eventBus.$emit(events.common.titleBar.toggle);
@@ -35,6 +61,7 @@
   #title-bar {
     background-color: $primary;
     color: $text-light;
+    z-index: 9;
     svg {
       color: white;
     }
