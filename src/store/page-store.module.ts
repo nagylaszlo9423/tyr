@@ -39,22 +39,5 @@ export class PageStoreModule<T, S extends PagedModuleState<T>> extends BaseStore
         state.pagination.nextPage++;
       }
     };
-
-    const actionTree: ActionTree<S, RootState> = {};
-    Object.keys(this.actions).forEach(actionName => {
-      const action = this.actions[actionName];
-      if (typeof action === 'function') {
-        const executableAction = action as Function;
-        actionTree[actionName] = ((...params: any) => {
-          try {
-            eventBus.$emit(events.loader.start);
-            executableAction(...params);
-          } finally {
-            eventBus.$emit(events.loader.stop);
-          }
-        });
-      }
-    });
-    this.actions = actionTree;
   }
 }

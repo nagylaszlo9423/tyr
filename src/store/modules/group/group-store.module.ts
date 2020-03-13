@@ -8,6 +8,7 @@ import {GroupModel} from '@/models/group.model';
 import {PageStoreModule} from '@/store/page-store.module';
 import {GroupMapper} from '@/models/mappers/group.mapper';
 import {PageModel} from '@/models/page.model';
+import {timeout} from 'rxjs/operators';
 
 export class GroupStoreState extends PagedModuleState<GroupModel> {
   model: GroupModel = new GroupModel();
