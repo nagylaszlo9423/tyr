@@ -4,14 +4,14 @@
        @mouseleave="isDescriptionClosed=true">
     <image-view class="tyr-card-image" :src="item.imgSrc" fit="frame"></image-view>
     <div class="tyr-card-content d-flex flex-column justify-content-between">
-      <span>{{item.title}}</span>
-      <div class="align-self-end px-2 mt-1">
+      <span class="tyr-card-title">{{item.title}}</span>
+      <div class="tyr-card-controls">
         <button v-for="(control, idx) in item.controls"
                   :key="idx"
-                  :class="'btn btn-' + (control.variant || 'primary')"
-                  class="p-0 mx-1"
+                  class="btn btn-outline-secondary"
                   @click="controlClick($event, idx)">
           <font-awesome-icon :icon="control.icon" fixed-width></font-awesome-icon>
+          <span class="ml-1">{{control.title}}</span>
         </button>
       </div>
     </div>
@@ -76,21 +76,38 @@
     .tyr-card-content {
       position: relative;
       height: 30%;
-      padding: .5rem;
 
-      .tyr-card-description {
-        transition: height 300ms;
-        height: 5rem;
-        overflow: hidden;
-
-        &.closed {
-          height: 0;
-        }
+      .tyr-card-title {
+        margin: .3rem;
       }
 
-      button {
-        width: 1.6rem;
-        height: 1.6rem;
+      .tyr-card-controls {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+
+        :nth-child(1) {
+          border-left: 0;
+        }
+
+        :nth-child(2n + 1) {
+          border-right: 0;
+        }
+
+        :nth-child(2n + 2) {
+          border-right: 0;
+        }
+
+        .btn {
+          flex: 1 0 33%;
+          border-radius: 0;
+          border-bottom: 0;
+          padding: .1rem .3rem .1rem .3rem;
+        }
+
+        svg, span {
+          font-size: .8rem;
+        }
       }
     }
   }

@@ -23,8 +23,6 @@
     isLoadingOnEvent: boolean = false;
 
     counter = 0;
-    compassBody = require('../../../assets/images/compass-body.png');
-    compassNeedle = require('../../../assets/images/compass-needle.png');
 
     created(): void {
       eventBus.$offOn(events.loader.start, (id: string) => {

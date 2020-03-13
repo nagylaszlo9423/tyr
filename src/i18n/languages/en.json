@@ -34,6 +34,11 @@
   "SAVED_SUCCESSFULLY": "Saved successfully",
   "OK": "Ok",
   "CANCEL": "Cancel",
+  "FILTERS": "Filters",
+  "JOIN": "Join",
+  "LEAVE": "Leave",
+  "EDIT": "Edit",
+  "APPLY": "Apply",
   "auth": {
     "ENTER_EMAIL": "Enter email",
     "ENTER_PASSWORD": "Enter password",

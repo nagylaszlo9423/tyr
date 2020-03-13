@@ -7,7 +7,7 @@
     </div>
     <div id="title-bar-right-controls" class="d-flex flex-row justify-content-end align-items-center pl-2">
       <b-input id="search-field" name="search-field" :class="{open: isSearchFieldOpen}" />
-      <b-button variant="link" type="button" class="btn btn-toolbar" :class="{'d-none': isSearchButtonHidden}" @click="toggleSearchField"><font-awesome-icon class="fa-1x" icon="search-location"></font-awesome-icon></b-button>
+      <b-button variant="link" type="button" class="btn btn-toolbar" :class="{'d-none': isSearchButtonHidden}" @click="toggleSearchField"><font-awesome-icon class="fa-1x" icon="search"></font-awesome-icon></b-button>
     </div>
   </div>
 </template>

@@ -1,5 +1,16 @@
 <template>
   <page :title="$t('PATHS') + searchExpInTitle" class="mt-2">
+    <b-row class="mb-2">
+      <b-col sm="12" md="10" lg="8" xl="6" class="m-auto">
+        <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
+          <input-field id="searchPath"
+                       :label="$t('SEARCH')"
+                       v-model="filtersModalData.searchExp"
+                       action-button-icon="search"
+                       @on-action="onSearch"></input-field>
+        </ValidationObserver>
+      </b-col>
+    </b-row>
     <b-row>
       <b-col>
         <card-board :items="mappedItems"
@@ -8,17 +19,6 @@
     </b-row>
     <b-modal ref="filtersModal" :title="$t('FILTERS')">
       <b-container>
-        <b-row class="mb-2">
-          <b-col>
-            <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
-              <input-field id="searchPath"
-                           :label="$t('SEARCH')"
-                           v-model="filtersModalData.searchExp"
-                           action-button-icon="search"
-                           @on-action="load"></input-field>
-            </ValidationObserver>
-          </b-col>
-        </b-row>
         <b-row class="mb-2">
           <b-col>
             <select-field id="select" v-model="filtersModalData.sortBy" :options="sortOptions" :block="true"
@@ -39,7 +39,7 @@
               <b-button variant="secondary" block @click="filtersModal.hide()">{{ $t('CANCEL') }}</b-button>
             </b-col>
             <b-col>
-              <b-button variant="primary" block @click="setFilters">{{ $t('OK') }}</b-button>
+              <b-button variant="primary" block @click="setFilters">{{ $t('APPLY') }}</b-button>
             </b-col>
           </b-row>
         </b-container>
@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts">
-  import {Component, Vue} from 'vue-property-decorator';
+  import {Component} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
   import Page from '@/components/common/page.vue';
   import CardBoard from '@/components/common/card-board/card-board.vue';
@@ -154,6 +154,11 @@
       this.filtersModal.hide();
     }
 
+    onSearch() {
+      this.setPageState(this.filtersModalData);
+      this.load();
+    }
+
     load() {
       this.setSearchExpInTitle();
       this.getAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy_});
@@ -162,8 +167,8 @@
     private pathToCardItem(path: PathResponse): CardItem {
       const controls: CardItemControl[] = [];
       if (path.isEditable) {
-        controls.push({action: this.editItem.bind(this), icon: 'pen'});
-        controls.push({action: this.askForDeletionApproval.bind(this), icon: 'trash', variant: 'danger'});
+        controls.push({title: this.$tc('EDIT'), action: this.editItem.bind(this), icon: 'pen'});
+        controls.push({title: this.$tc('DELETE'), action: this.askForDeletionApproval.bind(this), icon: 'trash'});
       }
       return {
         id: path.id,

@@ -1,6 +1,7 @@
 <template>
   <div id="pages">
     <title-bar></title-bar>
+    <tyr-progress-bar :show="isProgressBarVisible"></tyr-progress-bar>
     <navigation-drawer></navigation-drawer>
     <div class="pages-content" :class="{map: isMapPageOpen}">
       <router-view></router-view>
@@ -15,16 +16,27 @@
   import TitleBar from './common/title-bar.vue';
   import TyrMap from './map/tyr-map.vue';
   import {Route} from 'vue-router';
+  import {ComponentOptions} from 'vue';
+  import {eventBus} from '@/services/event-bus';
+  import {events} from '@/services/events';
+  import TyrProgressBar from '@/components/common/loaders/tyr-progress-bar.vue';
 
   @Component({
     components: {
+      TyrProgressBar,
       TyrMap,
       TitleBar,
       NavigationDrawer
     }
   })
-  export default class Pages extends Vue {
+  export default class Pages extends Vue implements ComponentOptions<Pages> {
     isMapPageOpen = false;
+    isProgressBarVisible = false;
+
+    created(): void {
+      eventBus.$offOn(events.loader.start, () => this.isProgressBarVisible = true);
+      eventBus.$offOn(events.loader.stop, () => this.isProgressBarVisible = false);
+    }
 
     @Watch('$route', {immediate: true, deep: true})
     routeChange(to: Route) {

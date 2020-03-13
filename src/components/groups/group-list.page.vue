@@ -3,22 +3,26 @@
     <template v-slot:title-bar-right>
       <b-button variant="primary" size="sm" @click="toCreateGroupPage">{{$t('groups.CREATE_GROUP')}}</b-button>
     </template>
-    <card-board :items="mappedItems" @on-item-click="onItemClick"></card-board>
+    <b-row class="mb-2">
+      <b-col sm="12" md="10" lg="8" xl="6" class="m-auto">
+        <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
+          <input-field id="searchPath"
+                       :label="$t('SEARCH')"
+                       v-model="filtersModalData.searchExp"
+                       action-button-icon="search"
+                       @on-action="onSearch"></input-field>
+        </ValidationObserver>
+      </b-col>
+    </b-row>
+    <b-row>
+      <b-col>
+        <card-board :items="mappedItems" @on-item-click="onItemClick"></card-board>
+      </b-col>
+    </b-row>
     <confirmation-modal ref="confirmGroupLeave" :title="$t('ARE_YOU_SURE')"
                         :message="$t('CONFIRM_GROUP_LEAVING')"></confirmation-modal>
     <b-modal ref="filtersModal" :title="$t('FILTERS')">
       <b-container>
-        <b-row class="mb-2">
-          <b-col>
-            <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
-              <input-field id="searchPath"
-                           :label="$t('SEARCH')"
-                           v-model="filtersModalData.searchExp"
-                           action-button-icon="search"
-                           @on-action="load"></input-field>
-            </ValidationObserver>
-          </b-col>
-        </b-row>
         <b-row class="mb-2">
           <b-col>
             <select-field id="select" v-model="filtersModalData.sortBy" :options="sortOptions" :block="true"
@@ -39,7 +43,7 @@
               <b-button variant="secondary" block @click="filtersModal.hide()">{{ $t('CANCEL') }}</b-button>
             </b-col>
             <b-col>
-              <b-button variant="primary" block @click="setFilters">{{ $t('OK') }}</b-button>
+              <b-button variant="primary" block @click="onModalConfirmed">{{ $t('APPLY') }}</b-button>
             </b-col>
           </b-row>
         </b-container>
@@ -129,7 +133,7 @@
     created(): void {
       super.created();
       eventBus.$offOn(events.common.titleBar.toggleSearch, () => this.filtersModal.show());
-      this.filtersModalData = new GroupListPageState();
+      this.filtersModalData = this.pageState;
       this.multiSelectItems_ = MultiSelectItems.of({
         member: {name: this.$tc('groups.joinPolicies.MEMBER'), selected: true, value: GroupFilter.MEMBER},
         invite_only: {name: this.$tc('groups.joinPolicies.INVITE_ONLY'), value: GroupFilter.INVITE_ONLY},
@@ -145,7 +149,12 @@
       this.filtersModal = this.$refs.filtersModal as BModal;
     }
 
-    setFilters() {
+    onSearch() {
+      this.setPageState(this.filtersModalData);
+      this.load();
+    }
+
+    onModalConfirmed() {
       this.setPageState(this.filtersModalData);
       this.load();
       this.filtersModal.hide();
@@ -178,12 +187,12 @@
       const controls: CardItemControl[] = [];
 
       if (group.isMember) {
-        controls.push({icon: 'minus', variant: 'primary', action: this.leaveGroup.bind(this)});
+        controls.push({title: this.$tc('LEAVE'), icon: 'minus', action: this.leaveGroup.bind(this)});
       } else {
-        controls.push({icon: 'plus', variant: 'primary', action: this.joinGroup.bind(this)});
+        controls.push({title: this.$tc('JOIN'), icon: 'plus', action: this.joinGroup.bind(this)});
       }
       if (group.isEditable) {
-        controls.push({icon: 'pen', variant: 'primary', action: this.goToEditPage.bind(this)});
+        controls.push({title: this.$tc('EDIT'), icon: 'pen', action: this.goToEditPage.bind(this)});
       }
       return {
         id: group.id,
