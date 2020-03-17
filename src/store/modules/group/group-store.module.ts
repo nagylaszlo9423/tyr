@@ -47,7 +47,7 @@ export const groupStoreModule: Module<GroupStoreState, RootState> = new PageStor
         params.filters && params.filters.length ? params.filters : undefined,
         params.sortBy || undefined
       );
-      const pageModel = PageModel.of(res.data, GroupMapper.responseListToModels);
+      const pageModel = PageModel.of(res.data, GroupMapper.responseToModel);
       store.commit('setPage', pageModel);
       store.commit('setParameters', params);
     },
@@ -58,7 +58,7 @@ export const groupStoreModule: Module<GroupStoreState, RootState> = new PageStor
           store.state.parameters.filters && store.state.parameters.filters.length ? store.state.parameters.filters : undefined,
           store.state.parameters.sortBy || undefined
       );
-      const pageModel = PageModel.of(res.data, GroupMapper.responseListToModels);
+      const pageModel = PageModel.of(res.data, GroupMapper.responseToModel);
       store.commit('setPage', pageModel);
     },
     async getNextPage(store: ActionContext<GroupStoreState, RootState>) {
@@ -69,7 +69,7 @@ export const groupStoreModule: Module<GroupStoreState, RootState> = new PageStor
         store.state.parameters.filters && store.state.parameters.filters.length ? store.state.parameters.filters : undefined,
         store.state.parameters.sortBy || undefined
       );
-      const pageModel = PageModel.of(res.data, GroupMapper.responseListToModels);
+      const pageModel = PageModel.of(res.data, GroupMapper.responseToModel);
       store.commit('setNextPage', pageModel);
     },
     async findById(store: ActionContext<GroupStoreState, RootState>, id: string) {

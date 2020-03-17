@@ -1,6 +1,5 @@
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import {fromLonLat} from 'ol/proj';
 import Geometry from 'ol/geom/Geometry';
 import Icon from 'ol/style/Icon';
 import Style from 'ol/style/Style';
@@ -54,7 +53,7 @@ export class PositionMarker extends Feature {
   }
 
   private static positionToCoords(position: Position): number[] {
-    return fromLonLat([position.coords.longitude, position.coords.latitude]);
+    return [position.coords.longitude, position.coords.latitude];
   }
 
   private static normalize(pointFrom: any[], pointTo: any[]): any[] {

@@ -1,5 +1,3 @@
-import {MapPageState} from '@/components/map/map.routes';
-import {MapPageState} from '@/components/map/map.routes';
 <template>
   <div id="map-page">
     <div class="map-page-controls">
@@ -34,11 +32,23 @@ import {MapPageState} from '@/components/map/map.routes';
   import {events} from '@/services/events';
   import {PathRecodingState} from '@/components/map/path-recoding-state';
   import {MapPageState} from '@/components/map/map.routes';
-  import {Map} from 'ol';
+  import {Feature, Map} from 'ol';
   import {PathRecorder} from '@/components/map/plugins/path-recorder';
   import {Coordinate} from 'ol/coordinate';
   import {PathNs} from '@/store/namespaces';
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
+  import {MappedActionWithParam} from '@/store/mapped-action';
+  import {FindPathsInAreaRequest} from 'tyr-api/types/axios';
+  import {ViewExtentObserver} from '@/components/map/plugins/view-extent-observer';
+  import VectorLayer from 'ol/layer/Vector';
+  import VectorSource from 'ol/source/Vector';
+  import {Path} from '@/components/map/features/path';
+  import {Cluster} from 'ol/source';
+  import {Point} from 'ol/geom';
+  import LineString from 'ol/geom/LineString';
+  import {Style} from 'ol/style';
+  import {FeatureLike} from 'ol/Feature';
+  import {ClusteredPathsLayer} from '@/components/map/layers/clustered-paths-layer';
 
   @Component({
     components: {
@@ -49,13 +59,18 @@ import {MapPageState} from '@/components/map/map.routes';
   export default class MapPage extends Vue implements ComponentOptions<MapPage> {
     @PathNs.Getter('recordedCoordinates') recordedCoordinates: Coordinate[];
     @PathNs.Getter('modelId') modelId: string;
+    @PathNs.Getter('paths') paths: Path[];
+    @PathNs.Action('getAllAvailableByArea') getAllAvailableByArea: MappedActionWithParam<FindPathsInAreaRequest>;
 
-    private confirmationModal: ConfirmationModal;
     private map: Map;
+    private confirmationModal: ConfirmationModal;
     private pathRecorder: PathRecorder;
+    private viewExtentObserver: ViewExtentObserver;
+
     pathRecordingStates = PathRecodingState;
     recordingState: PathRecodingState = PathRecodingState.NOT_RECORDING;
     mapPageState: MapPageState;
+    clusteredPathsLayer: ClusteredPathsLayer;
 
     created(): void {
       this.initWhenMapCreated();
@@ -69,6 +84,7 @@ import {MapPageState} from '@/components/map/map.routes';
       eventBus.$offOn(events.map.tyrMap.mapIsCreated, async (map: Map) => {
         this.map = map;
         this.pathRecorder = new PathRecorder(map);
+        this.viewExtentObserver = new ViewExtentObserver(map);
         this.mapPageState = this.$route.params.state as MapPageState;
         this.onPageState(this.mapPageState);
       });
@@ -81,6 +97,7 @@ import {MapPageState} from '@/components/map/map.routes';
         this.editRecordedPath();
       } else {
         this.goToBaseMapPage();
+        this.showAvailablePaths();
       }
     }
 
@@ -126,6 +143,15 @@ import {MapPageState} from '@/components/map/map.routes';
           this.$router.push('/pages/paths/new');
         }
       }
+    }
+
+    showAvailablePaths() {
+      this.clusteredPathsLayer = new ClusteredPathsLayer();
+      this.map.addLayer(this.clusteredPathsLayer);
+      this.viewExtentObserver.watchViewExtent().subscribe(async feature => {
+        await this.getAllAvailableByArea({feature: feature});
+        this.clusteredPathsLayer.paths = this.paths;
+      });
     }
 
     recenter() {

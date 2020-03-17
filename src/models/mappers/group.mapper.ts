@@ -4,10 +4,6 @@ import {GroupRequest, GroupResponse} from 'tyr-api/types/axios';
 export class GroupMapper {
   private constructor() {}
 
-  static responseListToModels(items: GroupResponse[]): GroupModel[] {
-    return items.map(GroupMapper.responseToModel);
-  }
-
   static responseToModel(response: GroupResponse): GroupModel {
     return new GroupModel({
       id: response.id,

@@ -8,12 +8,13 @@
   import TileLayer from 'ol/layer/Tile';
   import {OSM} from 'ol/source';
   import {Component, Vue} from 'vue-property-decorator';
-  import {fromLonLat} from 'ol/proj';
   import {ComponentOptions} from 'vue';
-  import {locationService} from '@/components/map/location-service';
   import {eventBus} from '@/services/event-bus';
   import {events} from '@/services/events';
   import {PositionMarker} from '@/components/map/features/position-marker';
+  import {ScaleLine} from 'ol/control';
+  import {locationService} from '@/components/map/location-service';
+
   @Component
   export default class TyrMap extends Vue implements ComponentOptions<TyrMap> {
     private trackPosition = true;
@@ -22,6 +23,7 @@
     private map: Map;
     private view: View = new View({
       center: [0, 0],
+      projection: 'EPSG:4326',
       zoom: 1
     });
     private layer: TileLayer = new TileLayer({
@@ -34,7 +36,11 @@
         target: 'tyr-map',
         layers: [this.layer],
         view: this.view,
-        controls: []
+        controls:[
+          new ScaleLine({
+            units: 'metric'
+          })
+        ],
       });
       this.map.on('pointerdrag', () => {
         this.trackPosition = false;
@@ -66,14 +72,14 @@
     onPositionChange(position: Position) {
       this.positionMarker.setPosition(position);
       if (this.trackPosition) {
-        this.view.animate({center: fromLonLat([position.coords.longitude, position.coords.latitude])});
+        this.view.animate({center: [position.coords.longitude, position.coords.latitude]});
       }
     }
 
     goToPosition(position: Position) {
       this.trackPosition = true;
       this.view.animate({
-        center: fromLonLat([position.coords.longitude, position.coords.latitude]),
+        center: [position.coords.longitude, position.coords.latitude],
         zoom: 15
       });
     }

@@ -9,7 +9,6 @@ import Snap from 'ol/interaction/Snap';
 import Select from 'ol/interaction/Select';
 import Modify from 'ol/interaction/Modify';
 import {doubleClick} from 'ol/events/condition';
-import LineString from 'ol/geom/LineString';
 import {Coordinate} from 'ol/coordinate';
 
 export class PathRecorder {
@@ -34,7 +33,10 @@ export class PathRecorder {
   startRecordingPath() {
     this.path = new Path();
     this.pathLayer = this.path.createVectorLayer();
-    this.subscription = locationService.watchPosition().subscribe(pos => this.path.setNextPosition(pos));
+    this.subscription = locationService.watchPosition().subscribe(pos => {
+      console.log('pos', pos);
+      this.path.setNextPosition(pos);
+    });
     this.map.addLayer(this.pathLayer);
   }
 

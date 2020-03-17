@@ -1,11 +1,9 @@
 import Feature from 'ol/Feature';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import Geometry from 'ol/geom/Geometry';
 import LineString from 'ol/geom/LineString';
 import Style from 'ol/style/Style';
 import Stroke from 'ol/style/Stroke';
-import {MapHelper} from '@/components/map/map-helper';
 import Fill from 'ol/style/Fill';
 import CircleStyle from 'ol/style/Circle';
 import {Coordinate} from 'ol/coordinate';
@@ -14,8 +12,8 @@ import {Coordinate} from 'ol/coordinate';
 export class Path extends Feature {
   private readonly _lineString: LineString;
 
-  constructor(path?: Coordinate[], options?: Geometry | { [key: string]: any }) {
-    super(options);
+  constructor(path?: Coordinate[]) {
+    super();
     this._lineString = new LineString(path ? path : []);
     this.setGeometry(this._lineString);
     this.setStyle(new Style({
@@ -57,8 +55,12 @@ export class Path extends Feature {
   setNextPosition(pos: Position) {
     this._lineString.setCoordinates([
       ...this._lineString.getCoordinates(),
-      MapHelper.fromLonLat(pos)
+      [pos.coords.longitude, pos.coords.latitude]
     ]);
+  }
+
+  getStartingCoordinate(): Coordinate {
+    return this._lineString.getCoordinates()[0];
   }
 
   isValid() {

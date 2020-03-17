@@ -7,12 +7,12 @@ export class PageModel<T> extends ObjectInitializer<PageModel<T>> {
   total: number;
   items: T[];
 
-  static of<R, M>(response: Partial<PageResponse> & {items: R[]}, mapper: (items: R[]) => M[]): PageModel<M> {
+  static of<R, M>(response: Partial<PageResponse> & {items: R[]}, mapper: (items: R) => M): PageModel<M> {
     return new PageModel({
       page: response.page,
       size: response.size,
       total: response.total,
-      items: mapper(response.items)
+      items: response.items.map(mapper)
     });
   }
 }

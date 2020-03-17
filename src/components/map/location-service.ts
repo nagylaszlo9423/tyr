@@ -1,5 +1,4 @@
-import {Observable, ReplaySubject, Subject, throwError} from 'rxjs';
-import {catchError, finalize} from 'rxjs/operators';
+import {Observable, ReplaySubject, Subject} from 'rxjs';
 
 
 export class LocationService {
@@ -91,6 +90,7 @@ export class LocationService {
       case 2:
         return 'LOCATION_UNAVAILABLE';
       case 3:
+        this.initWatchObservable();
         return 'TIME_OUT';
     }
   }
