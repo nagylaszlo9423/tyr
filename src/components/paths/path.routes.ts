@@ -1,7 +1,7 @@
 import {RouteConfig} from 'vue-router';
 import PathsPage from '@/components/paths/paths.page.vue';
-import PathListPage from '@/components/paths/path-list.page.vue';
-import PathEditPage from '@/components/paths/path-edit.page.vue';
+import PathListPage from '@/components/paths/list/path-list.page.vue';
+import PathEditPage from '@/components/paths/edit/path-edit.page.vue';
 import {PageType} from '@/utils/utils';
 
 

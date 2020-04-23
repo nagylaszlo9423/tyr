@@ -30,7 +30,7 @@ export const pathStoreModule: Module<PathStoreState, RootState> = new PageStoreM
     modelId: state => state.model.id,
     model: state => state.model,
     recordedCoordinates: state => state.model.coordinates,
-    paths: state => state.pathModels.map(model => new Path(model.coordinates))
+    paths: state => state.pathModels.map(model => new Path(model.coordinates, model.id))
   },
   mutations: {
     setModel(state: PathStoreState, model: PathModel) {

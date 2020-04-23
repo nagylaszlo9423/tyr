@@ -20,19 +20,45 @@
       </floating-action-button>
     </div>
     <confirmation-modal ref="confirmationModal" @on-confirmed="deleteRecordedPath"></confirmation-modal>
+    <b-modal ref="filtersModal" :title="$t('FILTERS')">
+      <b-container>
+        <b-row class="mb-2">
+          <b-col>
+            <select-field id="select" v-model="filtersModalData.sortBy" :options="sortOptions" :block="true"
+                          first-selected
+                          translation-namespace="paths.sortOptions"></select-field>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <multi-select-field v-model="multiSelectItems" block></multi-select-field>
+          </b-col>
+        </b-row>
+      </b-container>
+      <template v-slot:modal-footer>
+        <b-container>
+          <b-row>
+            <b-col>
+              <b-button variant="secondary" block @click="filtersModal.hide()">{{ $t('CANCEL') }}</b-button>
+            </b-col>
+            <b-col>
+              <b-button variant="primary" block @click="onModalConfirmed">{{ $t('APPLY') }}</b-button>
+            </b-col>
+          </b-row>
+        </b-container>
+      </template>
+    </b-modal>
   </div>
 </template>
 
 <script lang="ts">
   import {Component} from 'vue-property-decorator';
-  import {Vue} from '@/types';
   import {ComponentOptions} from 'vue';
   import {eventBus} from '@/services/event-bus';
   import FloatingActionButton from '@/components/common/controls/floating-action-button.vue';
   import {events} from '@/services/events';
   import {PathRecodingState} from '@/components/map/path-recoding-state';
-  import {MapPageState} from '@/components/map/map.routes';
-  import {Feature, Map} from 'ol';
+  import {Map} from 'ol';
   import {PathRecorder} from '@/components/map/plugins/path-recorder';
   import {Coordinate} from 'ol/coordinate';
   import {PathNs} from '@/store/namespaces';
@@ -40,15 +66,15 @@
   import {MappedActionWithParam} from '@/store/mapped-action';
   import {FindPathsInAreaRequest} from 'tyr-api/types/axios';
   import {ViewExtentObserver} from '@/components/map/plugins/view-extent-observer';
-  import VectorLayer from 'ol/layer/Vector';
-  import VectorSource from 'ol/source/Vector';
   import {Path} from '@/components/map/features/path';
-  import {Cluster} from 'ol/source';
-  import {Point} from 'ol/geom';
-  import LineString from 'ol/geom/LineString';
-  import {Style} from 'ol/style';
-  import {FeatureLike} from 'ol/Feature';
   import {ClusteredPathsLayer} from '@/components/map/layers/clustered-paths-layer';
+  import {ClusterPoint} from '@/components/map/features/cluster-point';
+  import {Select} from 'ol/interaction';
+  import {click} from 'ol/events/condition';
+  import {BvModal} from 'bootstrap-vue';
+  import {MapPageType} from '@/components/map/map.routes';
+  import {MapPageState} from '@/components/map/map-page.state';
+  import {UrlStateManagingVue} from '@/components/common/base/url-state-managing-vue';
 
   @Component({
     components: {
@@ -56,43 +82,64 @@
       FloatingActionButton
     }
   })
-  export default class MapPage extends Vue implements ComponentOptions<MapPage> {
+  export default class MapPage extends UrlStateManagingVue<MapPageState> implements ComponentOptions<MapPage> {
     @PathNs.Getter('recordedCoordinates') recordedCoordinates: Coordinate[];
     @PathNs.Getter('modelId') modelId: string;
     @PathNs.Getter('paths') paths: Path[];
     @PathNs.Action('getAllAvailableByArea') getAllAvailableByArea: MappedActionWithParam<FindPathsInAreaRequest>;
 
     private map: Map;
+    private clickSelect: Select;
     private confirmationModal: ConfirmationModal;
+    private filtersModal: BvModal;
     private pathRecorder: PathRecorder;
     private viewExtentObserver: ViewExtentObserver;
 
     pathRecordingStates = PathRecodingState;
     recordingState: PathRecodingState = PathRecodingState.NOT_RECORDING;
-    mapPageState: MapPageState;
+    mapPageState: MapPageType;
     clusteredPathsLayer: ClusteredPathsLayer;
 
+    constructor() {
+      super(MapPageState);
+    }
+
     created(): void {
+      super.created();
       this.initWhenMapCreated();
     }
 
     mounted(): void {
       this.confirmationModal = this.$refs.confirmationModal as ConfirmationModal;
+      this.filtersModal = this.$refs.filtersModal as BvModal;
     }
 
     initWhenMapCreated(): void {
       eventBus.$offOn(events.map.tyrMap.mapIsCreated, async (map: Map) => {
         this.map = map;
+        this.initSelect();
         this.pathRecorder = new PathRecorder(map);
         this.viewExtentObserver = new ViewExtentObserver(map);
-        this.mapPageState = this.$route.params.state as MapPageState;
-        this.onPageState(this.mapPageState);
+        this.mapPageState = this.$route.params.state as MapPageType;
+        this.resolvePageState(this.mapPageState);
       });
       eventBus.$emit(events.map.mapPage.checkMap);
     }
 
-    onPageState(state: MapPageState) {
-      if (state === MapPageState.EDIT) {
+    initSelect() {
+      if (this.clickSelect) {
+        this.map.removeInteraction(this.clickSelect);
+      }
+
+      this.clickSelect = new Select({
+        condition: click,
+        style: feature => ClusterPoint.getPointStyle(feature.get('features').length)
+      });
+      this.map.addInteraction(this.clickSelect);
+    }
+
+    resolvePageState(state: MapPageType) {
+      if (state === MapPageType.EDIT) {
         this.recordingState = PathRecodingState.EDITING;
         this.editRecordedPath();
       } else {
@@ -137,7 +184,7 @@
       if (this.recordingState === PathRecodingState.EDITING) {
         this.recordingState = PathRecodingState.NOT_RECORDING;
         this.pathRecorder.saveRecordedPath();
-        if (this.mapPageState === MapPageState.EDIT && this.modelId) {
+        if (this.mapPageState === MapPageType.EDIT && this.modelId) {
           this.$router.push(`/pages/paths/edit/${this.modelId}`);
         } else {
           this.$router.push('/pages/paths/new');
@@ -146,11 +193,11 @@
     }
 
     showAvailablePaths() {
-      this.clusteredPathsLayer = new ClusteredPathsLayer();
+      this.clusteredPathsLayer = ClusteredPathsLayer.create(this.map);
       this.map.addLayer(this.clusteredPathsLayer);
       this.viewExtentObserver.watchViewExtent().subscribe(async feature => {
         await this.getAllAvailableByArea({feature: feature});
-        this.clusteredPathsLayer.paths = this.paths;
+        this.clusteredPathsLayer.points = this.paths.map(_ => new ClusterPoint(_));
       });
     }
 

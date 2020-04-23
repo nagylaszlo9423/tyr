@@ -1,7 +1,7 @@
 import {RouteConfig} from 'vue-router';
 import MapPage from '@/components/map/map.page.vue';
 
-export enum MapPageState {
+export enum MapPageType {
   EDIT = 'edit'
 }
 
@@ -11,7 +11,9 @@ export const mapRoutes: RouteConfig[] = [
     name: 'map',
     component: MapPage,
     meta: {
-      isAuthenticated: true
+      isAuthenticated: true,
+      showTitleBarSearchButton: true,
+      showTitleBarSearchField: false
     }
   },
   {
@@ -19,7 +21,9 @@ export const mapRoutes: RouteConfig[] = [
     name: 'edit-map',
     component: MapPage,
     meta: {
-      isAuthenticated: true
+      isAuthenticated: true,
+      showTitleBarSearchButton: true,
+      showTitleBarSearchField: false
     }
   }
 ];

@@ -7,13 +7,17 @@ import Stroke from 'ol/style/Stroke';
 import Fill from 'ol/style/Fill';
 import CircleStyle from 'ol/style/Circle';
 import {Coordinate} from 'ol/coordinate';
+import {Point} from 'ol/geom';
+import {TransformableToPoint} from '@/components/map/features/transformable-to-point';
 
 
-export class Path extends Feature {
+export class Path extends Feature implements TransformableToPoint{
+  private static idCounter = 0;
   private readonly _lineString: LineString;
 
-  constructor(path?: Coordinate[]) {
+  constructor(path?: Coordinate[], id?: string) {
     super();
+    this.setId(id ? id : `path_${Path.idCounter++}`);
     this._lineString = new LineString(path ? path : []);
     this.setGeometry(this._lineString);
     this.setStyle(new Style({
@@ -59,11 +63,11 @@ export class Path extends Feature {
     ]);
   }
 
-  getStartingCoordinate(): Coordinate {
-    return this._lineString.getCoordinates()[0];
-  }
-
   isValid() {
     return this._lineString && this._lineString.getCoordinates() && this._lineString.getCoordinates().length > 1;
+  }
+
+  transformToPoint(): Point {
+    return new Point(this._lineString.getCoordinates()[0]);
   }
 }

@@ -71,24 +71,17 @@
   import {GroupFilter} from '@/components/groups/group-filter';
   import {GroupModel} from '@/models/group.model';
   import {PageModel} from '@/models/page.model';
-  import {VueUrlState} from '@/types';
   import {groupService} from '@/services/generated-services';
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
-  import FiltersModal from '@/components/common/modals/filters-modal.vue';
   import {eventBus} from '@/services/event-bus';
   import {events} from '@/services/events';
   import {BModal} from 'bootstrap-vue';
-
-  class GroupListPageState {
-    filters = [GroupFilter.MEMBER];
-    sortBy = '';
-    searchExp = '';
-  }
+  import {GroupListPageState} from '@/components/groups/group-list-page.state';
+  import {UrlStateManagingVue} from '@/components/common/base/url-state-managing-vue';
 
   @Component({
     components: {
       ConfirmationModal,
-      FiltersModal,
       InputField,
       SelectField,
       MultiSelectField,
@@ -98,7 +91,7 @@
       ValidationObserver
     }
   })
-  export default class GroupListPage extends VueUrlState<GroupListPageState> implements ComponentOptions<GroupListPage> {
+  export default class GroupListPage extends UrlStateManagingVue<GroupListPageState> implements ComponentOptions<GroupListPage> {
     @GroupNs.Action('getAllAvailable') getAllAvailable: MappedActionWithParam<FindAllAvailableGroupsParams>;
     @GroupNs.Action('getNextPage') getNextPage: MappedAction;
     @GroupNs.Action('deletePath') deletePath: MappedActionWithParam<string>;
@@ -150,12 +143,12 @@
     }
 
     onSearch() {
-      this.setPageState(this.filtersModalData);
+      this.pageState = this.filtersModalData;
       this.load();
     }
 
     onModalConfirmed() {
-      this.setPageState(this.filtersModalData);
+      this.pageState = this.filtersModalData;
       this.load();
       this.filtersModal.hide();
     }
@@ -171,7 +164,7 @@
     }
 
     private async load() {
-      this.setPageState();
+      this.updateQuery();
       this.getAllAvailable({
         filters: this.pageState.filters,
         searchExp: this.pageState.searchExp,

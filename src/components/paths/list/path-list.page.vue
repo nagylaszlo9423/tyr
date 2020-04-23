@@ -5,7 +5,7 @@
         <ValidationObserver tag="form" class="layout-container layout-vertical" novalidate @submit.prevent="load">
           <input-field id="searchPath"
                        :label="$t('SEARCH')"
-                       v-model="filtersModalData.searchExp"
+                       v-model="searchExp"
                        action-button-icon="search"
                        @on-action="onSearch"></input-field>
         </ValidationObserver>
@@ -17,34 +17,7 @@
                     :item-navigation-path="detailsPageRoute"></card-board>
       </b-col>
     </b-row>
-    <b-modal ref="filtersModal" :title="$t('FILTERS')">
-      <b-container>
-        <b-row class="mb-2">
-          <b-col>
-            <select-field id="select" v-model="filtersModalData.sortBy" :options="sortOptions" :block="true"
-                          first-selected
-                          translation-namespace="paths.sortOptions"></select-field>
-          </b-col>
-        </b-row>
-        <b-row>
-          <b-col>
-            <multi-select-field v-model="multiSelectItems" block></multi-select-field>
-          </b-col>
-        </b-row>
-      </b-container>
-      <template v-slot:modal-footer>
-        <b-container>
-          <b-row>
-            <b-col>
-              <b-button variant="secondary" block @click="filtersModal.hide()">{{ $t('CANCEL') }}</b-button>
-            </b-col>
-            <b-col>
-              <b-button variant="primary" block @click="setFilters">{{ $t('APPLY') }}</b-button>
-            </b-col>
-          </b-row>
-        </b-container>
-      </template>
-    </b-modal>
+    <path-list-filter-modal :data="pathFilters" @filter-change=""></path-list-filter-modal>
     <confirmation-modal ref="deletionModal" @confirmed="deletePath"></confirmation-modal>
   </page>
 </template>
@@ -60,7 +33,6 @@
   import {MappedAction, MappedActionWithParam} from '@/store/mapped-action';
   import {PathPageResponse, PathResponse} from 'tyr-api/types/axios';
   import {CardItem, CardItemControl} from '@/components/common/card-board/card-item';
-  import {MultiSelectItems} from '@/components/common/controls/multi-select-items';
   import InputField from '@/components/common/controls/input-field.vue';
   import SelectField from '@/components/common/controls/select-field.vue';
   import {ValidationObserver} from 'vee-validate';
@@ -68,23 +40,13 @@
   import ConfirmationModal from '@/components/common/modals/confirmation-modal.vue';
   import {AbstractModal} from '@/components/common/modals/abstract-modal';
   import {onPageBottomReached} from '@/utils/utils';
-  import {PathFilter} from '@/components/paths/path-filters';
-  import FiltersModal from '@/components/common/modals/filters-modal.vue';
-  import {BModal} from 'bootstrap-vue';
-  import {GroupFilter} from '@/components/groups/group-filter';
-  import {VueUrlState} from '@/types';
-  import {eventBus} from '@/services/event-bus';
-  import {events} from '@/services/events';
-
-  class PathListPageState {
-    filters = [GroupFilter.MEMBER];
-    sortBy = '';
-    searchExp = '';
-  }
+  import {PathListPageState} from '@/components/paths/list/path-list-page.state';
+  import {UrlStateManagingVue} from '@/components/common/base/url-state-managing-vue';
+  import PathListFilterModal from '@/components/paths/list/filter/path-list-filter.modal.vue';
 
   @Component({
     components: {
-      FiltersModal,
+      PathListFilterModal,
       ConfirmationModal,
       SelectField,
       InputField,
@@ -95,31 +57,17 @@
       ValidationObserver
     }
   })
-  export default class PathListPage extends VueUrlState<PathListPageState> implements ComponentOptions<PathListPage> {
+  export default class PathListPage extends UrlStateManagingVue<PathListPageState> implements ComponentOptions<PathListPage> {
     @PathNs.Action('getAllAvailable') getAllAvailable: MappedActionWithParam<FindAllAvailablePathsParams>;
     @PathNs.Action('getNextPage') getNextPage: MappedAction;
     @PathNs.Action('deletePath') deletePath: MappedActionWithParam<string>;
     @PathNs.Getter('page') page: PathPageResponse;
 
     readonly detailsPageRoute = '/pages/paths/details';
-    multiSelectItems_: MultiSelectItems<number> = {};
-    searchExp = '';
     searchExpInTitle = '';
-    filters_ = [PathFilter.OWN];
-    sortBy_ = '';
-    sortOptions: string[] = [];
+    searchExp = '';
     deletionModal: AbstractModal;
-    filtersModal: BModal;
-    filtersModalData: PathListPageState;
-
-    set multiSelectItems(items: MultiSelectItems<number>) {
-      this.filtersModalData.filters = Object.keys(items).filter(_ => items[_].selected).map(_ => items[_].value);
-      this.multiSelectItems_ = items;
-    }
-
-    get multiSelectItems() {
-      return this.multiSelectItems_;
-    }
+    filterData: PathListPageState;
 
     get mappedItems() {
       return this.page.items.map(this.pathToCardItem);
@@ -129,39 +77,29 @@
       super(PathListPageState);
     }
 
-    async created(): Promise<void> {
-      super.created();
-      eventBus.$offOn(events.common.titleBar.toggleSearch, () => this.filtersModal.show());
-      this.filtersModalData = new PathListPageState();
-      this.multiSelectItems_ = {
-        own: {name: this.$tc('OWN'), selected: true, value: PathFilter.OWN},
-        groups: {name: this.$tc('GROUPS'), value: PathFilter.GROUP},
-        public: {name: this.$tc('PUBLIC'), value: PathFilter.PUBLIC}
-      };
-      this.sortOptions = ['last_created', 'oldest_created', 'last_modified', 'oldest_modified', 'name_asc', 'name_desc', 'visibility'];
-      this.load();
-      onPageBottomReached().then(() => this.getNextPage());
-    }
-
     mounted(): void {
+      onPageBottomReached().then(() => this.getNextPage());
+      this.load();
       this.deletionModal = this.$refs.deletionModal as AbstractModal;
-      this.filtersModal = this.$refs.filtersModal as BModal;
     }
 
-    setFilters() {
-      this.setPageState(this.filtersModalData);
+    set pathFilters(filters: PathListPageState) {
+      this.pageState = filters;
       this.load();
-      this.filtersModal.hide();
+    }
+
+    get pathFilters(): PathListPageState {
+      return this.pageState;
     }
 
     onSearch() {
-      this.setPageState(this.filtersModalData);
+      this.pageState = this.filterData;
       this.load();
     }
 
     load() {
       this.setSearchExpInTitle();
-      this.getAllAvailable({filters: this.filters_, searchExp: this.searchExp, sortBy: this.sortBy_});
+      this.getAllAvailable(this.filterData);
     }
 
     private pathToCardItem(path: PathResponse): CardItem {
@@ -197,8 +135,8 @@
 </script>
 
 <style lang="scss" scoped>
-  @import "../../style/theme";
-  @import "../../style/media";
+  @import "src/style/theme";
+  @import "src/style/media";
 
   .filter-title {
     color: $primary;

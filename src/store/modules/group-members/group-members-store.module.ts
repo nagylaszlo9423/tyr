@@ -19,13 +19,13 @@ export const groupMembersStoreModule: Module<GroupMembersStoreState, RootState> 
   actions: {
     async getGroupMembers(store: ActionContext<GroupMembersStoreState, RootState>, id: string) {
       const res = await groupService.getGroupMembers(id, 0, environment.pageSize);
-      const pageModel = PageModel.of(res.data, UserMapper.groupMemberListResponseToModel);
+      const pageModel = PageModel.of(res.data, UserMapper.groupMemberResponseToModel);
       store.commit('setPage', pageModel);
     },
     async getNextPage(store: ActionContext<GroupMembersStoreState, RootState>) {
       if (store.state.groupId) {
         const res = await groupService.getGroupMembers(store.state.groupId, 0, environment.pageSize);
-        const pageModel = PageModel.of(res.data, UserMapper.groupMemberListResponseToModel);
+        const pageModel = PageModel.of(res.data, UserMapper.groupMemberResponseToModel);
         store.commit('setNextPage', pageModel);
       }
     }

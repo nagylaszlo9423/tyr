@@ -41,8 +41,7 @@
   import {pathService} from '@/services/generated-services';
   import Page from '@/components/common/page.vue';
   import InputField from '@/components/common/controls/input-field.vue';
-  import {MapPageState} from '@/components/map/map.routes';
-  import {Vue} from '@/types';
+  import {MapPageType} from '@/components/map/map.routes';
   import TextareaField from '@/components/common/controls/textarea-field.vue';
   import {PageType} from '@/utils/utils';
   import {PathNs} from '@/store/namespaces';
@@ -51,6 +50,7 @@
   import {events} from '@/services/events';
   import {PathModel} from '@/models/path.model';
   import {PathMapper} from '@/models/mappers/path.mapper';
+  import {BaseVue} from '@/components/common/base/base.vue';
 
   @Component({
     components: {
@@ -60,7 +60,7 @@
       ValidationObserver
     }
   })
-  export default class PathEditPage extends Vue implements ComponentOptions<PathEditPage> {
+  export default class PathEditPage extends BaseVue implements ComponentOptions<PathEditPage> {
     @PathNs.Getter('model') pathModel: PathModel;
     @PathNs.Action('clearModelWithoutPath') clearModelWithoutPath: MappedAction;
     @PathNs.Action('getPathById') getPathById: MappedActionWithParam<string>;
@@ -96,7 +96,7 @@
     }
 
     modifyPath() {
-      this.$router.push(`/pages/map/${MapPageState.EDIT}`);
+      this.$router.push(`/pages/map/${MapPageType.EDIT}`);
     }
 
     deletePath() {

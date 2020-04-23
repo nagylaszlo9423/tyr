@@ -1,5 +1,19 @@
 import {environment} from '@/environment/environment';
+import {Extent} from 'ol/extent';
 
+export function rescaleExtent(extent: Extent, scale: number) {
+  console.log(extent);
+  return [
+    extent[0] * (1 / scale),
+    extent[1] * (1 / scale),
+    extent[2] * scale,
+    extent[3] * scale
+  ];
+}
+
+export function diffOfFirstArray<T>(array1: T[], array2: T[], comp: (el1: T, el2:T) => boolean): T[] {
+  return array1.filter(el1 => array2.findIndex(el2 => comp(el1, el2)) === -1);
+}
 
 export function randomImageFileName(): string {
   if (environment.background_images.length === 0) return '';

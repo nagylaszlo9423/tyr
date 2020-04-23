@@ -40,13 +40,13 @@
   import {ComponentOptions} from 'vue';
   import {events} from '@/services/events';
   import {NavBarItem} from '@/components/common/navigation/nav-bar-item';
-  import {BaseComponent} from '@/components/common/base.component';
+  import {BaseVue} from '@/components/common/base/base.component';
   import {NavNarItems} from '@/components/common/navigation/nav-nar-items';
   import {eventBus} from '@/services/event-bus';
   import {authService} from '@/services/auth.service';
 
   @Component
-  export default class NavigationDrawer extends BaseComponent implements ComponentOptions<NavigationDrawer> {
+  export default class NavigationDrawer extends BaseVue implements ComponentOptions<NavigationDrawer> {
     isOpen = false;
     items: NavBarItem[] = NavNarItems;
     activeItem = 'map';

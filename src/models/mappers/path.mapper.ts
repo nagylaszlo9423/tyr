@@ -1,6 +1,7 @@
 import {FeatureType} from '@/utils/utils';
 import {PathRequest, PathResponse} from 'tyr-api/types/axios';
 import {PathModel} from '@/models/path.model';
+import {Coordinate} from 'ol/coordinate';
 
 export class PathMapper {
 
@@ -9,7 +10,7 @@ export class PathMapper {
       id: res.id,
       name: res.name,
       description: res.description,
-      coordinates: res.path.coordinates
+      coordinates: res.path.coordinates as Coordinate[]
     });
   }
 

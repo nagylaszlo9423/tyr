@@ -34,7 +34,6 @@ export class PathRecorder {
     this.path = new Path();
     this.pathLayer = this.path.createVectorLayer();
     this.subscription = locationService.watchPosition().subscribe(pos => {
-      console.log('pos', pos);
       this.path.setNextPosition(pos);
     });
     this.map.addLayer(this.pathLayer);

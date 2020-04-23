@@ -5,10 +5,6 @@ export class UserMapper {
 
   private constructor() {}
 
-  static groupMemberListResponseToModel(groupMembers: GroupMemberResponse[]): GroupMemberModel[] {
-    return groupMembers.map(UserMapper.groupMemberResponseToModel);
-  }
-
   static groupMemberResponseToModel(groupMember: GroupMemberResponse): GroupMemberModel {
     return new GroupMemberModel({
       id: groupMember.id,
