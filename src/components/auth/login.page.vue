@@ -61,7 +61,7 @@
         </b-row>
         <b-row class="my-2">
           <b-col class="d-flex justify-content-center">
-            <b-button class="icon-link" variant="link">
+            <b-button class="icon-link" variant="link" @click="facebookLogin">
               <img class="icon" src="../../assets/facebook-48.png" alt="Facebook"/>
             </b-button>
           </b-col>
@@ -115,6 +115,11 @@
               this.error = error.message;
             });
             break;
+          case 'facebook':
+            this.socialLogin({provider: 'facebook', code: this.$route.query.code}).then(() => this.goToMainPage()).catch((error: Error) => {
+              this.error = error.message;
+            });
+            break;
         }
       } else {
         this.$toasted.error(this.$tc('FAILED_TO_LOGIN'));
@@ -132,6 +137,10 @@
 
     googleLogin() {
       window.location.href = this.googleLink;
+    }
+
+    facebookLogin() {
+      window.location.href = this.facebookLink;
     }
 
     isFormValid(): boolean {
@@ -157,6 +166,10 @@
 
     private get googleLink() {
       return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${environment.google.client_id}&redirect_uri=${environment.google.redirect_uri}&response_type=code&include_granted_scopes=true&scope=email profile openid&access_type=`;
+    }
+
+    private get facebookLink() {
+      return `https://www.facebook.com/v7.0/dialog/oauth?client_id=${environment.facebook.client_id}&redirect_uri=${environment.facebook.redirect_uri}`;
     }
   }
 </script>

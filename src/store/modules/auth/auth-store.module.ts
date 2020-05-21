@@ -56,7 +56,7 @@ export const authStoreModule: Module<AuthStoreState, RootState> = new BaseStoreM
           tokenResponse = await authService.exchangeCode(data.code, environment.google.redirect_uri, environment.google.client_id);
           break;
         case 'facebook':
-          // TODO: implement
+          tokenResponse = await authService.exchangeCode(data.code, environment.facebook.redirect_uri, environment.facebook.client_id);
           break;
       }
 

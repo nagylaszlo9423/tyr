@@ -21,6 +21,14 @@ const routes: RouteConfig[] = [
     }
   },
   {
+    path: '/login/facebook',
+    name: 'facebookLogin',
+    component: () => import('./components/auth/login.page.vue'),
+    meta: {
+      social: 'facebook'
+    }
+  },
+  {
     path: '/register',
     name: 'registration',
     component: () => import('./components/auth/registration.page.vue')
