@@ -51,7 +51,6 @@ import {PageType} from '@/utils/utils';
   import {Component} from 'vue-property-decorator';
   import {ComponentOptions} from 'vue';
   import {ValidationObserver} from 'vee-validate';
-  import {Vue} from '@/types';
   import Page from '@/components/common/page.vue';
   import TextareaField from '@/components/common/controls/textarea-field.vue';
   import InputField from '@/components/common/controls/input-field.vue';
@@ -61,11 +60,12 @@ import {PageType} from '@/utils/utils';
   import {GroupNs} from '@/store/namespaces';
   import {GroupModel} from '@/models/group.model';
   import {MappedActionWithParam} from '@/store/mapped-action';
+  import {BaseVue} from '@/components/common/base/base.vue';
 
   @Component({
     components: {SelectField, TextareaField, InputField, Page, ValidationObserver}
   })
-  export default class GroupPage extends Vue implements ComponentOptions<GroupPage> {
+  export default class GroupPage extends BaseVue implements ComponentOptions<GroupPage> {
     @GroupNs.Getter('model') groupModel: GroupModel;
     @GroupNs.Action('findById') findById: MappedActionWithParam<string>;
     @GroupNs.Action('saveModel') saveModel: MappedActionWithParam<GroupModel>;

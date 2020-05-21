@@ -164,7 +164,7 @@
     }
 
     private async load() {
-      this.updateQuery();
+      this.updateQueryState();
       this.getAllAvailable({
         filters: this.pageState.filters,
         searchExp: this.pageState.searchExp,

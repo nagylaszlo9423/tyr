@@ -40,10 +40,10 @@
   import {ComponentOptions} from 'vue';
   import {events} from '@/services/events';
   import {NavBarItem} from '@/components/common/navigation/nav-bar-item';
-  import {BaseVue} from '@/components/common/base/base.component';
   import {NavNarItems} from '@/components/common/navigation/nav-nar-items';
   import {eventBus} from '@/services/event-bus';
   import {authService} from '@/services/auth.service';
+  import {BaseVue} from '@/components/common/base/base.vue';
 
   @Component
   export default class NavigationDrawer extends BaseVue implements ComponentOptions<NavigationDrawer> {
@@ -84,10 +84,9 @@
   @import "../../../style/media";
   @import "../../../style/variables";
 
-  $transition-time: .5s;
 
   #navigation-drawer {
-    transition: width $transition-time ease-in-out;
+    transition: width $navigationDrawerTransition ease-in-out;
     width: $navigationDrawerWidth;
     float: left;
     position: relative;
@@ -113,7 +112,7 @@
         overflow-x: hidden;
         text-align: left;
         width: 0;
-        transition: width $transition-time ease-in-out;
+        transition: width $navigationDrawerTransition ease-in-out;
 
         span {
           font-size: .8rem;
@@ -138,7 +137,7 @@
       width: 3rem;
       overflow-x: hidden;
       background: #FFFFFFAA;
-      transition: width $transition-time ease-in-out;
+      transition: width $navigationDrawerTransition ease-in-out;
       position: relative;
       display: flex;
       flex-direction: column;

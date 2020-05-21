@@ -11,7 +11,7 @@ export class UrlStateManagingVue<S extends UrlBaseState> extends BaseVue impleme
 
   protected set pageState(pageState: S) {
     this.setPageState_(pageState);
-    this.updateQuery();
+    this.updateQueryState();
   }
 
   protected constructor(private stateCtor: new () => S) {
@@ -23,10 +23,10 @@ export class UrlStateManagingVue<S extends UrlBaseState> extends BaseVue impleme
   }
 
   beforeDestroy() {
-    this.updateQuery();
+    this.updateQueryState();
   }
 
-  public updateQuery() {
+  public updateQueryState() {
     this.$router.push({
       path: this.$route.path,
       query: this.pageState_

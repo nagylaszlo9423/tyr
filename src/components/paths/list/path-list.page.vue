@@ -7,7 +7,7 @@
                        :label="$t('SEARCH')"
                        v-model="searchExp"
                        action-button-icon="search"
-                       @on-action="onSearch"></input-field>
+                       @on-action="load"></input-field>
         </ValidationObserver>
       </b-col>
     </b-row>
@@ -17,7 +17,7 @@
                     :item-navigation-path="detailsPageRoute"></card-board>
       </b-col>
     </b-row>
-    <path-list-filter-modal :data="pathFilters" @filter-change=""></path-list-filter-modal>
+    <path-list-filter-modal v-model="pathFilters"></path-list-filter-modal>
     <confirmation-modal ref="deletionModal" @confirmed="deletePath"></confirmation-modal>
   </page>
 </template>
@@ -65,9 +65,7 @@
 
     readonly detailsPageRoute = '/pages/paths/details';
     searchExpInTitle = '';
-    searchExp = '';
     deletionModal: AbstractModal;
-    filterData: PathListPageState;
 
     get mappedItems() {
       return this.page.items.map(this.pathToCardItem);
@@ -77,10 +75,23 @@
       super(PathListPageState);
     }
 
+    created() {
+      super.created();
+    }
+
     mounted(): void {
       onPageBottomReached().then(() => this.getNextPage());
       this.load();
       this.deletionModal = this.$refs.deletionModal as AbstractModal;
+    }
+
+    set searchExp(searchExp: string) {
+      this.pageState.searchExp = searchExp;
+      this.updateQueryState();
+    }
+
+    get searchExp(): string {
+      return this.pageState.searchExp;
     }
 
     set pathFilters(filters: PathListPageState) {
@@ -92,14 +103,9 @@
       return this.pageState;
     }
 
-    onSearch() {
-      this.pageState = this.filterData;
-      this.load();
-    }
-
     load() {
       this.setSearchExpInTitle();
-      this.getAllAvailable(this.filterData);
+      this.getAllAvailable(this.pageState);
     }
 
     private pathToCardItem(path: PathResponse): CardItem {
@@ -129,7 +135,7 @@
     }
 
     private setSearchExpInTitle() {
-      this.searchExpInTitle = this.searchExp ? ` - ${this.$tc('SEARCH')}: ${this.searchExp}` : '';
+      this.searchExpInTitle = this.pageState.searchExp ? ` - ${this.$tc('SEARCH')}: ${this.pageState.searchExp}` : '';
     }
   }
 </script>

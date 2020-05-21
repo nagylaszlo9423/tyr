@@ -32,11 +32,17 @@
 
     created(): void {
       this.items_ = this.updateItems(this.value);
+      console.log('created', JSON.stringify(this.value));
+    }
+
+    mounted(): void {
+      console.log('mounted', JSON.stringify(this.items_));
     }
 
     @Watch('value')
     watchItems(values: MultiSelectItems) {
       this.items_ = this.updateItems(values);
+      console.log('watchItems', JSON.stringify(this.items_));
     }
 
     updateItems(values: MultiSelectItems): MultiSelectItems {
@@ -57,6 +63,7 @@
         this.selectedCount += item.selected ? 1 : -1;
       }
       this.$emit('input', this.items_);
+      console.log('onSelect', JSON.stringify(this.items_));
     }
   }
 </script>

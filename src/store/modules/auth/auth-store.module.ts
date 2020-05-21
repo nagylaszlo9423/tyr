@@ -6,6 +6,7 @@ import {authService} from '@/services/auth.service';
 import {BaseStoreModule} from '@/store/base-store.module';
 import {UserModel} from '@/models/user.model';
 import {userService} from '@/services/generated-services';
+import {SocialLoginData} from '@/components/auth/social-login-data';
 
 export class AuthStoreState {
   code = '';
@@ -45,6 +46,27 @@ export const authStoreModule: Module<AuthStoreState, RootState> = new BaseStoreM
       store.commit('setTokens', tokenResponse);
       const profileInfo = await userService.getProfileInfo();
       store.commit('setProfileInfo', profileInfo.data);
+    },
+    async socialLogin(store: ActionContext<AuthStoreState, RootState>, data: SocialLoginData) {
+      store.commit('setCode', data.code);
+
+      let tokenResponse;
+      switch (data.provider) {
+        case 'google':
+          tokenResponse = await authService.exchangeCode(data.code, environment.google.redirect_uri, environment.google.client_id);
+          break;
+        case 'facebook':
+          // TODO: implement
+          break;
+      }
+
+      if (tokenResponse) {
+        store.commit('setTokens', tokenResponse);
+        const profileInfo = await userService.getProfileInfo();
+        store.commit('setProfileInfo', profileInfo.data);
+      } else {
+        throw new Error('errors.SOCIAL_LOGIN_FAILED');
+      }
     },
     async refreshToken(store: ActionContext<AuthStoreState, RootState>) {
       if (!store.state.tokens) {

@@ -66,7 +66,7 @@
             </b-button>
           </b-col>
           <b-col class="d-flex justify-content-center">
-            <b-button class="icon-link" variant="link">
+            <b-button class="icon-link" variant="link" @click="googleLogin">
               <img class="icon" src="../../assets/google-48.png" alt="Google"/>
             </b-button>
           </b-col>
@@ -79,6 +79,11 @@
 <script lang="ts">
   import {Component, Vue} from 'vue-property-decorator';
   import AuthPage from '@/components/auth/auth.page.vue';
+  import {environment} from '@/environment/environment';
+  import {ComponentOptions} from 'vue';
+  import {AuthNs} from '@/store/namespaces';
+  import {MappedActionWithParam} from '@/store/mapped-action';
+  import {SocialLoginData} from '@/components/auth/social-login-data';
 
   class FormModel {
     email = '';
@@ -90,7 +95,9 @@
       AuthPage
     }
   })
-  export default class LoginPage extends Vue {
+  export default class LoginPage extends Vue implements ComponentOptions<LoginPage> {
+    @AuthNs.Action('socialLogin') socialLogin: MappedActionWithParam<SocialLoginData>;
+
     formModel: FormModel;
     error = '';
     formErrors: string[] = [];
@@ -100,15 +107,31 @@
       this.formModel = new FormModel();
     }
 
+    created() {
+      if (this.$route.query.code && typeof this.$route.query.code === 'string') {
+        switch (this.$route.meta.social) {
+          case 'google':
+            this.socialLogin({provider: 'google', code: this.$route.query.code}).then(() => this.goToMainPage()).catch((error: Error) => {
+              this.error = error.message;
+            });
+            break;
+        }
+      } else {
+        this.$toasted.error(this.$tc('FAILED_TO_LOGIN'));
+      }
+    }
+
     login() {
       this.error = '';
       if (this.isFormValid()) {
-        this.$store.dispatch('auth/login', this.formModel).then(() => {
-          this.$router.push('/pages/map').catch(() => this.error = 'LOGIN_FAILED');
-        }).catch((error: Error) => {
+        this.$store.dispatch('auth/login', this.formModel).then(() => this.goToMainPage()).catch((error: Error) => {
           this.error = error.message;
         });
       }
+    }
+
+    googleLogin() {
+      window.location.href = this.googleLink;
     }
 
     isFormValid(): boolean {
@@ -126,6 +149,14 @@
 
     toRegistrationPage() {
       this.$router.push({name: 'registration'});
+    }
+
+    private goToMainPage() {
+      this.$router.push('/pages/map').catch(() => this.error = 'LOGIN_FAILED');
+    }
+
+    private get googleLink() {
+      return `https://accounts.google.com/o/oauth2/v2/auth?client_id=${environment.google.client_id}&redirect_uri=${environment.google.redirect_uri}&response_type=code&include_granted_scopes=true&scope=email profile openid&access_type=`;
     }
   }
 </script>

@@ -85,6 +85,7 @@
     background-color: $background;
     height: calc(100% - #{$titleBarHeight});
     overflow-x: hidden;
+    transition: width $navigationDrawerTransition ease-in-out;
   }
 
   .pages-content.map {

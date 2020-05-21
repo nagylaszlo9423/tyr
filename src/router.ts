@@ -13,6 +13,14 @@ const routes: RouteConfig[] = [
     component: () => import('./components/auth/login.page.vue')
   },
   {
+    path: '/login/google',
+    name: 'googleLogin',
+    component: () => import('./components/auth/login.page.vue'),
+    meta: {
+      social: 'google'
+    }
+  },
+  {
     path: '/register',
     name: 'registration',
     component: () => import('./components/auth/registration.page.vue')
@@ -24,4 +32,4 @@ const routes: RouteConfig[] = [
   }
 ];
 
-export const router = new VueRouter({routes});
+export const router = new VueRouter({routes, mode: 'history'});
