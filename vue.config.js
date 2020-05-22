@@ -15,11 +15,12 @@ module.exports = {
   },
   devServer: {
     port: 3000,
+    https: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001/',
+        target: 'https://127.0.0.1:3001/',
         changeOrigin: true,
-        secure: true,
+        secure: false,
         pathRewrite: {
           '^/api': ''
         },

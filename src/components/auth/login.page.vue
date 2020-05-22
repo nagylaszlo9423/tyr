@@ -55,7 +55,7 @@
         </b-row>
         <b-row class="my-2">
           <b-col>
-            <b-button variant="outline-secondary" size="sm" @click="toRegistrationPage">{{$t('REGISTRATION')}}
+            <b-button id="registrationButton" variant="outline-secondary" size="sm" @click="toRegistrationPage">{{$t('REGISTRATION')}}
             </b-button>
           </b-col>
         </b-row>

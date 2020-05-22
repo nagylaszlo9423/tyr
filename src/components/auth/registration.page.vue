@@ -62,7 +62,7 @@
         </b-row>
         <b-row class="my-2">
           <b-col>
-            <b-button variant="primary" size="sm" @click="register">{{$t('REGISTER')}}</b-button>
+            <b-button id="registerButton" variant="primary" size="sm" @click="register">{{$t('REGISTER')}}</b-button>
           </b-col>
         </b-row>
       </b-container>
