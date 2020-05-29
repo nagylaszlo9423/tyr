@@ -1,4 +1,10 @@
-# tyr
+# TYR
+
+## Backend
+https://github.com/nagylaszlo9423/tyr-backend
+
+## API
+https://github.com/nagylaszlo9423/tyr-api
 
 ## Project setup
 ```
